@@ -1,13 +1,31 @@
 import axios from 'axios';
 
+const getBaseUrl = (environment: string, project_seo_name: string): string => {
+    switch (environment.toUpperCase()) {
+        case 'PRODUCTION':
+            return `http://${project_seo_name}.api.prodelessdev.com:6002/api/v1/developer`;
+        case 'PREVIEW':
+            return `http://${project_seo_name}.api.preview.prodelessdev.com:6002/api/v1/developer`;
+        case 'BETA':
+            return `http://${project_seo_name}.api.beta.prodelessdev.com:6002/api/v1/developer`;
+        case 'ALPHA':
+            return `http://${project_seo_name}.api.alpha.prodelessdev.com:6002/api/v1/developer`;
+        default:
+            return `http://${project_seo_name}.api.prodelessdev.com:6002/api/v1/developer`;
+    }
+}
+
+
 export const getAllItems = async (
     project_seo_name: string,
     xApiKey: string,
     authorisation: string,
-    collectionName: string
+    collectionName: string,
+    environment: string
 ): Promise<any[]> => {
     try {
-        const url = `http://${project_seo_name}.api.prodelessdev.com:6002/api/v1/developer/collection/${collectionName}/items`;
+        const baseurl = getBaseUrl(project_seo_name, environment)
+        const url = `${baseurl}/collection/${collectionName}/items`;
         const response = await axios.get<any[]>(url, {
             headers: {
                 'x-api-key': xApiKey,
@@ -26,10 +44,12 @@ export const createItem = async (
     xApiKey: string,
     authorisation: string,
     collectionName: string,
-    body: any
+    body: any,
+    environment: string
 ): Promise<any[]> => {
     try {
-        const url = `http://${project_seo_name}.api.prodelessdev.com:6002/api/v1/developer/collection/${collectionName}/items`;
+        const baseurl = getBaseUrl(project_seo_name, environment)
+        const url = `${baseurl}/collection/${collectionName}/items`;
         const response = await axios.post<any[]>(url, body, {
             headers: {
                 'x-api-key': xApiKey,
@@ -50,10 +70,12 @@ export const getItemsWithFilter = async (
     xApiKey: string,
     authorisation: string,
     collectionName: string,
-    filterUuid: string
+    filterUuid: string,
+    environment: string
 ): Promise<any[]> => {
     try {
-        const url = `http://${project_seo_name}.api.prodelessdev.com:6002/api/v1/developer/collection/${collectionName}/filter/${filterUuid}/items`;
+        const baseurl = getBaseUrl(project_seo_name, environment)
+        const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/items`;
         const response = await axios.get<any[]>(url, {
             headers: {
                 'x-api-key': xApiKey,
@@ -72,10 +94,12 @@ export const getItemsCountWithFilter = async (
     xApiKey: string,
     authorisation: string,
     collectionName: string,
-    filterUuid: string
+    filterUuid: string,
+    environment: string
 ): Promise<any[]> => {
     try {
-        const url = `http://${project_seo_name}.api.prodelessdev.com:6002/api/v1/developer/collection/${collectionName}/filter/${filterUuid}/`;
+        const baseurl = getBaseUrl(project_seo_name, environment)
+        const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/`;
         const response = await axios.get<any[]>(url, {
             headers: {
                 'x-api-key': xApiKey,
@@ -94,10 +118,12 @@ export const getItemWithUuid = async (
     xApiKey: string,
     authorisation: string,
     collectionName: string,
-    itemUuid: string
+    itemUuid: string,
+    environment: string
 ): Promise<any[]> => {
     try {
-        const url = `http://${project_seo_name}.api.prodelessdev.com:6002/api/v1/developer/collection/${collectionName}/item/${itemUuid}`;
+        const baseurl = getBaseUrl(project_seo_name, environment)
+        const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
         const response = await axios.get<any[]>(url, {
             headers: {
                 'x-api-key': xApiKey,
@@ -117,10 +143,12 @@ export const updateItemWithUuid = async (
     authorisation: string,
     collectionName: string,
     itemUuid: string,
-    body: any
+    body: any,
+    environment: string
 ): Promise<any[]> => {
     try {
-        const url = `http://${project_seo_name}.api.prodelessdev.com:6002/api/v1/developer/collection/${collectionName}/item/${itemUuid}`;
+        const baseurl = getBaseUrl(project_seo_name, environment)
+        const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
         const response = await axios.put<any[]>(url, body, {
             headers: {
                 'x-api-key': xApiKey,
@@ -139,10 +167,12 @@ export const deleteItemWithUuid = async (
     xApiKey: string,
     authorisation: string,
     collectionName: string,
-    itemUuid: string
+    itemUuid: string,
+    environment: string
 ): Promise<any[]> => {
     try {
-        const url = `http://${project_seo_name}.api.prodelessdev.com:6002/api/v1/developer/collection/${collectionName}/item/${itemUuid}`;
+        const baseurl = getBaseUrl(project_seo_name, environment)
+        const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
         const response = await axios.delete<any[]>(url, {
             headers: {
                 'x-api-key': xApiKey,
@@ -161,10 +191,12 @@ export const bulkDeleteItems = async (
     xApiKey: string,
     authorisation: string,
     collectionName: string,
-    body: any
+    body: any,
+    environment: string
 ): Promise<any[]> => {
     try {
-        const url = `http://${project_seo_name}.api.prodelessdev.com:6002/api/v1/developer/collection/${collectionName}/bulkDelete`;
+        const baseurl = getBaseUrl(project_seo_name, environment)
+        const url = `${baseurl}/collection/${collectionName}/bulkDelete`;
         const response = await axios.post<any[]>(url, body, {
             headers: {
                 'x-api-key': xApiKey,
@@ -183,11 +215,36 @@ export const getItemsByids = async (
     xApiKey: string,
     authorisation: string,
     collectionName: string,
-    body: any
+    body: any,
+    environment: string
 ): Promise<any[]> => {
     try {
-        const url = `http://${project_seo_name}.api.prodelessdev.com:6002/api/v1/developer/collection/${collectionName}/itemsbyids`;
+        const baseurl = getBaseUrl(project_seo_name, environment)
+        const url = `${baseurl}/collection/${collectionName}/itemsbyids`;
         const response = await axios.post<any[]>(url, body, {
+            headers: {
+                'x-api-key': xApiKey,
+                'Authorization': authorisation,
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        console.error('Error fetching collection:', error.message);
+        throw error;
+    }
+};
+export const sendEmail = async (
+    project_seo_name: string,
+    xApiKey: string,
+    authorisation: string,
+    templateId: string,
+    sendTo: any,
+    environment: string
+): Promise<any[]> => {
+    try {
+        const baseurl = getBaseUrl(project_seo_name, environment)
+        const url = `${baseurl}/sendEmail/${templateId}/user/${sendTo}`;
+        const response = await axios.post<any[]>(url, "", {
             headers: {
                 'x-api-key': xApiKey,
                 'Authorization': authorisation,
