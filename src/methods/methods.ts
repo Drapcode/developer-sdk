@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const getBaseUrl = (environment: string, project_seo_name: string): string => {
+const getBaseUrl = (project_seo_name: string, environment: string): string => {
     switch (environment.toUpperCase()) {
         case 'PRODUCTION':
             return `http://${project_seo_name}.api.prodelessdev.com:6002/api/v1/developer`;
@@ -25,6 +25,7 @@ export const getAllItems = async (
 ): Promise<any[]> => {
     try {
         const baseurl = getBaseUrl(project_seo_name, environment)
+        console.log("base url", baseurl)
         const url = `${baseurl}/collection/${collectionName}/items`;
         const response = await axios.get<any[]>(url, {
             headers: {

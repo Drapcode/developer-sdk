@@ -1,16 +1,10 @@
 import { bulkDeleteItems, createItem, deleteItemWithUuid, getAllItems, getItemWithUuid, getItemsByids, getItemsCountWithFilter, getItemsWithFilter, sendEmail, updateItemWithUuid } from "./methods/methods";
-export enum Environment {
-    PRODUCTION = "PRODUCTION",
-    ALPHA = "ALPHA",
-    BETA = "BETA",
-    PREVIEW = "PREVIEW",
-}
 export class DrapcodeApis {
     private project_seo_name: string;
     private xApiKey: string;
     private authorisation: string;
-    private environment: Environment;
-    constructor(project_seo_name: string, xApiKey: string = "", authorisation: string = "", environment: Environment = Environment.PRODUCTION) {
+    private environment: string;
+    constructor(project_seo_name: string, xApiKey: string = "", authorisation: string = "", environment: string = 'PRODUCTION') {
         this.project_seo_name = project_seo_name;
         this.xApiKey = xApiKey;
         this.authorisation = authorisation;
