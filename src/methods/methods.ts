@@ -3,15 +3,15 @@ import axios from 'axios';
 const getBaseUrl = (project_seo_name: string, environment: string): string => {
     switch (environment.toUpperCase()) {
         case 'PRODUCTION':
-            return `http://${project_seo_name}.api.prodelessdev.com:6002/api/v1/developer`;
+            return `https://${project_seo_name}.api.drapcode.io/api/v1/developer`;
         case 'PREVIEW':
-            return `http://${project_seo_name}.api.preview.prodelessdev.com:6002/api/v1/developer`;
+            return `https://${project_seo_name}.api.preview.drapcode.io/api/v1/developer`;
         case 'BETA':
-            return `http://${project_seo_name}.api.beta.prodelessdev.com:6002/api/v1/developer`;
+            return `https://${project_seo_name}.api.beta.drapcode.io/api/v1/developer`;
         case 'ALPHA':
-            return `http://${project_seo_name}.api.alpha.prodelessdev.com:6002/api/v1/developer`;
+            return `https://${project_seo_name}.api.alpha.drapcode.io/api/v1/developer`;
         default:
-            return `http://${project_seo_name}.api.prodelessdev.com:6002/api/v1/developer`;
+            return `https://${project_seo_name}.api.drapcode.io/api/v1/developer`;
     }
 }
 
@@ -100,7 +100,7 @@ export const getItemsCountWithFilter = async (
 ): Promise<any[]> => {
     try {
         const baseurl = getBaseUrl(project_seo_name, environment)
-        const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/`;
+        const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/count`;
         const response = await axios.get<any[]>(url, {
             headers: {
                 'x-api-key': xApiKey,
