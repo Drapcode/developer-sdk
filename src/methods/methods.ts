@@ -1,259 +1,227 @@
 import axios from 'axios';
 
-const getBaseUrl = (project_seo_name: string, environment: string): string => {
-    switch (environment.toUpperCase()) {
-        case 'PRODUCTION':
-            return `https://${project_seo_name}.api.drapcode.io/api/v1/developer`;
-        case 'PREVIEW':
-            return `https://${project_seo_name}.api.preview.drapcode.io/api/v1/developer`;
-        case 'BETA':
-            return `https://${project_seo_name}.api.beta.drapcode.io/api/v1/developer`;
-        case 'ALPHA':
-            return `https://${project_seo_name}.api.alpha.drapcode.io/api/v1/developer`;
-        default:
-            return `https://${project_seo_name}.api.drapcode.io/api/v1/developer`;
+const createErrorResponse = (error: any) => {
+    if (error.response && error.response.status === 404) {
+        const responseData = error.response.data
+        let finalData;
+        if (responseData == 'This url does not exist. Please publish again.') {
+            finalData = "Please check your project name or publish again."
+        } else if (responseData.message) {
+            finalData = responseData.message
+        } else {
+            finalData = responseData
+        }
+        return {
+            code: error.response.status,
+            success: false,
+            data: finalData,
+            error: '',
+            message: '',
+        };
+    } else if (error.response && error.response.status === 401) {
+        const responseData = error.response
+        return {
+            code: responseData.status,
+            success: false,
+            data: responseData.data.message,
+            error: '',
+            message: '',
+        }
     }
-}
+    return {
+        code: error.response.code,
+        success: false,
+        data: "",
+        error: 'Please check your project name or publish again.',
+        message: '',
+    };
+};
 
 
 export const getAllItems = async (
-    project_seo_name: string,
-    xApiKey: string,
-    authorisation: string,
+    baseurl: string,
+    headers: Record<string, string>,
     collectionName: string,
-    environment: string
-): Promise<any[]> => {
+): Promise<any> => {
     try {
-        const baseurl = getBaseUrl(project_seo_name, environment)
-        console.log("base url", baseurl)
         const url = `${baseurl}/collection/${collectionName}/items`;
-        const response = await axios.get<any[]>(url, {
-            headers: {
-                'x-api-key': xApiKey,
-                'Authorization': authorisation,
-            },
-        });
-        return response.data;
+        const response = await axios.get<any>(url, { headers });
+        if (response.data && response.data.code === 404) {
+            return { success: false, data: response.data.data, error: '', message: '' };
+        }
+        return { success: true, data: response.data, error: '', message: '' };
     } catch (error: any) {
-        console.error('Error fetching collection:', error.message);
-        throw error;
+        return createErrorResponse(error)
     }
 };
 
 export const createItem = async (
-    project_seo_name: string,
-    xApiKey: string,
-    authorisation: string,
+    baseurl: string,
+    headers: Record<string, string>,
     collectionName: string,
     body: any,
-    environment: string
-): Promise<any[]> => {
+): Promise<any> => {
     try {
-        const baseurl = getBaseUrl(project_seo_name, environment)
         const url = `${baseurl}/collection/${collectionName}/items`;
-        const response = await axios.post<any[]>(url, body, {
-            headers: {
-                'x-api-key': xApiKey,
-                'Authorization': authorisation,
-            },
+        const response = await axios.post<any>(url, body, {
+            headers
         });
-        return response.data;
+        console.log("response.data with create", response.data)
+        if (response.data && response.data.code === 404) {
+            return { success: false, data: response.data.data, error: '', message: '' };
+        }
+        return { success: true, data: response.data, error: '', message: '' };
     } catch (error: any) {
-        console.error('Error fetching collection:', error.message);
-        throw error;
+        return createErrorResponse(error)
     }
 };
 
 
 
 export const getItemsWithFilter = async (
-    project_seo_name: string,
-    xApiKey: string,
-    authorisation: string,
+    baseurl: string,
+    headers: Record<string, string>,
     collectionName: string,
     filterUuid: string,
-    environment: string
-): Promise<any[]> => {
+): Promise<any> => {
     try {
-        const baseurl = getBaseUrl(project_seo_name, environment)
         const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/items`;
-        const response = await axios.get<any[]>(url, {
-            headers: {
-                'x-api-key': xApiKey,
-                'Authorization': authorisation,
-            },
+        const response = await axios.get<any>(url, {
+            headers
         });
-        return response.data;
+        console.log("response", response.data)
+        return { success: true, data: response.data, error: '', message: '' };
     } catch (error: any) {
-        console.error('Error fetching collection:', error.message);
-        throw error;
+        console.log("errrr", error)
+        return createErrorResponse(error)
     }
 };
 
 export const getItemsCountWithFilter = async (
-    project_seo_name: string,
-    xApiKey: string,
-    authorisation: string,
+    baseurl: string,
+    headers: Record<string, string>,
     collectionName: string,
     filterUuid: string,
-    environment: string
-): Promise<any[]> => {
+): Promise<any> => {
     try {
-        const baseurl = getBaseUrl(project_seo_name, environment)
         const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/count`;
         const response = await axios.get<any[]>(url, {
-            headers: {
-                'x-api-key': xApiKey,
-                'Authorization': authorisation,
-            },
+            headers
         });
-        return response.data;
+        return { success: true, data: response.data, error: '', message: '' };
     } catch (error: any) {
-        console.error('Error fetching collection:', error.message);
-        throw error;
+        return createErrorResponse(error)
     }
 };
 
 export const getItemWithUuid = async (
-    project_seo_name: string,
-    xApiKey: string,
-    authorisation: string,
+    baseurl: string,
+    headers: Record<string, string>,
     collectionName: string,
     itemUuid: string,
-    environment: string
-): Promise<any[]> => {
+): Promise<any> => {
     try {
-        const baseurl = getBaseUrl(project_seo_name, environment)
         const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
         const response = await axios.get<any[]>(url, {
-            headers: {
-                'x-api-key': xApiKey,
-                'Authorization': authorisation,
-            },
+            headers
         });
-        return response.data;
+        return { success: true, data: response.data, error: '', message: '' };
     } catch (error: any) {
-        console.error('Error fetching collection:', error.message);
-        throw error;
+        return createErrorResponse(error)
     }
 };
 
 export const updateItemWithUuid = async (
-    project_seo_name: string,
-    xApiKey: string,
-    authorisation: string,
+    baseurl: string,
+    headers: Record<string, string>,
     collectionName: string,
     itemUuid: string,
     body: any,
-    environment: string
-): Promise<any[]> => {
+): Promise<any> => {
     try {
-        const baseurl = getBaseUrl(project_seo_name, environment)
         const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
-        const response = await axios.put<any[]>(url, body, {
-            headers: {
-                'x-api-key': xApiKey,
-                'Authorization': authorisation,
-            },
+        const response = await axios.put<any>(url, body, {
+            headers
         });
-        return response.data;
+        return { success: true, data: response.data, error: '', message: '' };
     } catch (error: any) {
-        console.error('Error fetching collection:', error.message);
-        throw error;
+        return createErrorResponse(error)
     }
 };
 
 export const deleteItemWithUuid = async (
-    project_seo_name: string,
-    xApiKey: string,
-    authorisation: string,
+    baseurl: string,
+    headers: Record<string, string>,
     collectionName: string,
     itemUuid: string,
-    environment: string
-): Promise<any[]> => {
+): Promise<any> => {
     try {
-        const baseurl = getBaseUrl(project_seo_name, environment)
         const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
-        const response = await axios.delete<any[]>(url, {
-            headers: {
-                'x-api-key': xApiKey,
-                'Authorization': authorisation,
-            },
+        const response = await axios.delete<any>(url, {
+            headers
         });
-        return response.data;
+        return { success: true, data: response.data, error: '', message: '' };
     } catch (error: any) {
-        console.error('Error fetching collection:', error.message);
-        throw error;
+        return createErrorResponse(error)
     }
 };
 
 export const bulkDeleteItems = async (
-    project_seo_name: string,
-    xApiKey: string,
-    authorisation: string,
+    baseurl: string,
+    headers: Record<string, string>,
     collectionName: string,
     body: any,
-    environment: string
-): Promise<any[]> => {
+): Promise<any> => {
     try {
-        const baseurl = getBaseUrl(project_seo_name, environment)
         const url = `${baseurl}/collection/${collectionName}/bulkDelete`;
-        const response = await axios.post<any[]>(url, body, {
-            headers: {
-                'x-api-key': xApiKey,
-                'Authorization': authorisation,
-            },
+        const response = await axios.post<any>(url, body, {
+            headers
         });
-        return response.data;
+        return { success: true, data: response.data, error: '', message: '' };
     } catch (error: any) {
-        console.error('Error fetching collection:', error.message);
-        throw error;
+        return createErrorResponse(error)
     }
 };
 
 export const getItemsByids = async (
-    project_seo_name: string,
-    xApiKey: string,
-    authorisation: string,
+    baseurl: string,
+    headers: Record<string, string>,
     collectionName: string,
     body: any,
-    environment: string
-): Promise<any[]> => {
+): Promise<any> => {
     try {
-        const baseurl = getBaseUrl(project_seo_name, environment)
         const url = `${baseurl}/collection/${collectionName}/itemsbyids`;
-        const response = await axios.post<any[]>(url, body, {
-            headers: {
-                'x-api-key': xApiKey,
-                'Authorization': authorisation,
-            },
+        const response = await axios.post<any>(url, body, {
+            headers
         });
-        return response.data;
+        return { success: true, data: response.data, error: '', message: '' };
     } catch (error: any) {
-        console.error('Error fetching collection:', error.message);
-        throw error;
+        return createErrorResponse(error)
     }
 };
 export const sendEmail = async (
-    project_seo_name: string,
-    xApiKey: string,
-    authorisation: string,
+    baseurl: string,
+    headers: Record<string, string>,
     templateId: string,
     sendTo: any,
-    environment: string
-): Promise<any[]> => {
+): Promise<any> => {
     try {
-        const baseurl = getBaseUrl(project_seo_name, environment)
         const url = `${baseurl}/sendEmail/${templateId}/user/${sendTo}`;
         const response = await axios.post<any[]>(url, "", {
-            headers: {
-                'x-api-key': xApiKey,
-                'Authorization': authorisation,
-            },
+            headers
         });
-        return response.data;
+        return { success: true, data: response.data, error: '', message: '' }
     } catch (error: any) {
-        console.error('Error fetching collection:', error.message);
-        throw error;
+        return createErrorResponse(error)
     }
 };
+
+/**
+ * {
+ * code,
+ * success
+ * data,
+ * error,
+ * message,
+ * }
+ */
