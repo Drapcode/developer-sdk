@@ -9,7 +9,7 @@ const createErrorResponse = (error: any) => {
         } else if (responseData.message) {
             finalData = responseData.message
         } else {
-            finalData = responseData
+            finalData = responseData !== "" ? responseData : "Not found"
         }
         return {
             code: error.response.status,
@@ -24,6 +24,15 @@ const createErrorResponse = (error: any) => {
             code: responseData.status,
             success: false,
             data: responseData.data.message,
+            error: '',
+            message: '',
+        }
+    } else if (error.response && error.response.status === 400) {
+        const responseData = error.response
+        return {
+            code: responseData.status,
+            success: false,
+            data: "Please Check Your Credentials",
             error: '',
             message: '',
         }
@@ -160,7 +169,7 @@ export const deleteItemWithUuid = async (
         const response = await axios.delete<any>(url, {
             headers
         });
-        return { success: true, data: response.data, error: '', message: '' };
+        return { success: true, data: response.data?.message, error: '', message: '' };
     } catch (error: any) {
         return createErrorResponse(error)
     }
@@ -210,8 +219,10 @@ export const sendEmail = async (
         const response = await axios.post<any[]>(url, "", {
             headers
         });
+        console.log("response", response)
         return { success: true, data: response.data, error: '', message: '' }
     } catch (error: any) {
+        console.log("error in sending mail", error)
         return createErrorResponse(error)
     }
 };
