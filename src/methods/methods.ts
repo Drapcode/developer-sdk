@@ -75,7 +75,6 @@ export const createItem = async (
         const response = await axios.post<any>(url, body, {
             headers
         });
-        console.log("response.data with create", response.data)
         if (response.data && response.data.code === 404) {
             return { success: false, data: response.data.data, error: '', message: '' };
         }
@@ -98,10 +97,8 @@ export const getItemsWithFilter = async (
         const response = await axios.get<any>(url, {
             headers
         });
-        console.log("response", response.data)
         return { success: true, data: response.data, error: '', message: '' };
     } catch (error: any) {
-        console.log("errrr", error)
         return createErrorResponse(error)
     }
 };
@@ -219,10 +216,8 @@ export const sendEmail = async (
         const response = await axios.post<any[]>(url, "", {
             headers
         });
-        console.log("response", response)
         return { success: true, data: response.data, error: '', message: '' }
     } catch (error: any) {
-        console.log("error in sending mail", error)
         return createErrorResponse(error)
     }
 };
