@@ -1,6 +1,6 @@
 {
   "name": "drapcode-developer-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "files": [
@@ -11,8 +11,14 @@
     "link-lib": "npm link drapcode-constant drapcode-logger",
     "build": "npm run clean && npm run link-lib && tsc"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "drapcode",
+    "developer",
+    "sdk",
+    "axios",
+    "express"
+  ],
+  "author": "Drapcode",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.21",
