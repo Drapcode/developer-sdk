@@ -20,6 +20,10 @@
   ],
   "author": "Drapcode",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Drapcode/developer-sdk.git"
+  },
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/lodash": "^4.14.179",
