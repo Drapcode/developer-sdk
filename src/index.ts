@@ -1,14 +1,14 @@
 import {
-  //   bulkDeleteItems,
+  bulkDeleteItems,
   createItem,
-  //   deleteItemWithUuid,
+  deleteItemWithUuid,
   getAllItems,
   getItemWithUuid,
-  //   getItemsByids,
+  getItemsByids,
   getItemsCountWithFilter,
   getItemsWithFilter,
-  //   sendEmail,
-  //   updateItemWithUuid,
+  sendEmail,
+  updateItemWithUuid,
 } from "./methods/methods";
 export class DrapcodeApis {
   private project_seo_name: string;
@@ -91,47 +91,47 @@ export class DrapcodeApis {
       itemUuid
     );
   }
-  //   async updateItemWithUuid(
-  //     collectionName: string,
-  //     itemUuid: string,
-  //     body: any
-  //   ): Promise<any[]> {
-  //     return updateItemWithUuid(
-  //       this.getBaseUrl(),
-  //       this.getHeaders(),
-  //       collectionName,
-  //       itemUuid,
-  //       body
-  //     );
-  //   }
-  //   async deleteItemWithUuid(
-  //     collectionName: string,
-  //     itemUuid: string
-  //   ): Promise<any[]> {
-  //     return deleteItemWithUuid(
-  //       this.getBaseUrl(),
-  //       this.getHeaders(),
-  //       collectionName,
-  //       itemUuid
-  //     );
-  //   }
-  //   async bulkDeleteItems(collectionName: string, body: any): Promise<any[]> {
-  //     return bulkDeleteItems(
-  //       this.getBaseUrl(),
-  //       this.getHeaders(),
-  //       collectionName,
-  //       body
-  //     );
-  //   }
-  //   async getItemsByids(collectionName: string, body: any): Promise<any[]> {
-  //     return getItemsByids(
-  //       this.getBaseUrl(),
-  //       this.getHeaders(),
-  //       collectionName,
-  //       body
-  //     );
-  //   }
-  //   async sendEmail(templateId: string, sendTo: string): Promise<any[]> {
-  //     return sendEmail(this.getBaseUrl(), this.getHeaders(), templateId, sendTo);
-  //   }
+  async updateItemWithUuid(
+    collectionName: string,
+    itemUuid: string,
+    body: any
+  ) {
+    return updateItemWithUuid(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      collectionName,
+      itemUuid,
+      body
+    );
+  }
+  async deleteItemWithUuid(
+    collectionName: string,
+    itemUuid: string
+  ) {
+    return deleteItemWithUuid(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      collectionName,
+      itemUuid
+    );
+  }
+  async bulkDeleteItems(collectionName: string, body: any) {
+    return bulkDeleteItems(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      collectionName,
+      body
+    );
+  }
+  async getItemsByids(collectionName: string, body: any) {
+    return getItemsByids(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      collectionName,
+      body
+    );
+  }
+  async sendEmail(templateId: string, sendTo: string) {
+    return sendEmail(this.getBaseUrl(), this.getHeaders(), templateId, sendTo);
+  }
 }

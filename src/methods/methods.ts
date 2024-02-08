@@ -167,20 +167,21 @@ export const getItemWithUuid = async (
     return createErrorResponse(error);
   }
 };
-/*
+
 export const updateItemWithUuid = async (
   baseurl: string,
   headers: Record<string, string>,
   collectionName: string,
   itemUuid: string,
   body: any
-): Promise<any> => {
+) => {
   try {
     const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
-    const response = await axios.put<any>(url, body, {
-      headers,
-    });
-    return { success: true, data: response.data, error: "", message: "" };
+    const response = await fetch(url,
+      { method: 'PUT', headers, body: body }
+    );
+    const result = await response.json();
+    return { success: true, data: result.data, error: "", message: "" };
   } catch (error: any) {
     return createErrorResponse(error);
   }
@@ -191,15 +192,17 @@ export const deleteItemWithUuid = async (
   headers: Record<string, string>,
   collectionName: string,
   itemUuid: string
-): Promise<any> => {
+) => {
   try {
     const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
-    const response = await axios.delete<any>(url, {
+    const response = await fetch(url, {
+      method: "DELETE",
       headers,
     });
+    const result = await response.json();
     return {
       success: true,
-      data: response.data?.message,
+      data: result.data?.message,
       error: "",
       message: "",
     };
@@ -213,13 +216,16 @@ export const bulkDeleteItems = async (
   headers: Record<string, string>,
   collectionName: string,
   body: any
-): Promise<any> => {
+) => {
   try {
     const url = `${baseurl}/collection/${collectionName}/bulkDelete`;
-    const response = await axios.post<any>(url, body, {
+    const response = await fetch(url, {
+      method: "POST",
       headers,
+      body: body
     });
-    return { success: true, data: response.data, error: "", message: "" };
+    const result = await response.json();
+    return { success: true, data: result.data, error: "", message: "" };
   } catch (error: any) {
     return createErrorResponse(error);
   }
@@ -230,13 +236,15 @@ export const getItemsByids = async (
   headers: Record<string, string>,
   collectionName: string,
   body: any
-): Promise<any> => {
+) => {
   try {
     const url = `${baseurl}/collection/${collectionName}/itemsbyids`;
-    const response = await axios.post<any>(url, body, {
-      headers,
+    const response = await fetch(url, {
+      method: "POST",
+      headers, body: body
     });
-    return { success: true, data: response.data, error: "", message: "" };
+    const result = await response.json();
+    return { success: true, data: result.data, error: "", message: "" };
   } catch (error: any) {
     return createErrorResponse(error);
   }
@@ -246,18 +254,20 @@ export const sendEmail = async (
   headers: Record<string, string>,
   templateId: string,
   sendTo: any
-): Promise<any> => {
+) => {
   try {
     const url = `${baseurl}/sendEmail/${templateId}/user/${sendTo}`;
-    const response = await axios.post<any[]>(url, "", {
-      headers,
+    const response = await fetch(url, {
+      method: "POST",
+      headers
     });
-    return { success: true, data: response.data, error: "", message: "" };
+    const result = await response.json();
+    return { success: true, data: result.data, error: "", message: "" };
   } catch (error: any) {
     return createErrorResponse(error);
   }
 };
-*/
+
 /**
  * {
  * code,
