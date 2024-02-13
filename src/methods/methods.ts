@@ -70,8 +70,8 @@ const processResponse = (result: any) => {
       return {
         code: result.code,
         success: false,
-        error: result.data,
-        message: result.data,
+        error: result.data ? result.data : result,
+        message: result.data ? result.data : result,
         data: "",
       };
     }
@@ -86,12 +86,10 @@ export const getAllItems = async (
 ) => {
   try {
     const url = `${baseurl}/collection/${collectionName}/items`;
-    console.log("url", url);
     const response = await fetch(url, { method: "GET", headers });
     const result = await response.json();
     return processResponse(result);
   } catch (error: any) {
-    console.log("error", error);
     return createErrorResponse(error);
   }
 };
@@ -104,17 +102,18 @@ export const createItem = async (
 ) => {
   try {
     const url = `${baseurl}/collection/${collectionName}/items`;
-    const response = await fetch(url, { method: "POST", headers, body: body });
-    const result = await response.json();
-    if (result.data && result.data.code === 404) {
+    const response = await fetch(url, { method: "POST", headers, body: JSON.stringify(body) });
+    if (response.status && response.status === 404) {
       return {
         success: false,
-        data: result.data.data,
+        data: "Collection Not Found",
         error: "",
         message: "",
       };
+    } else {
+      const result = await response.json();
+      return { code: result.code, success: true, data: result, error: "", message: "" };
     }
-    return { success: true, data: result.data, error: "", message: "" };
   } catch (error: any) {
     return createErrorResponse(error);
   }
@@ -130,7 +129,7 @@ export const getItemsWithFilter = async (
     const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/items`;
     const response = await fetch(url, { method: "GET", headers });
     const result = await response.json();
-    return { success: true, data: result.data, error: "", message: "" };
+    return processResponse(result);
   } catch (error: any) {
     return createErrorResponse(error);
   }
@@ -146,7 +145,7 @@ export const getItemsCountWithFilter = async (
     const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/count`;
     const response = await fetch(url, { method: "GET", headers });
     const result = await response.json();
-    return { success: true, data: result.data, error: "", message: "" };
+    return processResponse(result);
   } catch (error: any) {
     return createErrorResponse(error);
   }
@@ -161,8 +160,19 @@ export const getItemWithUuid = async (
   try {
     const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
     const response = await fetch(url, { method: "GET", headers });
-    const result = await response.json();
-    return { success: true, data: result.data, error: "", message: "" };
+    if (response.status && response.status === 404) {
+      return {
+        code: response.status,
+        success: false,
+        data: "Please Check ItemUuid OR Collection Name",
+        error: "",
+        message: "",
+      };
+    } else {
+      const result = await response.json();
+      return processResponse(result);
+    }
+
   } catch (error: any) {
     return createErrorResponse(error);
   }
@@ -178,10 +188,20 @@ export const updateItemWithUuid = async (
   try {
     const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
     const response = await fetch(url,
-      { method: 'PUT', headers, body: body }
+      { method: 'PUT', headers, body: JSON.stringify(body) }
     );
-    const result = await response.json();
-    return { success: true, data: result.data, error: "", message: "" };
+    if (response.status && response.status === 404) {
+      return {
+        code: response.status,
+        success: false,
+        data: "Please Check ItemUuid OR Collection Name",
+        error: "",
+        message: "",
+      };
+    } else {
+      const result = await response.json();
+      return processResponse(result);
+    }
   } catch (error: any) {
     return createErrorResponse(error);
   }
@@ -201,8 +221,9 @@ export const deleteItemWithUuid = async (
     });
     const result = await response.json();
     return {
-      success: true,
-      data: result.data?.message,
+      code: result.code,
+      success: result.code == 200 ? true : false,
+      data: result.message,
       error: "",
       message: "",
     };
@@ -262,7 +283,7 @@ export const sendEmail = async (
       headers
     });
     const result = await response.json();
-    return { success: true, data: result.data, error: "", message: "" };
+    return { success: true, data: result, error: "", message: "" };
   } catch (error: any) {
     return createErrorResponse(error);
   }
