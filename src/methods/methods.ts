@@ -102,7 +102,11 @@ export const createItem = async (
 ) => {
   try {
     const url = `${baseurl}/collection/${collectionName}/items`;
-    const response = await fetch(url, { method: "POST", headers, body: JSON.stringify(body) });
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    });
     if (response.status && response.status === 404) {
       return {
         success: false,
@@ -112,7 +116,13 @@ export const createItem = async (
       };
     } else {
       const result = await response.json();
-      return { code: result.code, success: true, data: result, error: "", message: "" };
+      return {
+        code: result.code,
+        success: true,
+        data: result,
+        error: "",
+        message: "",
+      };
     }
   } catch (error: any) {
     return createErrorResponse(error);
@@ -172,7 +182,6 @@ export const getItemWithUuid = async (
       const result = await response.json();
       return processResponse(result);
     }
-
   } catch (error: any) {
     return createErrorResponse(error);
   }
@@ -187,9 +196,11 @@ export const updateItemWithUuid = async (
 ) => {
   try {
     const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
-    const response = await fetch(url,
-      { method: 'PUT', headers, body: JSON.stringify(body) }
-    );
+    const response = await fetch(url, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(body),
+    });
     if (response.status && response.status === 404) {
       return {
         code: response.status,
@@ -243,7 +254,7 @@ export const bulkDeleteItems = async (
     const response = await fetch(url, {
       method: "POST",
       headers,
-      body: body
+      body: body,
     });
     const result = await response.json();
     return { success: true, data: result.data, error: "", message: "" };
@@ -262,7 +273,8 @@ export const getItemsByids = async (
     const url = `${baseurl}/collection/${collectionName}/itemsbyids`;
     const response = await fetch(url, {
       method: "POST",
-      headers, body: body
+      headers,
+      body: body,
     });
     const result = await response.json();
     return { success: true, data: result.data, error: "", message: "" };
@@ -280,7 +292,7 @@ export const sendEmail = async (
     const url = `${baseurl}/sendEmail/${templateId}/user/${sendTo}`;
     const response = await fetch(url, {
       method: "POST",
-      headers
+      headers,
     });
     const result = await response.json();
     return { success: true, data: result, error: "", message: "" };

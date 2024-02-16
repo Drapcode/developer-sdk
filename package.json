@@ -13,9 +13,7 @@
   "keywords": [
     "drapcode",
     "developer",
-    "sdk",
-    "axios",
-    "express"
+    "sdk"
   ],
   "author": "Drapcode",
   "license": "ISC",

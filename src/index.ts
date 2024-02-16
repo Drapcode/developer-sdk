@@ -104,10 +104,7 @@ export class DrapcodeApis {
       body
     );
   }
-  async deleteItemWithUuid(
-    collectionName: string,
-    itemUuid: string
-  ) {
+  async deleteItemWithUuid(collectionName: string, itemUuid: string) {
     return deleteItemWithUuid(
       this.getBaseUrl(),
       this.getHeaders(),
