@@ -36,8 +36,21 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DrapcodeApis = void 0;
+exports.DrapcodeApis = exports.QueryOperation = void 0;
 var methods_1 = require("./methods/methods");
+var QueryOperation;
+(function (QueryOperation) {
+    QueryOperation["EQUALS"] = "EQUALS";
+    QueryOperation["IS_NOT_NULL"] = "IS_NOT_NULL";
+    QueryOperation["IS_NULL"] = "IS_NULL";
+    QueryOperation["LIKE"] = "LIKE";
+    QueryOperation["LESS_THAN_EQUALS_TO"] = "LESS_THAN_EQUALS_TO";
+    QueryOperation["GREATER_THAN_EQUALS_TO"] = "GREATER_THAN_EQUALS_TO";
+    QueryOperation["LESS_THAN"] = "LESS_THAN";
+    QueryOperation["GREATER_THAN"] = "GREATER_THAN";
+    QueryOperation["IN_LIST"] = "IN_LIST";
+    QueryOperation["NOT_IN_LIST"] = "NOT_IN_LIST";
+})(QueryOperation = exports.QueryOperation || (exports.QueryOperation = {}));
 var DrapcodeApis = /** @class */ (function () {
     function DrapcodeApis(project_seo_name, xApiKey, authorization, environment) {
         if (xApiKey === void 0) { xApiKey = ""; }

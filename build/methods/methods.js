@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendEmail = exports.getItemsByids = exports.bulkDeleteItems = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.getItemWithUuid = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getAllItems = void 0;
+exports.sendEmail = exports.getItemsByids = exports.bulkDeleteItems = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.getItemWithUuid = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getAllItems = exports.QueryOperation = void 0;
 var createErrorResponse = function (error) {
     if (error.response && error.response.status === 404) {
         var responseData = error.response.data;
@@ -121,6 +121,19 @@ var processResponse = function (result) {
         return { code: 200, success: true, error: "", message: "", data: result };
     }
 };
+var QueryOperation;
+(function (QueryOperation) {
+    QueryOperation["EQUALS"] = "EQUALS";
+    QueryOperation["IS_NOT_NULL"] = "IS_NOT_NULL";
+    QueryOperation["IS_NULL"] = "IS_NULL";
+    QueryOperation["LIKE"] = "LIKE";
+    QueryOperation["LESS_THAN_EQUALS_TO"] = "LESS_THAN_EQUALS_TO";
+    QueryOperation["GREATER_THAN_EQUALS_TO"] = "GREATER_THAN_EQUALS_TO";
+    QueryOperation["LESS_THAN"] = "LESS_THAN";
+    QueryOperation["GREATER_THAN"] = "GREATER_THAN";
+    QueryOperation["IN_LIST"] = "IN_LIST";
+    QueryOperation["NOT_IN_LIST"] = "NOT_IN_LIST";
+})(QueryOperation = exports.QueryOperation || (exports.QueryOperation = {}));
 var getAllItems = function (baseurl, headers, collectionName, query) { return __awaiter(void 0, void 0, void 0, function () {
     var params, key, queryString, url, response, result, error_1;
     return __generator(this, function (_a) {
