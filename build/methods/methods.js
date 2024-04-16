@@ -121,13 +121,18 @@ var processResponse = function (result) {
         return { code: 200, success: true, error: "", message: "", data: result };
     }
 };
-var getAllItems = function (baseurl, headers, collectionName) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_1;
+var getAllItems = function (baseurl, headers, collectionName, query) { return __awaiter(void 0, void 0, void 0, function () {
+    var params, key, queryString, url, response, result, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 3, , 4]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items");
+                params = new URLSearchParams();
+                for (key in query) {
+                    params.append(key, query[key]);
+                }
+                queryString = params.toString();
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryString);
                 return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
             case 1:
                 response = _a.sent();

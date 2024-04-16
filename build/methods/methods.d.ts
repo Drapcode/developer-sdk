@@ -1,4 +1,7 @@
-export declare const getAllItems: (baseurl: string, headers: Record<string, string>, collectionName: string) => Promise<{
+type Query = {
+    [key: string]: string;
+};
+export declare const getAllItems: (baseurl: string, headers: Record<string, string>, collectionName: string, query: Query) => Promise<{
     code: any;
     success: boolean;
     data: any;
@@ -118,6 +121,7 @@ export declare const sendEmail: (baseurl: string, headers: Record<string, string
     error: string;
     message: string;
 }>;
+export {};
 /**
  * {
  * code,

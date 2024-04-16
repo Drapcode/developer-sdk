@@ -10,6 +10,9 @@ import {
   sendEmail,
   updateItemWithUuid,
 } from "./methods/methods";
+type Query = {
+  [key: string]: string;
+};
 export class DrapcodeApis {
   private project_seo_name: string;
   private xApiKey: string;
@@ -55,9 +58,13 @@ export class DrapcodeApis {
     }
     return headers;
   }
-
-  async getAllItems(collectionName: string) {
-    return getAllItems(this.getBaseUrl(), this.getHeaders(), collectionName);
+  async getAllItems(collectionName: string, query: Query) {
+    return getAllItems(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      collectionName,
+      query
+    );
   }
   async createItem(collectionName: string, body: any) {
     return createItem(

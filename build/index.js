@@ -76,10 +76,10 @@ var DrapcodeApis = /** @class */ (function () {
         }
         return headers;
     };
-    DrapcodeApis.prototype.getAllItems = function (collectionName) {
+    DrapcodeApis.prototype.getAllItems = function (collectionName, query) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, (0, methods_1.getAllItems)(this.getBaseUrl(), this.getHeaders(), collectionName)];
+                return [2 /*return*/, (0, methods_1.getAllItems)(this.getBaseUrl(), this.getHeaders(), collectionName, query)];
             });
         });
     };

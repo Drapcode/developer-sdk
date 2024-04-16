@@ -78,14 +78,25 @@ const processResponse = (result: any) => {
     return { code: 200, success: true, error: "", message: "", data: result };
   }
 };
-
+type Query = {
+  [key: string]: string;
+};
 export const getAllItems = async (
   baseurl: string,
   headers: Record<string, string>,
-  collectionName: string
+  collectionName: string,
+  query: Query
 ) => {
   try {
-    const url = `${baseurl}/collection/${collectionName}/items`;
+    const params = new URLSearchParams();
+    for (const key in query) {
+      params.append(key, query[key]);
+    }
+    const queryString = params.toString();
+    const url = `${baseurl}/collection/${collectionName}/items?`.concat(
+      queryString
+    );
+
     const response = await fetch(url, { method: "GET", headers });
     const result = await response.json();
     return processResponse(result);

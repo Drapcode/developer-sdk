@@ -1,3 +1,6 @@
+type Query = {
+    [key: string]: string;
+};
 export declare class DrapcodeApis {
     private project_seo_name;
     private xApiKey;
@@ -7,7 +10,7 @@ export declare class DrapcodeApis {
     constructor(project_seo_name: string, xApiKey?: string, authorization?: string, environment?: string);
     private getBaseUrl;
     private getHeaders;
-    getAllItems(collectionName: string): Promise<{
+    getAllItems(collectionName: string, query: Query): Promise<{
         code: any;
         success: boolean;
         data: any;
@@ -128,3 +131,4 @@ export declare class DrapcodeApis {
         message: string;
     }>;
 }
+export {};
