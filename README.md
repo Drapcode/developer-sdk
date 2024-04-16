@@ -30,7 +30,7 @@ const drapcodeApi = new DrapcodeApis("test-project-7138");
 # Methods
 
 ## getAllItems(collectionName: string)
-Retrieves all items from a specified collection.
+Retrieves all items from a specified collection. The items will come under 'data' JSON path.
 
 **collectionName:** The name of the collection to retrieve items from 
 ### Example: 
