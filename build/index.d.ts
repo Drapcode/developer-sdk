@@ -11,7 +11,9 @@ export declare enum QueryOperation {
     NOT_IN_LIST = "NOT_IN_LIST"
 }
 type Query = {
-    [key: string]: string;
+    field: string;
+    condition: QueryOperation;
+    value: string;
 };
 export declare class DrapcodeApis {
     private project_seo_name;
@@ -22,7 +24,7 @@ export declare class DrapcodeApis {
     constructor(project_seo_name: string, xApiKey?: string, authorization?: string, environment?: string);
     private getBaseUrl;
     private getHeaders;
-    getAllItems(collectionName: string, query: Query): Promise<{
+    getAllItems(collectionName: string, query: Query[]): Promise<{
         code: any;
         success: boolean;
         data: any;

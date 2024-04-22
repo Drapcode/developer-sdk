@@ -23,8 +23,11 @@ export enum QueryOperation {
   NOT_IN_LIST = "NOT_IN_LIST",
 }
 type Query = {
-  [key: string]: string;
+  field: string;
+  condition: QueryOperation;
+  value: string;
 };
+
 export class DrapcodeApis {
   private project_seo_name: string;
   private xApiKey: string;
@@ -70,7 +73,7 @@ export class DrapcodeApis {
     }
     return headers;
   }
-  async getAllItems(collectionName: string, query: Query) {
+  async getAllItems(collectionName: string, query: Query[]) {
     return getAllItems(
       this.getBaseUrl(),
       this.getHeaders(),

@@ -135,17 +135,19 @@ var QueryOperation;
     QueryOperation["NOT_IN_LIST"] = "NOT_IN_LIST";
 })(QueryOperation = exports.QueryOperation || (exports.QueryOperation = {}));
 var getAllItems = function (baseurl, headers, collectionName, query) { return __awaiter(void 0, void 0, void 0, function () {
-    var params, key, queryString, url, response, result, error_1;
+    var params_1, queryParams, url, response, result, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 3, , 4]);
-                params = new URLSearchParams();
-                for (key in query) {
-                    params.append(key, query[key]);
-                }
-                queryString = params.toString();
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryString);
+                params_1 = [];
+                query.forEach(function (query, index) {
+                    var conditionString = QueryOperation[query.condition];
+                    var queryString = "".concat(encodeURIComponent(query.field), "%3A").concat(conditionString, "=").concat(encodeURIComponent(query.value));
+                    params_1.push(queryString);
+                });
+                queryParams = params_1.join("&");
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat("".concat(queryParams));
                 return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
             case 1:
                 response = _a.sent();

@@ -91,22 +91,30 @@ export enum QueryOperation {
   NOT_IN_LIST = "NOT_IN_LIST",
 }
 type Query = {
-  [key: string]: string;
+  field: string;
+  condition: QueryOperation;
+  value: string;
 };
+
 export const getAllItems = async (
   baseurl: string,
   headers: Record<string, string>,
   collectionName: string,
-  query: Query
+  query: Query[]
 ) => {
   try {
-    const params = new URLSearchParams();
-    for (const key in query) {
-      params.append(key, query[key]);
-    }
-    const queryString = params.toString();
+    const params: string[] = [];
+
+    query.forEach((query, index) => {
+      const conditionString = QueryOperation[query.condition];
+      const queryString = `${encodeURIComponent(
+        query.field
+      )}%3A${conditionString}=${encodeURIComponent(query.value)}`;
+      params.push(queryString);
+    });
+    const queryParams = params.join("&");
     const url = `${baseurl}/collection/${collectionName}/items?`.concat(
-      queryString
+      `${queryParams}`
     );
 
     const response = await fetch(url, { method: "GET", headers });

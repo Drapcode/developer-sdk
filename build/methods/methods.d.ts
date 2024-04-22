@@ -11,9 +11,11 @@ export declare enum QueryOperation {
     NOT_IN_LIST = "NOT_IN_LIST"
 }
 type Query = {
-    [key: string]: string;
+    field: string;
+    condition: QueryOperation;
+    value: string;
 };
-export declare const getAllItems: (baseurl: string, headers: Record<string, string>, collectionName: string, query: Query) => Promise<{
+export declare const getAllItems: (baseurl: string, headers: Record<string, string>, collectionName: string, query: Query[]) => Promise<{
     code: any;
     success: boolean;
     data: any;
