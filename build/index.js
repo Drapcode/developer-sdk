@@ -54,11 +54,11 @@ var DrapcodeApis = /** @class */ (function () {
             case "PRODUCTION":
                 return "https://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
             case "PREVIEW":
-                return "https://".concat(this.project_seo_name, ".preview.").concat(this.API_PATH);
+                return "https://".concat(this.project_seo_name, ".api.preview.").concat(this.API_PATH);
             case "BETA":
-                return "https://".concat(this.project_seo_name, ".beta.").concat(this.API_PATH);
+                return "https://".concat(this.project_seo_name, ".api.beta.").concat(this.API_PATH);
             case "ALPHA":
-                return "https://".concat(this.project_seo_name, ".alpha.").concat(this.API_PATH);
+                return "https://".concat(this.project_seo_name, ".api.alpha.").concat(this.API_PATH);
             default:
                 return "https://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
         }
