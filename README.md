@@ -25,12 +25,12 @@ const api = new DrapcodeApis(project_seo_name, xApiKey, authorization, environme
 **environment (Optional)**: The environment (PRODUCTION, PREVIEW, BETA, ALPHA). Defaults to PRODUCTION if not provided.
 ### Example:  
 ```
-const drapcodeApi = new DrapcodeApis("singhaniya-computer-7138");
+const drapcodeApi = new DrapcodeApis("test-project-7138");
 ```
 # Methods
 
 ## getAllItems(collectionName: string)
-Retrieves all items from a specified collection.
+Retrieves all items from a specified collection. The items will come under 'data' JSON path.
 
 **collectionName:** The name of the collection to retrieve items from 
 ### Example: 
@@ -48,8 +48,8 @@ Creates a new item in the specified collection.
 ### Example: 
 ```
 await drapcodeApi.createItem("users", {
-    "name": "Pk",
-    "age": 23
+    "name": "John Doe",
+    "age": 25
 });
 ```
 Creates a new item in the "users" collection with the provided data.

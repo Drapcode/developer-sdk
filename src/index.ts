@@ -33,11 +33,11 @@ export class DrapcodeApis {
       case "PRODUCTION":
         return `https://${this.project_seo_name}.api.${this.API_PATH}`;
       case "PREVIEW":
-        return `https://${this.project_seo_name}.preview.${this.API_PATH}`;
+        return `https://${this.project_seo_name}.api.preview.${this.API_PATH}`;
       case "BETA":
-        return `https://${this.project_seo_name}.beta.${this.API_PATH}`;
+        return `https://${this.project_seo_name}.api.beta.${this.API_PATH}`;
       case "ALPHA":
-        return `https://${this.project_seo_name}.alpha.${this.API_PATH}`;
+        return `https://${this.project_seo_name}.api.alpha.${this.API_PATH}`;
       default:
         return `https://${this.project_seo_name}.api.${this.API_PATH}`;
     }
