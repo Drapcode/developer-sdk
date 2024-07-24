@@ -55,7 +55,7 @@ var makeAPICall = function (apiData) { return __awaiter(void 0, void 0, void 0, 
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                console.log("Testing");
+                console.log("API call started");
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 4, , 5]);
@@ -85,7 +85,6 @@ var makeAPICall = function (apiData) { return __awaiter(void 0, void 0, void 0, 
                 return [4 /*yield*/, fetch(url, extra)];
             case 2:
                 response = _b.sent();
-                console.log("response", response);
                 if (!(response === null || response === void 0 ? void 0 : response.ok)) {
                     return [2 /*return*/, {
                             status: response === null || response === void 0 ? void 0 : response.status,
@@ -93,6 +92,7 @@ var makeAPICall = function (apiData) { return __awaiter(void 0, void 0, void 0, 
                             message: response.statusText,
                         }];
                 }
+                console.log("API call finished");
                 _a = {
                     status: response.status,
                     error: null,
