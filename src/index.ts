@@ -132,3 +132,4 @@ export class DrapcodeApis {
     return sendEmail(this.getBaseUrl(), this.getHeaders(), templateId, sendTo);
   }
 }
+export * from "./utils/index";
