@@ -32,7 +32,7 @@ const api = new DrapcodeApis(
 ### Example:
 
 ```
-const drapcodeApi = new DrapcodeApis("test-project-7138");
+const drapcodeApi = new DrapcodeApis("test-project-7138",xApiKey, authorization, environment);
 ```
 
 # Methods
