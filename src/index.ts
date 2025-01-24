@@ -15,8 +15,9 @@ export class DrapcodeApis {
   private xApiKey: string;
   private authorization: string; //authorization
   private environment: string;
-  // private API_PATH = "drapcode.io/api/v1/developer";
-  private API_PATH = "prodeless.com:6002/api/v1/developer";
+  private API_PATH = "drapcode.io/api/v1/developer";
+  //for development
+  // private API_PATH = "prodeless.com:6002/api/v1/developer";
 
   constructor(
     project_seo_name: string,
@@ -32,15 +33,15 @@ export class DrapcodeApis {
   private getBaseUrl(): string {
     switch (this.environment) {
       case "PRODUCTION":
-        return `http://${this.project_seo_name}.api.${this.API_PATH}`;
+        return `https://${this.project_seo_name}.api.${this.API_PATH}`;
       case "PREVIEW":
-        return `http://${this.project_seo_name}.api.preview.${this.API_PATH}`;
+        return `https://${this.project_seo_name}.api.preview.${this.API_PATH}`;
       case "BETA":
         return `https://${this.project_seo_name}.api.sandbox.${this.API_PATH}`;
       case "ALPHA":
         return `https://${this.project_seo_name}.api.uat.${this.API_PATH}`;
       default:
-        return `http://${this.project_seo_name}.api.${this.API_PATH}`;
+        return `https://${this.project_seo_name}.api.${this.API_PATH}`;
     }
   }
   private getHeaders(): Record<string, string> {
