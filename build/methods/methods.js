@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -38,6 +49,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendEmail = exports.getItemsByids = exports.bulkDeleteItems = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.getItemWithUuid = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getAllItems = void 0;
 var createErrorResponse = function (error) {
+    var _a;
     if (error.response && error.response.status === 404) {
         var responseData = error.response.data;
         var finalData = void 0;
@@ -71,7 +83,7 @@ var createErrorResponse = function (error) {
     else if (error.response && error.response.status === 400) {
         var responseData = error.response;
         return {
-            code: responseData.status,
+            code: responseData === null || responseData === void 0 ? void 0 : responseData.status,
             success: false,
             data: "Please Check Your Credentials",
             error: "",
@@ -79,7 +91,7 @@ var createErrorResponse = function (error) {
         };
     }
     return {
-        code: error.response.code,
+        code: (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.code,
         success: false,
         data: "",
         error: "Please check your project name or publish again.",
@@ -87,47 +99,56 @@ var createErrorResponse = function (error) {
     };
 };
 var processResponse = function (result) {
-    console.log("result", result);
-    if (result.status === "FAILED") {
-        if (result.error) {
-            if (result.error.errStatus === 401) {
-                return {
-                    code: result.error.errStatus,
-                    success: false,
-                    error: result.error.message,
-                    message: result.error.message,
-                    data: "",
-                };
-            }
-        }
+    var _a, _b;
+    var defaultMessages = {
+        401: "Unauthorized",
+        404: "Not Found",
+        409: "Conflict",
+        500: "Internal Server Error",
+    };
+    if ((result === null || result === void 0 ? void 0 : result.status) === "FAILED") {
+        var statusCode = ((_a = result === null || result === void 0 ? void 0 : result.error) === null || _a === void 0 ? void 0 : _a.errStatus) || 400;
+        var errorMessage = ((_b = result === null || result === void 0 ? void 0 : result.error) === null || _b === void 0 ? void 0 : _b.message) || defaultMessages[statusCode] || "API Failed";
         return {
-            code: 400,
+            code: statusCode,
             success: false,
-            error: "API Failed",
-            message: "",
-            data: result,
+            error: errorMessage,
+            message: errorMessage,
+            data: "",
         };
     }
-    else {
-        if (result.code === 404) {
-            return {
-                code: result.code,
-                success: false,
-                error: result.data ? result.data : result,
-                message: result.data ? result.data : result,
-                data: "",
-            };
-        }
-        return { code: 200, success: true, error: "", message: "", data: result };
+    if ((result === null || result === void 0 ? void 0 : result.code) && (result === null || result === void 0 ? void 0 : result.code) !== 200) {
+        var errorMessage = (result === null || result === void 0 ? void 0 : result.data) || defaultMessages[result === null || result === void 0 ? void 0 : result.code] || "An error occurred";
+        return {
+            code: result.code,
+            success: false,
+            error: errorMessage,
+            message: errorMessage,
+            data: "",
+        };
     }
+    return {
+        code: 200,
+        success: true,
+        error: "",
+        message: "",
+        data: (result === null || result === void 0 ? void 0 : result.result) || result,
+        totalItems: (result === null || result === void 0 ? void 0 : result.totalItems) || 0,
+        totalPages: (result === null || result === void 0 ? void 0 : result.totalPages) || 0,
+    };
 };
-var getAllItems = function (baseurl, headers, collectionName) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_1;
+var getAllItems = function (baseurl, headers, collectionName, reqQuery) { return __awaiter(void 0, void 0, void 0, function () {
+    var queryParams, url, response, result, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 3, , 4]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items");
+                queryParams = new URLSearchParams(__assign(__assign(__assign(__assign({}, ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortField) && { sortField: reqQuery.sortField })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortOrder) && { sortOrder: reqQuery.sortOrder })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.searchTerm) && { searchTerm: reqQuery.searchTerm })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.isPagination) && {
+                    page: reqQuery.page,
+                    limit: reqQuery.limit,
+                })));
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryParams.toString());
+                console.log("Generated URL:", url, headers, "Query:", reqQuery);
                 return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
             case 1:
                 response = _a.sent();
@@ -168,11 +189,11 @@ var createItem = function (baseurl, headers, collectionName, body) { return __aw
             case 3:
                 result = _a.sent();
                 return [2 /*return*/, {
-                        code: result.code,
+                        code: result === null || result === void 0 ? void 0 : result.code,
                         success: true,
-                        data: result,
+                        data: result === null || result === void 0 ? void 0 : result.data,
                         error: "",
-                        message: "",
+                        message: result.message || "",
                     }];
             case 4: return [3 /*break*/, 6];
             case 5:
@@ -310,8 +331,8 @@ var deleteItemWithUuid = function (baseurl, headers, collectionName, itemUuid) {
             case 2:
                 result = _a.sent();
                 return [2 /*return*/, {
-                        code: result.code,
-                        success: result.code == 200 ? true : false,
+                        code: result === null || result === void 0 ? void 0 : result.code,
+                        success: (result === null || result === void 0 ? void 0 : result.code) == 200 ? true : false,
                         data: result.message,
                         error: "",
                         message: "",

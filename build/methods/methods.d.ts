@@ -1,4 +1,4 @@
-export declare const getAllItems: (baseurl: string, headers: Record<string, string>, collectionName: string) => Promise<{
+export declare const getAllItems: (baseurl: string, headers: Record<string, string>, collectionName: string, reqQuery: any) => Promise<{
     code: any;
     success: boolean;
     data: any;
@@ -10,18 +10,21 @@ export declare const getAllItems: (baseurl: string, headers: Record<string, stri
     error: any;
     message: any;
     data: string;
+    totalItems?: undefined;
+    totalPages?: undefined;
 }>;
 export declare const createItem: (baseurl: string, headers: Record<string, string>, collectionName: string, body: any) => Promise<{
-    code: any;
-    success: boolean;
-    data: any;
-    error: string;
-    message: string;
-} | {
     success: boolean;
     data: string;
     error: string;
     message: string;
+    code?: undefined;
+} | {
+    code: any;
+    success: boolean;
+    data: any;
+    error: string;
+    message: any;
 }>;
 export declare const getItemsWithFilter: (baseurl: string, headers: Record<string, string>, collectionName: string, filterUuid: string) => Promise<{
     code: any;
@@ -35,6 +38,8 @@ export declare const getItemsWithFilter: (baseurl: string, headers: Record<strin
     error: any;
     message: any;
     data: string;
+    totalItems?: undefined;
+    totalPages?: undefined;
 }>;
 export declare const getItemsCountWithFilter: (baseurl: string, headers: Record<string, string>, collectionName: string, filterUuid: string) => Promise<{
     code: any;
@@ -48,6 +53,8 @@ export declare const getItemsCountWithFilter: (baseurl: string, headers: Record<
     error: any;
     message: any;
     data: string;
+    totalItems?: undefined;
+    totalPages?: undefined;
 }>;
 export declare const getItemWithUuid: (baseurl: string, headers: Record<string, string>, collectionName: string, itemUuid: string) => Promise<{
     code: any;
@@ -61,6 +68,8 @@ export declare const getItemWithUuid: (baseurl: string, headers: Record<string, 
     error: any;
     message: any;
     data: string;
+    totalItems?: undefined;
+    totalPages?: undefined;
 }>;
 export declare const updateItemWithUuid: (baseurl: string, headers: Record<string, string>, collectionName: string, itemUuid: string, body: any) => Promise<{
     code: any;
@@ -74,6 +83,8 @@ export declare const updateItemWithUuid: (baseurl: string, headers: Record<strin
     error: any;
     message: any;
     data: string;
+    totalItems?: undefined;
+    totalPages?: undefined;
 }>;
 export declare const deleteItemWithUuid: (baseurl: string, headers: Record<string, string>, collectionName: string, itemUuid: string) => Promise<{
     code: any;
