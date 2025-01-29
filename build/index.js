@@ -164,3 +164,4 @@ var DrapcodeApis = /** @class */ (function () {
 }());
 exports.DrapcodeApis = DrapcodeApis;
 __exportStar(require("./utils/index"), exports);
+__exportStar(require("./utils/crypt"), exports);
