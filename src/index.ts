@@ -16,8 +16,6 @@ export class DrapcodeApis {
   private authorization: string; //authorization
   private environment: string;
   private API_PATH = "drapcode.io/api/v1/developer";
-  //for development
-  // private API_PATH = "prodeless.com:6002/api/v1/developer";
 
   constructor(
     project_seo_name: string,
@@ -60,8 +58,6 @@ export class DrapcodeApis {
   }
 
   async getAllItems(collectionName: string, reqQuery: any) {
-    console.log("hereis collectionName", collectionName);
-
     return getAllItems(
       this.getBaseUrl(),
       this.getHeaders(),
