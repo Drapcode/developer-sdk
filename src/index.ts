@@ -16,6 +16,8 @@ export class DrapcodeApis {
   private authorization: string; //authorization
   private environment: string;
   private API_PATH = "drapcode.io/api/v1/developer";
+  //for development
+  // private API_PATH = "prodeless.com:6002/api/v1/developer";
 
   constructor(
     project_seo_name: string,
@@ -53,11 +55,19 @@ export class DrapcodeApis {
     if (this.authorization) {
       headers["Authorization"] = this.authorization;
     }
+    console.log("hereis header", headers);
     return headers;
   }
 
-  async getAllItems(collectionName: string) {
-    return getAllItems(this.getBaseUrl(), this.getHeaders(), collectionName);
+  async getAllItems(collectionName: string, reqQuery: any) {
+    console.log("hereis collectionName", collectionName);
+
+    return getAllItems(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      collectionName,
+      reqQuery
+    );
   }
   async createItem(collectionName: string, body: any) {
     return createItem(
