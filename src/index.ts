@@ -53,11 +53,17 @@ export class DrapcodeApis {
     if (this.authorization) {
       headers["Authorization"] = this.authorization;
     }
+    console.log("hereis header", headers);
     return headers;
   }
 
-  async getAllItems(collectionName: string) {
-    return getAllItems(this.getBaseUrl(), this.getHeaders(), collectionName);
+  async getAllItems(collectionName: string, reqQuery: any) {
+    return getAllItems(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      collectionName,
+      reqQuery
+    );
   }
   async createItem(collectionName: string, body: any) {
     return createItem(
