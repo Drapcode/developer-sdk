@@ -22,9 +22,9 @@
     "url": "https://github.com/Drapcode/developer-sdk.git"
   },
   "devDependencies": {
+    "@types/node": "^22.12.0",
     "del-cli": "^5.0.0",
     "typescript": "^4.0.2"
   },
-  "dependencies": {},
   "description": ""
 }

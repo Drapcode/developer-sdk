@@ -29,7 +29,7 @@ export class DrapcodeApis {
     this.environment = environment;
   }
   private getBaseUrl(): string {
-    switch (this.environment) {
+    switch (this.environment.toUpperCase()) {
       case "PRODUCTION":
         return `https://${this.project_seo_name}.api.${this.API_PATH}`;
       case "PREVIEW":
@@ -53,11 +53,17 @@ export class DrapcodeApis {
     if (this.authorization) {
       headers["Authorization"] = this.authorization;
     }
+    console.log("here is header", headers);
     return headers;
   }
 
-  async getAllItems(collectionName: string) {
-    return getAllItems(this.getBaseUrl(), this.getHeaders(), collectionName);
+  async getAllItems(collectionName: string, reqQuery: any) {
+    return getAllItems(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      collectionName,
+      reqQuery
+    );
   }
   async createItem(collectionName: string, body: any) {
     return createItem(
@@ -133,3 +139,4 @@ export class DrapcodeApis {
   }
 }
 export * from "./utils/index";
+export * from "./utils/crypt";

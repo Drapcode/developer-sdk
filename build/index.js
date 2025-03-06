@@ -64,7 +64,7 @@ var DrapcodeApis = /** @class */ (function () {
         this.environment = environment;
     }
     DrapcodeApis.prototype.getBaseUrl = function () {
-        switch (this.environment) {
+        switch (this.environment.toUpperCase()) {
             case "PRODUCTION":
                 return "https://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
             case "PREVIEW":
@@ -88,12 +88,13 @@ var DrapcodeApis = /** @class */ (function () {
         if (this.authorization) {
             headers["Authorization"] = this.authorization;
         }
+        console.log("here is header", headers);
         return headers;
     };
-    DrapcodeApis.prototype.getAllItems = function (collectionName) {
+    DrapcodeApis.prototype.getAllItems = function (collectionName, reqQuery) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, (0, methods_1.getAllItems)(this.getBaseUrl(), this.getHeaders(), collectionName)];
+                return [2 /*return*/, (0, methods_1.getAllItems)(this.getBaseUrl(), this.getHeaders(), collectionName, reqQuery)];
             });
         });
     };
@@ -164,3 +165,4 @@ var DrapcodeApis = /** @class */ (function () {
 }());
 exports.DrapcodeApis = DrapcodeApis;
 __exportStar(require("./utils/index"), exports);
+__exportStar(require("./utils/crypt"), exports);

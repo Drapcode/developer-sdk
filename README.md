@@ -32,7 +32,7 @@ const api = new DrapcodeApis(
 ### Example:
 
 ```
-const drapcodeApi = new DrapcodeApis("test-project-7138");
+const drapcodeApi = new DrapcodeApis("test-project-7138",xApiKey, authorization, environment);
 ```
 
 # Methods
@@ -161,3 +161,28 @@ await drapcodeApi.sendEmail("345-678", "support@drapcode.com");
 Sends an email using the template ID "345-678" to the email address "support@drapcode.com".
 
 For better experience, utilize async/await syntax when using these methods.
+
+## Encryption Related
+
+We have two methods related to encryption.
+
+1. encryptData
+2. decryptData
+
+### Encrypt Data
+
+```
+await encryptData(content, publicKey)
+```
+
+**content:** Content/Text you want to encrypt.
+**publicKey:** Public key, which will be used to encrypt data.
+
+### Decrypt Data
+
+```
+await decryptData(content, publicKey)
+```
+
+**content:** Content/Text you want to decrypt.
+**publicKey:** Public key, which was used to decrypt data.
