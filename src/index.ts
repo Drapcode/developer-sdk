@@ -29,7 +29,7 @@ export class DrapcodeApis {
     this.environment = environment;
   }
   private getBaseUrl(): string {
-    switch (this.environment) {
+    switch (this.environment.toUpperCase()) {
       case "PRODUCTION":
         return `https://${this.project_seo_name}.api.${this.API_PATH}`;
       case "PREVIEW":
@@ -53,7 +53,7 @@ export class DrapcodeApis {
     if (this.authorization) {
       headers["Authorization"] = this.authorization;
     }
-    console.log("hereis header", headers);
+    console.log("here is header", headers);
     return headers;
   }
 

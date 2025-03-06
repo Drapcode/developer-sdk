@@ -64,7 +64,7 @@ var DrapcodeApis = /** @class */ (function () {
         this.environment = environment;
     }
     DrapcodeApis.prototype.getBaseUrl = function () {
-        switch (this.environment) {
+        switch (this.environment.toUpperCase()) {
             case "PRODUCTION":
                 return "https://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
             case "PREVIEW":
@@ -88,7 +88,7 @@ var DrapcodeApis = /** @class */ (function () {
         if (this.authorization) {
             headers["Authorization"] = this.authorization;
         }
-        console.log("hereis header", headers);
+        console.log("here is header", headers);
         return headers;
     };
     DrapcodeApis.prototype.getAllItems = function (collectionName, reqQuery) {
