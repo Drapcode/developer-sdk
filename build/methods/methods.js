@@ -142,10 +142,7 @@ var getAllItems = function (baseurl, headers, collectionName, reqQuery) { return
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log("baseurl :>> ", baseurl);
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 4, , 5]);
+                _a.trys.push([0, 3, , 4]);
                 queryParams = new URLSearchParams(__assign(__assign(__assign(__assign({}, ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortField) && { sortField: reqQuery.sortField })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortOrder) && { sortOrder: reqQuery.sortOrder })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.searchTerm) && { searchTerm: reqQuery.searchTerm })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.isPagination) && {
                     page: reqQuery.page,
                     limit: reqQuery.limit,
@@ -153,16 +150,16 @@ var getAllItems = function (baseurl, headers, collectionName, reqQuery) { return
                 url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryParams.toString());
                 console.log("Generated URL:", url, headers, "Query:", reqQuery);
                 return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
-            case 2:
+            case 1:
                 response = _a.sent();
                 return [4 /*yield*/, response.json()];
-            case 3:
+            case 2:
                 result = _a.sent();
                 return [2 /*return*/, processResponse(result)];
-            case 4:
+            case 3:
                 error_1 = _a.sent();
                 return [2 /*return*/, createErrorResponse(error_1)];
-            case 5: return [2 /*return*/];
+            case 4: return [2 /*return*/];
         }
     });
 }); };
