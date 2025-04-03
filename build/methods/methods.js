@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -47,7 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendEmail = exports.getItemsByids = exports.bulkDeleteItems = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.getItemWithUuid = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getAllItems = exports.QueryOperation = void 0;
+exports.sendEmail = exports.getItemsByids = exports.bulkDeleteItems = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.getItemWithUuid = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getAllItems = void 0;
+var constants_1 = require("../utils/constants");
 var createErrorResponse = function (error) {
     var _a;
     if (error.response && error.response.status === 404) {
@@ -127,43 +117,44 @@ var processResponse = function (result) {
             data: "",
         };
     }
+    return {
+        code: 200,
+        success: true,
+        error: "",
+        message: "",
+        data: (result === null || result === void 0 ? void 0 : result.result) || result,
+        totalItems: (result === null || result === void 0 ? void 0 : result.totalItems) || 0,
+        totalPages: (result === null || result === void 0 ? void 0 : result.totalPages) || 0,
+    };
 };
-var QueryOperation;
-(function (QueryOperation) {
-    QueryOperation["EQUALS"] = "EQUALS";
-    QueryOperation["IS_NOT_NULL"] = "IS_NOT_NULL";
-    QueryOperation["IS_NULL"] = "IS_NULL";
-    QueryOperation["LIKE"] = "LIKE";
-    QueryOperation["LESS_THAN_EQUALS_TO"] = "LESS_THAN_EQUALS_TO";
-    QueryOperation["GREATER_THAN_EQUALS_TO"] = "GREATER_THAN_EQUALS_TO";
-    QueryOperation["LESS_THAN"] = "LESS_THAN";
-    QueryOperation["GREATER_THAN"] = "GREATER_THAN";
-    QueryOperation["IN_LIST"] = "IN_LIST";
-    QueryOperation["NOT_IN_LIST"] = "NOT_IN_LIST";
-})(QueryOperation = exports.QueryOperation || (exports.QueryOperation = {}));
-var getAllItems = function (baseurl, headers, collectionName, query) { return __awaiter(void 0, void 0, void 0, function () {
-    var params_1, queryParams, url, response, result, error_1;
+var getAllItems = function (baseurl, headers, collectionName, reqQuery, query) { return __awaiter(void 0, void 0, void 0, function () {
+    var queryParams_1, url, response, result, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 3, , 4]);
-                params_1 = [];
-                query.forEach(function (query, index) {
-                    var conditionString = QueryOperation[query.condition];
-                    var queryString = "".concat(encodeURIComponent(query.field), "%3A").concat(conditionString, "=").concat(encodeURIComponent(query.value));
-                    params_1.push(queryString);
+                queryParams_1 = new URLSearchParams();
+                console.log("headers :>> ", headers);
+                console.log("query :>> ", query);
+                console.log("reqQuery :>> ", reqQuery);
+                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortField)
+                    queryParams_1.append("sortField", reqQuery.sortField);
+                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortOrder)
+                    queryParams_1.append("sortOrder", reqQuery.sortOrder);
+                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.searchTerm)
+                    queryParams_1.append("searchTerm", reqQuery.searchTerm);
+                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.isPagination) {
+                    queryParams_1.append("page", reqQuery.page);
+                    queryParams_1.append("limit", reqQuery.limit);
+                }
+                query.map(function (query) {
+                    var conditionString = constants_1.QueryOperation[query.condition];
+                    var field = encodeURIComponent(query.field);
+                    var value = encodeURIComponent(query.value);
+                    queryParams_1.append("".concat(field, "%3A").concat(conditionString), "".concat(value));
                 });
-                queryParams = params_1.join("&");
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat("".concat(queryParams));
-                return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
-            case 1:
-                _a.trys.push([1, 4, , 5]);
-                queryParams = new URLSearchParams(__assign(__assign(__assign(__assign({}, ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortField) && { sortField: reqQuery.sortField })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortOrder) && { sortOrder: reqQuery.sortOrder })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.searchTerm) && { searchTerm: reqQuery.searchTerm })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.isPagination) && {
-                    page: reqQuery.page,
-                    limit: reqQuery.limit,
-                })));
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryParams.toString());
-                console.log("Generated URL:", url, headers, "Query:", reqQuery);
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryParams_1.toString());
+                console.log("Generated URL:", url);
                 return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
             case 1:
                 response = _a.sent();

@@ -50,21 +50,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DrapcodeApis = exports.QueryOperation = void 0;
+exports.DrapcodeApis = void 0;
 var methods_1 = require("./methods/methods");
-var QueryOperation;
-(function (QueryOperation) {
-    QueryOperation["EQUALS"] = "EQUALS";
-    QueryOperation["IS_NOT_NULL"] = "IS_NOT_NULL";
-    QueryOperation["IS_NULL"] = "IS_NULL";
-    QueryOperation["LIKE"] = "LIKE";
-    QueryOperation["LESS_THAN_EQUALS_TO"] = "LESS_THAN_EQUALS_TO";
-    QueryOperation["GREATER_THAN_EQUALS_TO"] = "GREATER_THAN_EQUALS_TO";
-    QueryOperation["LESS_THAN"] = "LESS_THAN";
-    QueryOperation["GREATER_THAN"] = "GREATER_THAN";
-    QueryOperation["IN_LIST"] = "IN_LIST";
-    QueryOperation["NOT_IN_LIST"] = "NOT_IN_LIST";
-})(QueryOperation = exports.QueryOperation || (exports.QueryOperation = {}));
 var DrapcodeApis = /** @class */ (function () {
     function DrapcodeApis(project_seo_name, xApiKey, authorization, environment) {
         if (xApiKey === void 0) { xApiKey = ""; }
@@ -104,10 +91,12 @@ var DrapcodeApis = /** @class */ (function () {
         console.log("here is header", headers);
         return headers;
     };
-    DrapcodeApis.prototype.getAllItems = function (collectionName, query) {
+    DrapcodeApis.prototype.getAllItems = function (collectionName, reqQuery, query) {
+        if (reqQuery === void 0) { reqQuery = null; }
+        if (query === void 0) { query = []; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, (0, methods_1.getAllItems)(this.getBaseUrl(), this.getHeaders(), collectionName, query)];
+                return [2 /*return*/, (0, methods_1.getAllItems)(this.getBaseUrl(), this.getHeaders(), collectionName, reqQuery, query)];
             });
         });
     };
