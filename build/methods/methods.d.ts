@@ -1,4 +1,21 @@
-export declare const getAllItems: (baseurl: string, headers: Record<string, string>, collectionName: string, reqQuery: any) => Promise<{
+export declare enum QueryOperation {
+    EQUALS = "EQUALS",
+    IS_NOT_NULL = "IS_NOT_NULL",
+    IS_NULL = "IS_NULL",
+    LIKE = "LIKE",
+    LESS_THAN_EQUALS_TO = "LESS_THAN_EQUALS_TO",
+    GREATER_THAN_EQUALS_TO = "GREATER_THAN_EQUALS_TO",
+    LESS_THAN = "LESS_THAN",
+    GREATER_THAN = "GREATER_THAN",
+    IN_LIST = "IN_LIST",
+    NOT_IN_LIST = "NOT_IN_LIST"
+}
+type Query = {
+    field: string;
+    condition: QueryOperation;
+    value: string;
+};
+export declare const getAllItems: (baseurl: string, headers: Record<string, string>, collectionName: string, query: Query[]) => Promise<{
     code: any;
     success: boolean;
     data: any;
@@ -129,6 +146,7 @@ export declare const sendEmail: (baseurl: string, headers: Record<string, string
     error: string;
     message: string;
 }>;
+export {};
 /**
  * {
  * code,

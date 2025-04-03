@@ -51,6 +51,54 @@ const items = await drapcodeApi.getAllItems("users");
 
 Retrieves items from the "users" collection.
 
+## Pagination and Search
+
+### getAllItems(collectionName: string, reqQuery: SearchPaginate, query: Query[])
+
+Retrieves all items from a specified collection. The items will come under 'data' JSON path.
+
+**collectionName:** The name of the collection to retrieve items from. Required
+**reqQuery:** Search and Pagination options. Optional, must pass null, in case of query
+
+```
+  sortField:"",
+  sortOrder:"",
+  searchTerm:"",
+  isPagination: true|false
+  page: 1, //Greater than 0 and isPagination must be true
+  limit: 1 //Greater than 0 and isPagination must be true
+```
+
+**query**: Filter on basis of query. Optional
+
+```
+{
+  field: field_name
+  condition: QueryCondition
+  value: value
+}
+```
+
+```
+//QueryCondition
+EQUALS, IS_NOT_NULL, IS_NULL, LIKE, LESS_THAN_EQUALS_TO, GREATER_THAN_EQUALS_TO, LESS_THAN, GREATER_THAN, IN_LIST, NOT_IN_LIST
+```
+
+### Example
+
+```
+// 1
+const reqQuery = {isPaginate: true, page:1, limit: 100}
+const items = await drapcodeApi.getAllItems("users", reqQuery);
+// 2
+const query = {field: "userName", condition: QueryCondition.EQUALS, value: "test@test.com}
+const items = await drapcodeApi.getAllItems("users", null, query);
+// 3
+const query = {field: "userName", condition: QueryCondition.EQUALS, value: "test@test.com}
+const items = await drapcodeApi.getAllItems("users", reqQuery, query);
+
+```
+
 ## createItem(collectionName: string, body: JSON)
 
 Creates a new item in the specified collection.

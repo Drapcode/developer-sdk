@@ -1,3 +1,5 @@
+import { Query, QueryOperation, SearchPaginate } from "../utils/constants";
+
 const createErrorResponse = (error: any) => {
   if (error.response && error.response.status === 404) {
     const responseData = error.response.data;
@@ -94,20 +96,36 @@ export const getAllItems = async (
   baseurl: string,
   headers: Record<string, string>,
   collectionName: string,
-  reqQuery: any
+  reqQuery: SearchPaginate,
+  query: Query[]
 ) => {
   try {
-    const queryParams = new URLSearchParams({
-      ...(reqQuery?.sortField && { sortField: reqQuery.sortField }),
-      ...(reqQuery?.sortOrder && { sortOrder: reqQuery.sortOrder }),
-      ...(reqQuery?.searchTerm && { searchTerm: reqQuery.searchTerm }),
-      ...(reqQuery?.isPagination && {
-        page: reqQuery.page,
-        limit: reqQuery.limit,
-      }),
+    const queryParams = new URLSearchParams();
+    console.log("headers :>> ", headers);
+    console.log("query :>> ", query);
+    console.log("reqQuery :>> ", reqQuery);
+
+    if (reqQuery?.sortField)
+      queryParams.append("sortField", reqQuery.sortField);
+    if (reqQuery?.sortOrder)
+      queryParams.append("sortOrder", reqQuery.sortOrder);
+    if (reqQuery?.searchTerm)
+      queryParams.append("searchTerm", reqQuery.searchTerm);
+    if (reqQuery?.isPagination) {
+      queryParams.append("page", reqQuery.page);
+      queryParams.append("limit", reqQuery.limit);
+    }
+
+    query.map((query) => {
+      const conditionString = QueryOperation[query.condition];
+      const field = encodeURIComponent(query.field);
+      const value = encodeURIComponent(query.value);
+      queryParams.append(`${field}%3A${conditionString}`, `${value}`);
     });
+
     const url = `${baseurl}/collection/${collectionName}/items?${queryParams.toString()}`;
-    console.log("Generated URL:", url, headers, "Query:", reqQuery);
+    console.log("Generated URL:", url);
+
     const response = await fetch(url, { method: "GET", headers });
     const result = await response.json();
     return processResponse(result);
