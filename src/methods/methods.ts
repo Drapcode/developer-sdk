@@ -115,16 +115,12 @@ export const getAllItems = async (
       queryParams.append("page", reqQuery.page);
       queryParams.append("limit", reqQuery.limit);
     }
-    console.log("queryParams :>> ", queryParams);
-    console.log("*** 1");
     query.map((query) => {
       const conditionString = QueryOperation[query.condition];
       const field = encodeURIComponent(query.field);
       const value = encodeURIComponent(query.value);
       queryParams.append(`${field}%3A${conditionString}`, `${value}`);
     });
-    console.log("queryParams :>> ", queryParams);
-    console.log("*** 2");
     const url = `${baseurl}/collection/${collectionName}/items?${queryParams.toString()}`;
     console.log("Generated URL:", url);
 
