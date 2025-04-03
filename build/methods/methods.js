@@ -47,7 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendEmail = exports.getItemsByids = exports.bulkDeleteItems = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.getItemWithUuid = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getAllItems = void 0;
+exports.sendEmail = exports.getItemsByids = exports.bulkDeleteItems = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.getItemWithUuid = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getAllItems = exports.QueryOperation = void 0;
 var createErrorResponse = function (error) {
     var _a;
     if (error.response && error.response.status === 404) {
@@ -127,23 +127,35 @@ var processResponse = function (result) {
             data: "",
         };
     }
-    return {
-        code: 200,
-        success: true,
-        error: "",
-        message: "",
-        data: (result === null || result === void 0 ? void 0 : result.result) || result,
-        totalItems: (result === null || result === void 0 ? void 0 : result.totalItems) || 0,
-        totalPages: (result === null || result === void 0 ? void 0 : result.totalPages) || 0,
-    };
 };
-var getAllItems = function (baseurl, headers, collectionName, reqQuery) { return __awaiter(void 0, void 0, void 0, function () {
-    var queryParams, url, response, result, error_1;
+var QueryOperation;
+(function (QueryOperation) {
+    QueryOperation["EQUALS"] = "EQUALS";
+    QueryOperation["IS_NOT_NULL"] = "IS_NOT_NULL";
+    QueryOperation["IS_NULL"] = "IS_NULL";
+    QueryOperation["LIKE"] = "LIKE";
+    QueryOperation["LESS_THAN_EQUALS_TO"] = "LESS_THAN_EQUALS_TO";
+    QueryOperation["GREATER_THAN_EQUALS_TO"] = "GREATER_THAN_EQUALS_TO";
+    QueryOperation["LESS_THAN"] = "LESS_THAN";
+    QueryOperation["GREATER_THAN"] = "GREATER_THAN";
+    QueryOperation["IN_LIST"] = "IN_LIST";
+    QueryOperation["NOT_IN_LIST"] = "NOT_IN_LIST";
+})(QueryOperation = exports.QueryOperation || (exports.QueryOperation = {}));
+var getAllItems = function (baseurl, headers, collectionName, query) { return __awaiter(void 0, void 0, void 0, function () {
+    var params_1, queryParams, url, response, result, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log("baseurl :>> ", baseurl);
-                _a.label = 1;
+                _a.trys.push([0, 3, , 4]);
+                params_1 = [];
+                query.forEach(function (query, index) {
+                    var conditionString = QueryOperation[query.condition];
+                    var queryString = "".concat(encodeURIComponent(query.field), "%3A").concat(conditionString, "=").concat(encodeURIComponent(query.value));
+                    params_1.push(queryString);
+                });
+                queryParams = params_1.join("&");
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat("".concat(queryParams));
+                return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
             case 1:
                 _a.trys.push([1, 4, , 5]);
                 queryParams = new URLSearchParams(__assign(__assign(__assign(__assign({}, ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortField) && { sortField: reqQuery.sortField })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortOrder) && { sortOrder: reqQuery.sortOrder })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.searchTerm) && { searchTerm: reqQuery.searchTerm })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.isPagination) && {

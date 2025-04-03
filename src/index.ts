@@ -10,6 +10,8 @@ import {
   sendEmail,
   updateItemWithUuid,
 } from "./methods/methods";
+import { Query, QueryOperation, SearchPaginate } from "./utils/constants";
+
 export class DrapcodeApis {
   private project_seo_name: string;
   private xApiKey: string;
@@ -56,13 +58,17 @@ export class DrapcodeApis {
     console.log("here is header", headers);
     return headers;
   }
-
-  async getAllItems(collectionName: string, reqQuery: any) {
+  async getAllItems(
+    collectionName: string,
+    reqQuery: SearchPaginate | any = null,
+    query: Query[] | [] = []
+  ) {
     return getAllItems(
       this.getBaseUrl(),
       this.getHeaders(),
       collectionName,
-      reqQuery
+      reqQuery,
+      query
     );
   }
   async createItem(collectionName: string, body: any) {
