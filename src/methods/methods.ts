@@ -1,3 +1,5 @@
+import { Query, QueryOperation, SearchPaginate } from "../utils/constants";
+
 const createErrorResponse = (error: any) => {
   if (error.response && error.response.status === 404) {
     const responseData = error.response.data;
@@ -89,57 +91,40 @@ const processResponse = (result: any) => {
     totalPages: result?.totalPages || 0,
   };
 };
-export enum QueryOperation {
-  EQUALS = "EQUALS",
-  IS_NOT_NULL = "IS_NOT_NULL",
-  IS_NULL = "IS_NULL",
-  LIKE = "LIKE",
-  LESS_THAN_EQUALS_TO = "LESS_THAN_EQUALS_TO",
-  GREATER_THAN_EQUALS_TO = "GREATER_THAN_EQUALS_TO",
-  LESS_THAN = "LESS_THAN",
-  GREATER_THAN = "GREATER_THAN",
-  IN_LIST = "IN_LIST",
-  NOT_IN_LIST = "NOT_IN_LIST",
-}
-type Query = {
-  field: string;
-  condition: QueryOperation;
-  value: string;
-};
 
 export const getAllItems = async (
   baseurl: string,
   headers: Record<string, string>,
   collectionName: string,
+  reqQuery: SearchPaginate,
   query: Query[]
 ) => {
   try {
-  /**
-   * const queryParams = new URLSearchParams({
-      ...(reqQuery?.sortField && { sortField: reqQuery.sortField }),
-      ...(reqQuery?.sortOrder && { sortOrder: reqQuery.sortOrder }),
-      ...(reqQuery?.searchTerm && { searchTerm: reqQuery.searchTerm }),
-      ...(reqQuery?.isPagination && {
-        page: reqQuery.page,
-        limit: reqQuery.limit,
-      }),
-    });
-    const url = `${baseurl}/collection/${collectionName}/items?${queryParams.toString()}`;
-    console.log("Generated URL:", url, headers, "Query:", reqQuery);
-    */
-    const params: string[] = [];
+    const queryParams = new URLSearchParams();
+    console.log("headers :>> ", headers);
+    console.log("query :>> ", query);
+    console.log("reqQuery :>> ", reqQuery);
 
-    query.forEach((query, index) => {
+    if (reqQuery?.sortField)
+      queryParams.append("sortField", reqQuery.sortField);
+    if (reqQuery?.sortOrder)
+      queryParams.append("sortOrder", reqQuery.sortOrder);
+    if (reqQuery?.searchTerm)
+      queryParams.append("searchTerm", reqQuery.searchTerm);
+    if (reqQuery?.isPagination) {
+      queryParams.append("page", reqQuery.page);
+      queryParams.append("limit", reqQuery.limit);
+    }
+
+    query.map((query) => {
       const conditionString = QueryOperation[query.condition];
-      const queryString = `${encodeURIComponent(
-        query.field
-      )}%3A${conditionString}=${encodeURIComponent(query.value)}`;
-      params.push(queryString);
+      const field = encodeURIComponent(query.field);
+      const value = encodeURIComponent(query.value);
+      queryParams.append(`${field}%3A${conditionString}`, `${value}`);
     });
-    const queryParams = params.join("&");
-    const url = `${baseurl}/collection/${collectionName}/items?`.concat(
-      `${queryParams}`
-    );
+
+    const url = `${baseurl}/collection/${collectionName}/items?${queryParams.toString()}`;
+    console.log("Generated URL:", url);
 
     const response = await fetch(url, { method: "GET", headers });
     const result = await response.json();

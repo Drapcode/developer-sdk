@@ -10,23 +10,7 @@ import {
   sendEmail,
   updateItemWithUuid,
 } from "./methods/methods";
-export enum QueryOperation {
-  EQUALS = "EQUALS",
-  IS_NOT_NULL = "IS_NOT_NULL",
-  IS_NULL = "IS_NULL",
-  LIKE = "LIKE",
-  LESS_THAN_EQUALS_TO = "LESS_THAN_EQUALS_TO",
-  GREATER_THAN_EQUALS_TO = "GREATER_THAN_EQUALS_TO",
-  LESS_THAN = "LESS_THAN",
-  GREATER_THAN = "GREATER_THAN",
-  IN_LIST = "IN_LIST",
-  NOT_IN_LIST = "NOT_IN_LIST",
-}
-type Query = {
-  field: string;
-  condition: QueryOperation;
-  value: string;
-};
+import { Query, QueryOperation, SearchPaginate } from "./utils/constants";
 
 export class DrapcodeApis {
   private project_seo_name: string;
@@ -74,11 +58,16 @@ export class DrapcodeApis {
     console.log("here is header", headers);
     return headers;
   }
-  async getAllItems(collectionName: string, query: Query[]) {
+  async getAllItems(
+    collectionName: string,
+    reqQuery: SearchPaginate | any = null,
+    query: Query[] | [] = []
+  ) {
     return getAllItems(
       this.getBaseUrl(),
       this.getHeaders(),
       collectionName,
+      reqQuery,
       query
     );
   }
