@@ -81,7 +81,16 @@ Retrieves all items from a specified collection. The items will come under 'data
 
 ```
 //QueryCondition
-EQUALS, IS_NOT_NULL, IS_NULL, LIKE, LESS_THAN_EQUALS_TO, GREATER_THAN_EQUALS_TO, LESS_THAN, GREATER_THAN, IN_LIST, NOT_IN_LIST
+EQUALS,
+IS_NOT_NULL,
+IS_NULL,
+LIKE,
+LESS_THAN_EQUALS_TO,
+GREATER_THAN_EQUALS_TO,
+LESS_THAN,
+GREATER_THAN,
+IN_LIST,
+NOT_IN_LIST
 ```
 
 ### Example
@@ -91,11 +100,11 @@ EQUALS, IS_NOT_NULL, IS_NULL, LIKE, LESS_THAN_EQUALS_TO, GREATER_THAN_EQUALS_TO,
 const reqQuery = {isPaginate: true, page:1, limit: 100}
 const items = await drapcodeApi.getAllItems("users", reqQuery);
 // 2
-const query = {field: "userName", condition: QueryCondition.EQUALS, value: "test@test.com}
-const items = await drapcodeApi.getAllItems("users", null, query);
+const query = {field: "userName", condition: "EQUALS", value: "test@test.com"}
+const queries = [query]
+const items = await drapcodeApi.getAllItems("users", null, queries);
 // 3
-const query = {field: "userName", condition: QueryCondition.EQUALS, value: "test@test.com}
-const items = await drapcodeApi.getAllItems("users", reqQuery, query);
+const items = await drapcodeApi.getAllItems("users", reqQuery, queries);
 
 ```
 
