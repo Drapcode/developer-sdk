@@ -47,15 +47,15 @@ export class DrapcodeApis {
     this.environment = environment;
   }
   private getBaseUrl(): string {
-    switch (this.environment) {
+    switch (this.environment.toUpperCase()) {
       case "PRODUCTION":
         return `https://${this.project_seo_name}.api.${this.API_PATH}`;
       case "PREVIEW":
-        return `https://${this.project_seo_name}.preview.${this.API_PATH}`;
+        return `https://${this.project_seo_name}.api.preview.${this.API_PATH}`;
       case "BETA":
-        return `https://${this.project_seo_name}.beta.${this.API_PATH}`;
+        return `https://${this.project_seo_name}.api.sandbox.${this.API_PATH}`;
       case "ALPHA":
-        return `https://${this.project_seo_name}.alpha.${this.API_PATH}`;
+        return `https://${this.project_seo_name}.api.uat.${this.API_PATH}`;
       default:
         return `https://${this.project_seo_name}.api.${this.API_PATH}`;
     }
@@ -71,6 +71,7 @@ export class DrapcodeApis {
     if (this.authorization) {
       headers["Authorization"] = this.authorization;
     }
+    console.log("here is header", headers);
     return headers;
   }
   async getAllItems(collectionName: string, query: Query[]) {
@@ -154,3 +155,5 @@ export class DrapcodeApis {
     return sendEmail(this.getBaseUrl(), this.getHeaders(), templateId, sendTo);
   }
 }
+export * from "./utils/index";
+export * from "./utils/crypt";

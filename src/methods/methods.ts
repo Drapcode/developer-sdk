@@ -28,7 +28,7 @@ const createErrorResponse = (error: any) => {
   } else if (error.response && error.response.status === 400) {
     const responseData = error.response;
     return {
-      code: responseData.status,
+      code: responseData?.status,
       success: false,
       data: "Please Check Your Credentials",
       error: "",
@@ -36,7 +36,7 @@ const createErrorResponse = (error: any) => {
     };
   }
   return {
-    code: error.response.code,
+    code: error?.response?.code,
     success: false,
     data: "",
     error: "Please check your project name or publish again.",
@@ -45,38 +45,49 @@ const createErrorResponse = (error: any) => {
 };
 
 const processResponse = (result: any) => {
-  console.log("result", result);
-  if (result.status === "FAILED") {
-    if (result.error) {
-      if (result.error.errStatus === 401) {
-        return {
-          code: result.error.errStatus,
-          success: false,
-          error: result.error.message,
-          message: result.error.message,
-          data: "",
-        };
-      }
-    }
+  const defaultMessages: Record<number, string> = {
+    401: "Unauthorized",
+    404: "Not Found",
+    409: "Conflict",
+    500: "Internal Server Error",
+  };
+
+  if (result?.status === "FAILED") {
+    const statusCode = result?.error?.errStatus || 400;
+    const errorMessage =
+      result?.error?.message || defaultMessages[statusCode] || "API Failed";
+
     return {
-      code: 400,
+      code: statusCode,
       success: false,
-      error: "API Failed",
-      message: "",
-      data: result,
+      error: errorMessage,
+      message: errorMessage,
+      data: "",
     };
-  } else {
-    if (result.code === 404) {
-      return {
-        code: result.code,
-        success: false,
-        error: result.data ? result.data : result,
-        message: result.data ? result.data : result,
-        data: "",
-      };
-    }
-    return { code: 200, success: true, error: "", message: "", data: result };
   }
+
+  if (result?.code && result?.code !== 200) {
+    const errorMessage =
+      result?.data || defaultMessages[result?.code] || "An error occurred";
+
+    return {
+      code: result.code,
+      success: false,
+      error: errorMessage,
+      message: errorMessage,
+      data: "",
+    };
+  }
+
+  return {
+    code: 200,
+    success: true,
+    error: "",
+    message: "",
+    data: result?.result || result,
+    totalItems: result?.totalItems || 0,
+    totalPages: result?.totalPages || 0,
+  };
 };
 export enum QueryOperation {
   EQUALS = "EQUALS",
@@ -103,6 +114,19 @@ export const getAllItems = async (
   query: Query[]
 ) => {
   try {
+  /**
+   * const queryParams = new URLSearchParams({
+      ...(reqQuery?.sortField && { sortField: reqQuery.sortField }),
+      ...(reqQuery?.sortOrder && { sortOrder: reqQuery.sortOrder }),
+      ...(reqQuery?.searchTerm && { searchTerm: reqQuery.searchTerm }),
+      ...(reqQuery?.isPagination && {
+        page: reqQuery.page,
+        limit: reqQuery.limit,
+      }),
+    });
+    const url = `${baseurl}/collection/${collectionName}/items?${queryParams.toString()}`;
+    console.log("Generated URL:", url, headers, "Query:", reqQuery);
+    */
     const params: string[] = [];
 
     query.forEach((query, index) => {
@@ -148,11 +172,11 @@ export const createItem = async (
     } else {
       const result = await response.json();
       return {
-        code: result.code,
+        code: result?.code,
         success: true,
-        data: result,
+        data: result?.data,
         error: "",
-        message: "",
+        message: result.message || "",
       };
     }
   } catch (error: any) {
@@ -263,8 +287,8 @@ export const deleteItemWithUuid = async (
     });
     const result = await response.json();
     return {
-      code: result.code,
-      success: result.code == 200 ? true : false,
+      code: result?.code,
+      success: result?.code == 200 ? true : false,
       data: result.message,
       error: "",
       message: "",

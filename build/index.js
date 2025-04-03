@@ -1,4 +1,18 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -63,15 +77,15 @@ var DrapcodeApis = /** @class */ (function () {
         this.environment = environment;
     }
     DrapcodeApis.prototype.getBaseUrl = function () {
-        switch (this.environment) {
+        switch (this.environment.toUpperCase()) {
             case "PRODUCTION":
                 return "https://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
             case "PREVIEW":
-                return "https://".concat(this.project_seo_name, ".preview.").concat(this.API_PATH);
+                return "https://".concat(this.project_seo_name, ".api.preview.").concat(this.API_PATH);
             case "BETA":
-                return "https://".concat(this.project_seo_name, ".beta.").concat(this.API_PATH);
+                return "https://".concat(this.project_seo_name, ".api.sandbox.").concat(this.API_PATH);
             case "ALPHA":
-                return "https://".concat(this.project_seo_name, ".alpha.").concat(this.API_PATH);
+                return "https://".concat(this.project_seo_name, ".api.uat.").concat(this.API_PATH);
             default:
                 return "https://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
         }
@@ -87,6 +101,7 @@ var DrapcodeApis = /** @class */ (function () {
         if (this.authorization) {
             headers["Authorization"] = this.authorization;
         }
+        console.log("here is header", headers);
         return headers;
     };
     DrapcodeApis.prototype.getAllItems = function (collectionName, query) {
@@ -162,3 +177,5 @@ var DrapcodeApis = /** @class */ (function () {
     return DrapcodeApis;
 }());
 exports.DrapcodeApis = DrapcodeApis;
+__exportStar(require("./utils/index"), exports);
+__exportStar(require("./utils/crypt"), exports);
