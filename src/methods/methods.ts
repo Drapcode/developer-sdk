@@ -120,7 +120,7 @@ export const getAllItems = async (
       const conditionString = QueryOperation[query.condition];
       const field = encodeURIComponent(query.field);
       const value = encodeURIComponent(query.value);
-      queryParams.append(`${field}%3A${conditionString}`, `${value}`);
+      queryParams.append(`${field}:${conditionString}`, `${value}`);
     });
 
     const url = `${baseurl}/collection/${collectionName}/items?${queryParams.toString()}`;
