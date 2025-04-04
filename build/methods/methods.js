@@ -151,7 +151,7 @@ var getAllItems = function (baseurl, headers, collectionName, reqQuery, query) {
                     var conditionString = constants_1.QueryOperation[query.condition];
                     var field = encodeURIComponent(query.field);
                     var value = encodeURIComponent(query.value);
-                    queryParams_1.append("".concat(field, "%3A").concat(conditionString), "".concat(value));
+                    queryParams_1.append("".concat(field, ":").concat(conditionString), "".concat(value));
                 });
                 url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryParams_1.toString());
                 console.log("Generated URL:", url);
