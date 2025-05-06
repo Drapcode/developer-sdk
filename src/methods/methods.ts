@@ -118,8 +118,11 @@ export const getAllItems = async (
 
     query.map((query) => {
       const conditionString = QueryOperation[query.condition];
-      const field = encodeURIComponent(query.field);
-      const value = encodeURIComponent(query.value);
+      const field = `${query.field}`;
+      const value = `${query.value}`;
+      // double encoding the query params(remove after testing)
+      // const field = encodeURIComponent(query.field);
+      // const value = encodeURIComponent(query.value);
       queryParams.append(`${field}:${conditionString}`, `${value}`);
     });
 
