@@ -176,8 +176,9 @@ var createItem = function (baseurl, headers, collectionName, body) { return __aw
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 5, , 6]);
+                _a.trys.push([0, 3, , 4]);
                 url = "".concat(baseurl, "/collection/").concat(collectionName, "/items");
+                console.log("url :>> ", url);
                 return [4 /*yield*/, fetch(url, {
                         method: "POST",
                         headers: headers,
@@ -185,16 +186,19 @@ var createItem = function (baseurl, headers, collectionName, body) { return __aw
                     })];
             case 1:
                 response = _a.sent();
-                if (!(response.status && response.status === 404)) return [3 /*break*/, 2];
-                return [2 /*return*/, {
-                        success: false,
-                        data: "Collection Not Found",
-                        error: "",
-                        message: "",
-                    }];
-            case 2: return [4 /*yield*/, response.json()];
-            case 3:
+                console.log("response.status :>> ", response.status);
+                if (response.status && response.status === 404) {
+                    return [2 /*return*/, {
+                            success: false,
+                            data: "Collection Not Found",
+                            error: "",
+                            message: "",
+                        }];
+                }
+                return [4 /*yield*/, response.json()];
+            case 2:
                 result = _a.sent();
+                console.log("result :>> ", result);
                 return [2 /*return*/, {
                         code: result === null || result === void 0 ? void 0 : result.code,
                         success: true,
@@ -202,11 +206,10 @@ var createItem = function (baseurl, headers, collectionName, body) { return __aw
                         error: "",
                         message: result.message || "",
                     }];
-            case 4: return [3 /*break*/, 6];
-            case 5:
+            case 3:
                 error_2 = _a.sent();
                 return [2 /*return*/, createErrorResponse(error_2)];
-            case 6: return [2 /*return*/];
+            case 4: return [2 /*return*/];
         }
     });
 }); };
