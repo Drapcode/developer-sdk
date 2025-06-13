@@ -141,11 +141,13 @@ export const createItem = async (
 ) => {
   try {
     const url = `${baseurl}/collection/${collectionName}/items`;
+    console.log("url :>> ", url);
     const response = await fetch(url, {
       method: "POST",
       headers,
       body: JSON.stringify(body),
     });
+    console.log("response.status :>> ", response.status);
     if (response.status && response.status === 404) {
       return {
         success: false,
@@ -153,16 +155,16 @@ export const createItem = async (
         error: "",
         message: "",
       };
-    } else {
-      const result = await response.json();
-      return {
-        code: result?.code,
-        success: true,
-        data: result?.data,
-        error: "",
-        message: result.message || "",
-      };
     }
+    const result = await response.json();
+    console.log("result :>> ", result);
+    return {
+      code: result?.code,
+      success: true,
+      data: result?.data,
+      error: "",
+      message: result.message || "",
+    };
   } catch (error: any) {
     return createErrorResponse(error);
   }
