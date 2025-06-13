@@ -15,18 +15,17 @@ export declare const getAllItems: (baseurl: string, headers: Record<string, stri
     totalPages?: undefined;
 }>;
 export declare const createItem: (baseurl: string, headers: Record<string, string>, collectionName: string, body: any) => Promise<{
-    success: boolean;
-    data: string;
-    error: string;
-    message: string;
-    code?: undefined;
-} | {
     code: any;
     success: boolean;
     data: any;
     error: string;
-    message: any;
-}>;
+    message: string;
+} | {
+    success: boolean;
+    data: string;
+    error: string;
+    message: string;
+} | undefined>;
 export declare const getItemsWithFilter: (baseurl: string, headers: Record<string, string>, collectionName: string, filterUuid: string) => Promise<{
     code: any;
     success: boolean;

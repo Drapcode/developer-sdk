@@ -176,7 +176,7 @@ var createItem = function (baseurl, headers, collectionName, body) { return __aw
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
+                _a.trys.push([0, 4, , 5]);
                 url = "".concat(baseurl, "/collection/").concat(collectionName, "/items");
                 console.log("url :>> ", url);
                 return [4 /*yield*/, fetch(url, {
@@ -195,21 +195,24 @@ var createItem = function (baseurl, headers, collectionName, body) { return __aw
                             message: "",
                         }];
                 }
+                if (!(response.status &&
+                    (response.status === 200 || response.status === 201))) return [3 /*break*/, 3];
                 return [4 /*yield*/, response.json()];
             case 2:
                 result = _a.sent();
                 console.log("result :>> ", result);
                 return [2 /*return*/, {
-                        code: result === null || result === void 0 ? void 0 : result.code,
+                        code: response.status,
                         success: true,
-                        data: result === null || result === void 0 ? void 0 : result.data,
+                        data: result,
                         error: "",
-                        message: result.message || "",
+                        message: "",
                     }];
-            case 3:
+            case 3: return [3 /*break*/, 5];
+            case 4:
                 error_2 = _a.sent();
                 return [2 /*return*/, createErrorResponse(error_2)];
-            case 4: return [2 /*return*/];
+            case 5: return [2 /*return*/];
         }
     });
 }); };

@@ -24,18 +24,17 @@ export declare class DrapcodeApis {
         totalPages?: undefined;
     }>;
     createItem(collectionName: string, body: any): Promise<{
-        success: boolean;
-        data: string;
-        error: string;
-        message: string;
-        code?: undefined;
-    } | {
         code: any;
         success: boolean;
         data: any;
         error: string;
-        message: any;
-    }>;
+        message: string;
+    } | {
+        success: boolean;
+        data: string;
+        error: string;
+        message: string;
+    } | undefined>;
     getItemsWithFilter(collectionName: string, filterUuid: string): Promise<{
         code: any;
         success: boolean;
