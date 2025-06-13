@@ -156,15 +156,20 @@ export const createItem = async (
         message: "",
       };
     }
-    const result = await response.json();
-    console.log("result :>> ", result);
-    return {
-      code: result?.code,
-      success: true,
-      data: result?.data,
-      error: "",
-      message: result.message || "",
-    };
+    if (
+      response.status &&
+      (response.status === 200 || response.status === 201)
+    ) {
+      const result = await response.json();
+      console.log("result :>> ", result);
+      return {
+        code: response.status,
+        success: true,
+        data: result,
+        error: "",
+        message: "",
+      };
+    }
   } catch (error: any) {
     return createErrorResponse(error);
   }
