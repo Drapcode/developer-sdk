@@ -17,31 +17,35 @@ export class DrapcodeApis {
   private xApiKey: string;
   private authorization: string; //authorization
   private environment: string;
-  private API_PATH = "drapcode.io/api/v1/developer";
+  // private API_PATH = "drapcode.io/api/v1/developer";
+  private API_PATH = "prodeless.com:6002/api/v1/developer";
+  private builderKey: string; //for builder auth
 
   constructor(
     project_seo_name: string,
     xApiKey: string = "",
     authorization: string = "",
-    environment: string = "PRODUCTION"
+    environment: string = "PRODUCTION",
+    builderKey: string = ""
   ) {
     this.project_seo_name = project_seo_name;
     this.xApiKey = xApiKey;
     this.authorization = authorization;
     this.environment = environment;
+    this.builderKey = builderKey;
   }
   private getBaseUrl(): string {
     switch (this.environment.toUpperCase()) {
       case "PRODUCTION":
-        return `https://${this.project_seo_name}.api.${this.API_PATH}`;
+        return `http://${this.project_seo_name}.api.${this.API_PATH}`;
       case "PREVIEW":
-        return `https://${this.project_seo_name}.api.preview.${this.API_PATH}`;
+        return `http://${this.project_seo_name}.api.preview.${this.API_PATH}`;
       case "BETA":
         return `https://${this.project_seo_name}.api.sandbox.${this.API_PATH}`;
       case "ALPHA":
         return `https://${this.project_seo_name}.api.uat.${this.API_PATH}`;
       default:
-        return `https://${this.project_seo_name}.api.${this.API_PATH}`;
+        return `http://${this.project_seo_name}.api.${this.API_PATH}`;
     }
   }
   private getHeaders(): Record<string, string> {
@@ -55,7 +59,9 @@ export class DrapcodeApis {
     if (this.authorization) {
       headers["Authorization"] = this.authorization;
     }
-    console.log("here is header", headers);
+    if (this.builderKey) {
+      headers["BuilderKey"] = this.builderKey;
+    }
     return headers;
   }
   async getAllItems(
