@@ -161,7 +161,6 @@ var getAllItems = function (baseurl, headers, collectionName, reqQuery, query) {
                 return [4 /*yield*/, response.json()];
             case 2:
                 result = _a.sent();
-                // console.log("result sdk 130----", result);
                 return [2 /*return*/, processResponse(result)];
             case 3:
                 error_1 = _a.sent();
@@ -186,7 +185,6 @@ var createItem = function (baseurl, headers, collectionName, body) { return __aw
                     })];
             case 1:
                 response = _a.sent();
-                console.log("response here---createItem", response);
                 if ((response === null || response === void 0 ? void 0 : response.status) && response.status === 404) {
                     return [2 /*return*/, {
                             success: false,
@@ -270,7 +268,6 @@ var getItemWithUuid = function (baseurl, headers, collectionName, itemUuid) { re
                 return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
             case 1:
                 response = _a.sent();
-                console.log("response here---getItemWithUuid", response);
                 if (!((response === null || response === void 0 ? void 0 : response.status) && (response === null || response === void 0 ? void 0 : response.status) === 404)) return [3 /*break*/, 2];
                 return [2 /*return*/, {
                         code: response === null || response === void 0 ? void 0 : response.status,
@@ -343,23 +340,6 @@ var deleteItemWithUuid = function (baseurl, headers, collectionName, itemUuid) {
                 return [4 /*yield*/, response.json()];
             case 2:
                 result = _a.sent();
-                // console.log("🚀 ~ result:deleteItemWithUuid----", result);
-                // if (result?.errStatus == 401) {
-                //   return {
-                //     code: result?.errStatus || 401,
-                //     success: false,
-                //     data: result?.message,
-                //     error: "",
-                //     message: "",
-                //   };
-                // }
-                // return {
-                //   code: result?.code || 200,
-                //   success: result?.code == 200 ? true : false,
-                //   data: result?.message,
-                //   error: "",
-                //   message: "",
-                // };
                 return [2 /*return*/, processResponse(result)];
             case 3:
                 error_7 = _a.sent();
