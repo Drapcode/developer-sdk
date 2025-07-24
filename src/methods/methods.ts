@@ -1,34 +1,34 @@
 import { Query, QueryOperation, SearchPaginate } from "../utils/constants";
 
 const createErrorResponse = (error: any) => {
-  if (error.response && error.response.status === 404) {
-    const responseData = error.response.data;
+  if (error?.response && error?.response?.status === 404) {
+    const responseData = error?.response?.data;
     let finalData;
     if (responseData == "This url does not exist. Please publish again.") {
       finalData = "Please check your project name or publish again.";
-    } else if (responseData.message) {
-      finalData = responseData.message;
+    } else if (responseData?.message) {
+      finalData = responseData?.message;
     } else {
       finalData = responseData !== "" ? responseData : "Not found";
     }
     return {
-      code: error.response.status,
+      code: error?.response?.status,
       success: false,
       data: finalData,
       error: "",
       message: "",
     };
-  } else if (error.response && error.response.status === 401) {
-    const responseData = error.response;
+  } else if (error?.response && error?.response?.status === 401) {
+    const responseData = error?.response;
     return {
-      code: responseData.status,
+      code: responseData?.status,
       success: false,
-      data: responseData.data.message,
+      data: responseData?.data?.message,
       error: "",
       message: "",
     };
-  } else if (error.response && error.response.status === 400) {
-    const responseData = error.response;
+  } else if (error?.response && error?.response?.status === 400) {
+    const responseData = error?.response;
     return {
       code: responseData?.status,
       success: false,
@@ -73,7 +73,7 @@ const processResponse = (result: any) => {
       result?.data || defaultMessages[result?.code] || "An error occurred";
 
     return {
-      code: result.code,
+      code: result?.code,
       success: false,
       error: errorMessage,
       message: errorMessage,
@@ -115,7 +115,6 @@ export const getAllItems = async (
       queryParams.append("page", reqQuery.page);
       queryParams.append("limit", reqQuery.limit);
     }
-
     query.map((query) => {
       const conditionString = QueryOperation[query.condition];
       const field = encodeURIComponent(query.field);
@@ -125,7 +124,6 @@ export const getAllItems = async (
 
     const url = `${baseurl}/collection/${collectionName}/items?${queryParams.toString()}`;
     console.log("Generated URL:", url);
-
     const response = await fetch(url, { method: "GET", headers });
     const result = await response.json();
     return processResponse(result);
@@ -148,8 +146,7 @@ export const createItem = async (
       headers,
       body: JSON.stringify(body),
     });
-    console.log("response.status :>> ", response.status);
-    if (response.status && response.status === 404) {
+    if (response?.status && response.status === 404) {
       return {
         success: false,
         data: "Collection Not Found",
@@ -158,13 +155,12 @@ export const createItem = async (
       };
     }
     if (
-      response.status &&
-      (response.status === 200 || response.status === 201)
+      response?.status &&
+      (response?.status === 200 || response?.status === 201)
     ) {
       const result = await response.json();
-      console.log("result :>> ", result);
       return {
-        code: response.status,
+        code: response?.status,
         success: true,
         data: result,
         error: "",
@@ -217,9 +213,9 @@ export const getItemWithUuid = async (
   try {
     const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
     const response = await fetch(url, { method: "GET", headers });
-    if (response.status && response.status === 404) {
+    if (response?.status && response?.status === 404) {
       return {
-        code: response.status,
+        code: response?.status,
         success: false,
         data: "Please Check ItemUuid OR Collection Name",
         error: "",
@@ -248,9 +244,9 @@ export const updateItemWithUuid = async (
       headers,
       body: JSON.stringify(body),
     });
-    if (response.status && response.status === 404) {
+    if (response?.status && response?.status === 404) {
       return {
-        code: response.status,
+        code: response?.status,
         success: false,
         data: "Please Check ItemUuid OR Collection Name",
         error: "",
@@ -278,13 +274,7 @@ export const deleteItemWithUuid = async (
       headers,
     });
     const result = await response.json();
-    return {
-      code: result?.code,
-      success: result?.code == 200 ? true : false,
-      data: result.message,
-      error: "",
-      message: "",
-    };
+    return processResponse(result);
   } catch (error: any) {
     return createErrorResponse(error);
   }
