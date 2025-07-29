@@ -37,15 +37,15 @@ export class DrapcodeApis {
   public getBaseUrl(): string {
     switch (this.environment.toUpperCase()) {
       case "PRODUCTION":
-        return `http://${this.project_seo_name}.api.${this.API_PATH}`;
+        return `https://${this.project_seo_name}.api.${this.API_PATH}`;
       case "PREVIEW":
-        return `http://${this.project_seo_name}.api.preview.${this.API_PATH}`;
+        return `https://${this.project_seo_name}.api.preview.${this.API_PATH}`;
       case "BETA":
         return `https://${this.project_seo_name}.api.sandbox.${this.API_PATH}`;
       case "ALPHA":
         return `https://${this.project_seo_name}.api.uat.${this.API_PATH}`;
       default:
-        return `http://${this.project_seo_name}.api.${this.API_PATH}`;
+        return `https://${this.project_seo_name}.api.${this.API_PATH}`;
     }
   }
   public getHeaders(): Record<string, string> {
