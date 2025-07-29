@@ -34,7 +34,7 @@ export class DrapcodeApis {
     this.environment = environment;
     this.builderKey = builderKey;
   }
-  private getBaseUrl(): string {
+  public getBaseUrl(): string {
     switch (this.environment.toUpperCase()) {
       case "PRODUCTION":
         return `http://${this.project_seo_name}.api.${this.API_PATH}`;
@@ -48,7 +48,7 @@ export class DrapcodeApis {
         return `http://${this.project_seo_name}.api.${this.API_PATH}`;
     }
   }
-  private getHeaders(): Record<string, string> {
+  public getHeaders(): Record<string, string> {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
       Accept: "application/json",
