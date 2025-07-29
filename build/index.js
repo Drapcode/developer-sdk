@@ -69,15 +69,15 @@ var DrapcodeApis = /** @class */ (function () {
     DrapcodeApis.prototype.getBaseUrl = function () {
         switch (this.environment.toUpperCase()) {
             case "PRODUCTION":
-                return "http://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
+                return "https://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
             case "PREVIEW":
-                return "http://".concat(this.project_seo_name, ".api.preview.").concat(this.API_PATH);
+                return "https://".concat(this.project_seo_name, ".api.preview.").concat(this.API_PATH);
             case "BETA":
                 return "https://".concat(this.project_seo_name, ".api.sandbox.").concat(this.API_PATH);
             case "ALPHA":
                 return "https://".concat(this.project_seo_name, ".api.uat.").concat(this.API_PATH);
             default:
-                return "http://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
+                return "https://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
         }
     };
     DrapcodeApis.prototype.getHeaders = function () {
