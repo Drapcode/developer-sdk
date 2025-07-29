@@ -17,7 +17,8 @@ export class DrapcodeApis {
   private xApiKey: string;
   private authorization: string; //authorization
   private environment: string;
-  private API_PATH = "drapcode.io/api/v1/developer";
+  // private API_PATH = "drapcode.io/api/v1/developer";
+  private API_PATH = "webkonnect.site/api/v1/developer";
   private builderKey: string; //for builder auth
 
   constructor(
