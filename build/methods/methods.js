@@ -40,8 +40,10 @@ exports.sendEmail = exports.getItemsByids = exports.bulkDeleteItems = exports.de
 var constants_1 = require("../utils/constants");
 var createErrorResponse = function (error) {
     var _a, _b, _c, _d, _e, _f, _g;
+    console.log("error.response :>> ", error === null || error === void 0 ? void 0 : error.response);
     if ((error === null || error === void 0 ? void 0 : error.response) && ((_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.status) === 404) {
         var responseData = (_b = error === null || error === void 0 ? void 0 : error.response) === null || _b === void 0 ? void 0 : _b.data;
+        console.log("responseData", responseData);
         var finalData = void 0;
         if (responseData == "This url does not exist. Please publish again.") {
             finalData = "Please check your project name or publish again.";
