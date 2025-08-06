@@ -53,11 +53,12 @@ const processResponse = (result: any) => {
     409: "Conflict",
     500: "Internal Server Error",
   };
-
+  console.log("result :>> ", result);
   if (result?.status === "FAILED") {
     const statusCode = result?.error?.errStatus || 400;
     const errorMessage =
       result?.error?.message || defaultMessages[statusCode] || "API Failed";
+    console.log("errorMessage :>> ", errorMessage);
 
     return {
       code: statusCode,
