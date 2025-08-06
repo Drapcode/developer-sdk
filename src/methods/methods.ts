@@ -1,8 +1,10 @@
 import { Query, QueryOperation, SearchPaginate } from "../utils/constants";
 
 const createErrorResponse = (error: any) => {
+  console.log("error.response :>> ", error.response);
   if (error.response && error.response.status === 404) {
     const responseData = error.response.data;
+    console.log("responseData :>> ", responseData);
     let finalData;
     if (responseData == "This url does not exist. Please publish again.") {
       finalData = "Please check your project name or publish again.";
@@ -18,7 +20,8 @@ const createErrorResponse = (error: any) => {
       error: "",
       message: "",
     };
-  } else if (error.response && error.response.status === 401) {
+  }
+  if (error.response && error.response.status === 401) {
     const responseData = error.response;
     return {
       code: responseData.status,
@@ -27,7 +30,8 @@ const createErrorResponse = (error: any) => {
       error: "",
       message: "",
     };
-  } else if (error.response && error.response.status === 400) {
+  }
+  if (error.response && error.response.status === 400) {
     const responseData = error.response;
     return {
       code: responseData?.status,
