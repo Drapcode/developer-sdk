@@ -147,6 +147,7 @@ var getAllItems = function (baseurl, headers, collectionName, reqQuery, query) {
                     queryParams_1.append("page", reqQuery.page);
                     queryParams_1.append("limit", reqQuery.limit);
                 }
+                console.log("queryParams 1:>> ", queryParams_1);
                 query.map(function (query) {
                     var conditionString = constants_1.QueryOperation[query.condition];
                     var field = "".concat(query.field);
@@ -156,6 +157,7 @@ var getAllItems = function (baseurl, headers, collectionName, reqQuery, query) {
                     // const value = encodeURIComponent(query.value);
                     queryParams_1.append("".concat(field, ":").concat(conditionString), "".concat(value));
                 });
+                console.log("queryParams 2:>> ", queryParams_1);
                 url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryParams_1.toString());
                 console.log("Generated URL:", url);
                 return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
@@ -167,6 +169,7 @@ var getAllItems = function (baseurl, headers, collectionName, reqQuery, query) {
                 return [2 /*return*/, processResponse(result)];
             case 3:
                 error_1 = _a.sent();
+                console.log("error :>> ", error_1);
                 return [2 /*return*/, createErrorResponse(error_1)];
             case 4: return [2 /*return*/];
         }
