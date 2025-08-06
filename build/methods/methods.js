@@ -149,8 +149,11 @@ var getAllItems = function (baseurl, headers, collectionName, reqQuery, query) {
                 }
                 query.map(function (query) {
                     var conditionString = constants_1.QueryOperation[query.condition];
-                    var field = encodeURIComponent(query.field);
-                    var value = encodeURIComponent(query.value);
+                    var field = "".concat(query.field);
+                    var value = "".concat(query.value);
+                    // double encoding the query params(remove after testing)
+                    // const field = encodeURIComponent(query.field);
+                    // const value = encodeURIComponent(query.value);
                     queryParams_1.append("".concat(field, ":").concat(conditionString), "".concat(value));
                 });
                 url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryParams_1.toString());

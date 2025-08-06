@@ -6,8 +6,8 @@ export declare class DrapcodeApis {
     private environment;
     private API_PATH;
     constructor(project_seo_name: string, xApiKey?: string, authorization?: string, environment?: string);
-    private getBaseUrl;
-    private getHeaders;
+    getBaseUrl(): string;
+    getHeaders(): Record<string, string>;
     getAllItems(collectionName: string, reqQuery?: SearchPaginate | any, query?: Query[] | []): Promise<{
         code: any;
         success: boolean;
