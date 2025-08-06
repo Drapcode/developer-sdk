@@ -96,9 +96,11 @@ var processResponse = function (result) {
         409: "Conflict",
         500: "Internal Server Error",
     };
+    console.log("result :>> ", result);
     if ((result === null || result === void 0 ? void 0 : result.status) === "FAILED") {
         var statusCode = ((_a = result === null || result === void 0 ? void 0 : result.error) === null || _a === void 0 ? void 0 : _a.errStatus) || 400;
         var errorMessage = ((_b = result === null || result === void 0 ? void 0 : result.error) === null || _b === void 0 ? void 0 : _b.message) || defaultMessages[statusCode] || "API Failed";
+        console.log("errorMessage :>> ", errorMessage);
         return {
             code: statusCode,
             success: false,
