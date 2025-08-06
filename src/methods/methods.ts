@@ -115,6 +115,7 @@ export const getAllItems = async (
       queryParams.append("page", reqQuery.page);
       queryParams.append("limit", reqQuery.limit);
     }
+    console.log("queryParams 1:>> ", queryParams);
     query.map((query) => {
       const conditionString = QueryOperation[query.condition];
       const field = `${query.field}`;
@@ -124,6 +125,7 @@ export const getAllItems = async (
       // const value = encodeURIComponent(query.value);
       queryParams.append(`${field}:${conditionString}`, `${value}`);
     });
+    console.log("queryParams 2:>> ", queryParams);
 
     const url = `${baseurl}/collection/${collectionName}/items?${queryParams.toString()}`;
     console.log("Generated URL:", url);
@@ -131,6 +133,7 @@ export const getAllItems = async (
     const result = await response.json();
     return processResponse(result);
   } catch (error: any) {
+    console.log("error :>> ", error);
     return createErrorResponse(error);
   }
 };
