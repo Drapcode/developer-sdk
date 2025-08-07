@@ -1,3 +1,9 @@
+const defaultMessages: Record<number, string> = {
+  401: "Unauthorized",
+  404: "Not Found",
+  409: "Conflict",
+  500: "Internal Server Error",
+};
 export const createErrorResponse = async (error: any) => {
   const status = error?.status;
   console.log("status :>> ", status);
@@ -54,12 +60,6 @@ export const createErrorResponse = async (error: any) => {
 };
 
 export const processResponse = (result: any) => {
-  const defaultMessages: Record<number, string> = {
-    401: "Unauthorized",
-    404: "Not Found",
-    409: "Conflict",
-    500: "Internal Server Error",
-  };
   console.log("1");
   if (result?.status === "FAILED") {
     const statusCode = result?.error?.errStatus || 400;

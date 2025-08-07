@@ -37,6 +37,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.processResponse = exports.createErrorResponse = void 0;
+var defaultMessages = {
+    401: "Unauthorized",
+    404: "Not Found",
+    409: "Conflict",
+    500: "Internal Server Error",
+};
 var createErrorResponse = function (error) { return __awaiter(void 0, void 0, void 0, function () {
     var status, responseData, finalMessage;
     return __generator(this, function (_a) {
@@ -101,12 +107,6 @@ var createErrorResponse = function (error) { return __awaiter(void 0, void 0, vo
 exports.createErrorResponse = createErrorResponse;
 var processResponse = function (result) {
     var _a, _b;
-    var defaultMessages = {
-        401: "Unauthorized",
-        404: "Not Found",
-        409: "Conflict",
-        500: "Internal Server Error",
-    };
     console.log("1");
     if ((result === null || result === void 0 ? void 0 : result.status) === "FAILED") {
         var statusCode = ((_a = result === null || result === void 0 ? void 0 : result.error) === null || _a === void 0 ? void 0 : _a.errStatus) || 400;
