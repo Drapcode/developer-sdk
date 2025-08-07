@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -47,134 +36,61 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendEmail = exports.getItemsByids = exports.bulkDeleteItems = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.getItemWithUuid = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getAllItems = exports.QueryOperation = void 0;
-var createErrorResponse = function (error) {
-    var _a;
-    if (error.response && error.response.status === 404) {
-        var responseData = error.response.data;
-        var finalData = void 0;
-        if (responseData == "This url does not exist. Please publish again.") {
-            finalData = "Please check your project name or publish again.";
-        }
-        else if (responseData.message) {
-            finalData = responseData.message;
-        }
-        else {
-            finalData = responseData !== "" ? responseData : "Not found";
-        }
-        return {
-            code: error.response.status,
-            success: false,
-            data: finalData,
-            error: "",
-            message: "",
-        };
-    }
-    else if (error.response && error.response.status === 401) {
-        var responseData = error.response;
-        return {
-            code: responseData.status,
-            success: false,
-            data: responseData.data.message,
-            error: "",
-            message: "",
-        };
-    }
-    else if (error.response && error.response.status === 400) {
-        var responseData = error.response;
-        return {
-            code: responseData === null || responseData === void 0 ? void 0 : responseData.status,
-            success: false,
-            data: "Please Check Your Credentials",
-            error: "",
-            message: "",
-        };
-    }
-    return {
-        code: (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.code,
-        success: false,
-        data: "",
-        error: "Please check your project name or publish again.",
-        message: "",
-    };
-};
-var processResponse = function (result) {
-    var _a, _b;
-    var defaultMessages = {
-        401: "Unauthorized",
-        404: "Not Found",
-        409: "Conflict",
-        500: "Internal Server Error",
-    };
-    if ((result === null || result === void 0 ? void 0 : result.status) === "FAILED") {
-        var statusCode = ((_a = result === null || result === void 0 ? void 0 : result.error) === null || _a === void 0 ? void 0 : _a.errStatus) || 400;
-        var errorMessage = ((_b = result === null || result === void 0 ? void 0 : result.error) === null || _b === void 0 ? void 0 : _b.message) || defaultMessages[statusCode] || "API Failed";
-        return {
-            code: statusCode,
-            success: false,
-            error: errorMessage,
-            message: errorMessage,
-            data: "",
-        };
-    }
-    if ((result === null || result === void 0 ? void 0 : result.code) && (result === null || result === void 0 ? void 0 : result.code) !== 200) {
-        var errorMessage = (result === null || result === void 0 ? void 0 : result.data) || defaultMessages[result === null || result === void 0 ? void 0 : result.code] || "An error occurred";
-        return {
-            code: result.code,
-            success: false,
-            error: errorMessage,
-            message: errorMessage,
-            data: "",
-        };
-    }
-};
-var QueryOperation;
-(function (QueryOperation) {
-    QueryOperation["EQUALS"] = "EQUALS";
-    QueryOperation["IS_NOT_NULL"] = "IS_NOT_NULL";
-    QueryOperation["IS_NULL"] = "IS_NULL";
-    QueryOperation["LIKE"] = "LIKE";
-    QueryOperation["LESS_THAN_EQUALS_TO"] = "LESS_THAN_EQUALS_TO";
-    QueryOperation["GREATER_THAN_EQUALS_TO"] = "GREATER_THAN_EQUALS_TO";
-    QueryOperation["LESS_THAN"] = "LESS_THAN";
-    QueryOperation["GREATER_THAN"] = "GREATER_THAN";
-    QueryOperation["IN_LIST"] = "IN_LIST";
-    QueryOperation["NOT_IN_LIST"] = "NOT_IN_LIST";
-})(QueryOperation = exports.QueryOperation || (exports.QueryOperation = {}));
-var getAllItems = function (baseurl, headers, collectionName, query) { return __awaiter(void 0, void 0, void 0, function () {
-    var params_1, queryParams, url, response, result, error_1;
+exports.sendEmail = exports.getItemsByids = exports.bulkDeleteItems = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.getItemWithUuid = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getAllItems = void 0;
+var constants_1 = require("../utils/constants");
+var util_1 = require("../utils/util");
+var getAllItems = function (baseurl, headers, collectionName, reqQuery, query) { return __awaiter(void 0, void 0, void 0, function () {
+    var queryParams_1, url, response, result, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
-                params_1 = [];
-                query.forEach(function (query, index) {
-                    var conditionString = QueryOperation[query.condition];
-                    var queryString = "".concat(encodeURIComponent(query.field), "%3A").concat(conditionString, "=").concat(encodeURIComponent(query.value));
-                    params_1.push(queryString);
-                });
-                queryParams = params_1.join("&");
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat("".concat(queryParams));
+                _a.trys.push([0, 5, , 7]);
+                queryParams_1 = new URLSearchParams();
+                console.log("headers :>> ", headers);
+                console.log("query :>> ", query);
+                console.log("reqQuery :>> ", reqQuery);
+                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortField)
+                    queryParams_1.append("sortField", reqQuery.sortField);
+                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortOrder)
+                    queryParams_1.append("sortOrder", reqQuery.sortOrder);
+                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.searchTerm)
+                    queryParams_1.append("searchTerm", reqQuery.searchTerm);
+                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.isPagination) {
+                    queryParams_1.append("page", reqQuery.page);
+                    queryParams_1.append("limit", reqQuery.limit);
+                }
+                if (Array.isArray(query)) {
+                    query.forEach(function (query) {
+                        var conditionString = constants_1.QueryOperation[query.condition];
+                        var field = "".concat(query.field);
+                        var value = "".concat(query.value);
+                        // double encoding the query params(remove after testing)
+                        // const field = encodeURIComponent(query.field);
+                        // const value = encodeURIComponent(query.value);
+                        queryParams_1.append("".concat(field, ":").concat(conditionString), "".concat(value));
+                    });
+                }
+                console.log("queryParams :>> ", queryParams_1);
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryParams_1.toString());
+                console.log("Generated URL:", url);
                 return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
             case 1:
-                _a.trys.push([1, 4, , 5]);
-                queryParams = new URLSearchParams(__assign(__assign(__assign(__assign({}, ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortField) && { sortField: reqQuery.sortField })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortOrder) && { sortOrder: reqQuery.sortOrder })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.searchTerm) && { searchTerm: reqQuery.searchTerm })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.isPagination) && {
-                    page: reqQuery.page,
-                    limit: reqQuery.limit,
-                })));
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryParams.toString());
-                console.log("Generated URL:", url, headers, "Query:", reqQuery);
-                return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
-            case 2:
                 response = _a.sent();
-                return [4 /*yield*/, response.json()];
-            case 3:
-                result = _a.sent();
-                return [2 /*return*/, processResponse(result)];
+                if (!!response.ok) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
+            case 2: return [2 /*return*/, _a.sent()];
+            case 3: return [4 /*yield*/, response.json()];
             case 4:
+                result = _a.sent();
+                console.log("Before Process Response :>> ", result);
+                //TODO: Handle result is array
+                return [2 /*return*/, (0, util_1.processResponse)(result)];
+            case 5:
                 error_1 = _a.sent();
-                return [2 /*return*/, createErrorResponse(error_1)];
-            case 5: return [2 /*return*/];
+                console.log("error :>> ", error_1);
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(error_1)];
+            case 6: return [2 /*return*/, _a.sent()];
+            case 7: return [2 /*return*/];
         }
     });
 }); };
@@ -184,8 +100,9 @@ var createItem = function (baseurl, headers, collectionName, body) { return __aw
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 5, , 6]);
+                _a.trys.push([0, 6, , 8]);
                 url = "".concat(baseurl, "/collection/").concat(collectionName, "/items");
+                console.log("url :>> ", url);
                 return [4 /*yield*/, fetch(url, {
                         method: "POST",
                         headers: headers,
@@ -193,28 +110,30 @@ var createItem = function (baseurl, headers, collectionName, body) { return __aw
                     })];
             case 1:
                 response = _a.sent();
-                if (!(response.status && response.status === 404)) return [3 /*break*/, 2];
+                if (!!response.ok) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
+            case 2: return [2 /*return*/, _a.sent()];
+            case 3:
+                console.log("response.status :>> ", response.status);
+                if (!(response.status &&
+                    (response.status === 200 || response.status === 201))) return [3 /*break*/, 5];
+                return [4 /*yield*/, response.json()];
+            case 4:
+                result = _a.sent();
+                console.log("result :>> ", result);
                 return [2 /*return*/, {
-                        success: false,
-                        data: "Collection Not Found",
+                        code: response.status,
+                        success: true,
+                        data: result,
                         error: "",
                         message: "",
                     }];
-            case 2: return [4 /*yield*/, response.json()];
-            case 3:
-                result = _a.sent();
-                return [2 /*return*/, {
-                        code: result === null || result === void 0 ? void 0 : result.code,
-                        success: true,
-                        data: result === null || result === void 0 ? void 0 : result.data,
-                        error: "",
-                        message: result.message || "",
-                    }];
-            case 4: return [3 /*break*/, 6];
-            case 5:
+            case 5: return [3 /*break*/, 8];
+            case 6:
                 error_2 = _a.sent();
-                return [2 /*return*/, createErrorResponse(error_2)];
-            case 6: return [2 /*return*/];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(error_2)];
+            case 7: return [2 /*return*/, _a.sent()];
+            case 8: return [2 /*return*/];
         }
     });
 }); };
@@ -224,7 +143,7 @@ var getItemsWithFilter = function (baseurl, headers, collectionName, filterUuid)
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
+                _a.trys.push([0, 3, , 5]);
                 url = "".concat(baseurl, "/collection/").concat(collectionName, "/filter/").concat(filterUuid, "/items");
                 return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
             case 1:
@@ -232,11 +151,12 @@ var getItemsWithFilter = function (baseurl, headers, collectionName, filterUuid)
                 return [4 /*yield*/, response.json()];
             case 2:
                 result = _a.sent();
-                return [2 /*return*/, processResponse(result)];
+                return [2 /*return*/, (0, util_1.processResponse)(result)];
             case 3:
                 error_3 = _a.sent();
-                return [2 /*return*/, createErrorResponse(error_3)];
-            case 4: return [2 /*return*/];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(error_3)];
+            case 4: return [2 /*return*/, _a.sent()];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
@@ -246,7 +166,7 @@ var getItemsCountWithFilter = function (baseurl, headers, collectionName, filter
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
+                _a.trys.push([0, 3, , 5]);
                 url = "".concat(baseurl, "/collection/").concat(collectionName, "/filter/").concat(filterUuid, "/count");
                 return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
             case 1:
@@ -254,11 +174,12 @@ var getItemsCountWithFilter = function (baseurl, headers, collectionName, filter
                 return [4 /*yield*/, response.json()];
             case 2:
                 result = _a.sent();
-                return [2 /*return*/, processResponse(result)];
+                return [2 /*return*/, (0, util_1.processResponse)(result)];
             case 3:
                 error_4 = _a.sent();
-                return [2 /*return*/, createErrorResponse(error_4)];
-            case 4: return [2 /*return*/];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(error_4)];
+            case 4: return [2 /*return*/, _a.sent()];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
@@ -268,7 +189,7 @@ var getItemWithUuid = function (baseurl, headers, collectionName, itemUuid) { re
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 5, , 6]);
+                _a.trys.push([0, 5, , 7]);
                 url = "".concat(baseurl, "/collection/").concat(collectionName, "/item/").concat(itemUuid);
                 return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
             case 1:
@@ -284,12 +205,13 @@ var getItemWithUuid = function (baseurl, headers, collectionName, itemUuid) { re
             case 2: return [4 /*yield*/, response.json()];
             case 3:
                 result = _a.sent();
-                return [2 /*return*/, processResponse(result)];
-            case 4: return [3 /*break*/, 6];
+                return [2 /*return*/, (0, util_1.processResponse)(result)];
+            case 4: return [3 /*break*/, 7];
             case 5:
                 error_5 = _a.sent();
-                return [2 /*return*/, createErrorResponse(error_5)];
-            case 6: return [2 /*return*/];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(error_5)];
+            case 6: return [2 /*return*/, _a.sent()];
+            case 7: return [2 /*return*/];
         }
     });
 }); };
@@ -299,7 +221,7 @@ var updateItemWithUuid = function (baseurl, headers, collectionName, itemUuid, b
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 5, , 6]);
+                _a.trys.push([0, 5, , 7]);
                 url = "".concat(baseurl, "/collection/").concat(collectionName, "/item/").concat(itemUuid);
                 return [4 /*yield*/, fetch(url, {
                         method: "PUT",
@@ -319,12 +241,13 @@ var updateItemWithUuid = function (baseurl, headers, collectionName, itemUuid, b
             case 2: return [4 /*yield*/, response.json()];
             case 3:
                 result = _a.sent();
-                return [2 /*return*/, processResponse(result)];
-            case 4: return [3 /*break*/, 6];
+                return [2 /*return*/, (0, util_1.processResponse)(result)];
+            case 4: return [3 /*break*/, 7];
             case 5:
                 error_6 = _a.sent();
-                return [2 /*return*/, createErrorResponse(error_6)];
-            case 6: return [2 /*return*/];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(error_6)];
+            case 6: return [2 /*return*/, _a.sent()];
+            case 7: return [2 /*return*/];
         }
     });
 }); };
@@ -334,7 +257,7 @@ var deleteItemWithUuid = function (baseurl, headers, collectionName, itemUuid) {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
+                _a.trys.push([0, 3, , 5]);
                 url = "".concat(baseurl, "/collection/").concat(collectionName, "/item/").concat(itemUuid);
                 return [4 /*yield*/, fetch(url, {
                         method: "DELETE",
@@ -354,8 +277,9 @@ var deleteItemWithUuid = function (baseurl, headers, collectionName, itemUuid) {
                     }];
             case 3:
                 error_7 = _a.sent();
-                return [2 /*return*/, createErrorResponse(error_7)];
-            case 4: return [2 /*return*/];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(error_7)];
+            case 4: return [2 /*return*/, _a.sent()];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
@@ -365,7 +289,7 @@ var bulkDeleteItems = function (baseurl, headers, collectionName, body) { return
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
+                _a.trys.push([0, 3, , 5]);
                 url = "".concat(baseurl, "/collection/").concat(collectionName, "/bulkDelete");
                 return [4 /*yield*/, fetch(url, {
                         method: "POST",
@@ -380,8 +304,9 @@ var bulkDeleteItems = function (baseurl, headers, collectionName, body) { return
                 return [2 /*return*/, { success: true, data: result.data, error: "", message: "" }];
             case 3:
                 error_8 = _a.sent();
-                return [2 /*return*/, createErrorResponse(error_8)];
-            case 4: return [2 /*return*/];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(error_8)];
+            case 4: return [2 /*return*/, _a.sent()];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
@@ -391,7 +316,7 @@ var getItemsByids = function (baseurl, headers, collectionName, body) { return _
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
+                _a.trys.push([0, 3, , 5]);
                 url = "".concat(baseurl, "/collection/").concat(collectionName, "/itemsbyids");
                 return [4 /*yield*/, fetch(url, {
                         method: "POST",
@@ -406,8 +331,9 @@ var getItemsByids = function (baseurl, headers, collectionName, body) { return _
                 return [2 /*return*/, { success: true, data: result.data, error: "", message: "" }];
             case 3:
                 error_9 = _a.sent();
-                return [2 /*return*/, createErrorResponse(error_9)];
-            case 4: return [2 /*return*/];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(error_9)];
+            case 4: return [2 /*return*/, _a.sent()];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
@@ -417,7 +343,7 @@ var sendEmail = function (baseurl, headers, templateId, sendTo) { return __await
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
+                _a.trys.push([0, 3, , 5]);
                 url = "".concat(baseurl, "/sendEmail/").concat(templateId, "/user/").concat(sendTo);
                 return [4 /*yield*/, fetch(url, {
                         method: "POST",
@@ -431,18 +357,10 @@ var sendEmail = function (baseurl, headers, templateId, sendTo) { return __await
                 return [2 /*return*/, { success: true, data: result, error: "", message: "" }];
             case 3:
                 error_10 = _a.sent();
-                return [2 /*return*/, createErrorResponse(error_10)];
-            case 4: return [2 /*return*/];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(error_10)];
+            case 4: return [2 /*return*/, _a.sent()];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
 exports.sendEmail = sendEmail;
-/**
- * {
- * code,
- * success
- * data,
- * error,
- * message,
- * }
- */

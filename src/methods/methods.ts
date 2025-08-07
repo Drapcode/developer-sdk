@@ -1,101 +1,5 @@
 import { Query, QueryOperation, SearchPaginate } from "../utils/constants";
-
-const createErrorResponse = (error: any) => {
-  console.log("error.response :>> ", error.response);
-  if (error.response && error.response.status === 404) {
-    const responseData = error.response.data;
-    console.log("responseData :>> ", responseData);
-    let finalData;
-    if (responseData == "This url does not exist. Please publish again.") {
-      finalData = "Please check your project name or publish again.";
-    } else if (responseData.message) {
-      finalData = responseData.message;
-    } else {
-      finalData = responseData !== "" ? responseData : "Not found";
-    }
-    return {
-      code: error.response.status,
-      success: false,
-      data: finalData,
-      error: "",
-      message: "",
-    };
-  }
-  if (error.response && error.response.status === 401) {
-    const responseData = error.response;
-    return {
-      code: responseData.status,
-      success: false,
-      data: responseData.data.message,
-      error: "",
-      message: "",
-    };
-  }
-  if (error.response && error.response.status === 400) {
-    const responseData = error.response;
-    return {
-      code: responseData?.status,
-      success: false,
-      data: "Please Check Your Credentials",
-      error: "",
-      message: "",
-    };
-  }
-  return {
-    code: error?.response?.code,
-    success: false,
-    data: "",
-    error: "Please check your project name or publish again.",
-    message: "",
-  };
-};
-
-const processResponse = (result: any) => {
-  const defaultMessages: Record<number, string> = {
-    401: "Unauthorized",
-    404: "Not Found",
-    409: "Conflict",
-    500: "Internal Server Error",
-  };
-  console.log("result :>> ", result);
-  if (result?.status === "FAILED") {
-    const statusCode = result?.error?.errStatus || 400;
-    const errorMessage =
-      result?.error?.message || defaultMessages[statusCode] || "API Failed";
-    console.log("errorMessage :>> ", errorMessage);
-
-    return {
-      code: statusCode,
-      success: false,
-      error: errorMessage,
-      message: errorMessage,
-      data: "",
-    };
-  }
-
-  if (result?.code && result?.code !== 200) {
-    const errorMessage =
-      result?.data || defaultMessages[result?.code] || "An error occurred";
-
-    return {
-      code: result.code,
-      success: false,
-      error: errorMessage,
-      message: errorMessage,
-      data: "",
-    };
-  }
-
-  return {
-    code: 200,
-    success: true,
-    error: "",
-    message: "",
-    data: result?.result || result,
-    totalItems: result?.totalItems || 0,
-    totalPages: result?.totalPages || 0,
-  };
-};
+import { createErrorResponse, processResponse } from "../utils/util";
 
 export const getAllItems = async (
   baseurl: string,
@@ -120,25 +24,33 @@ export const getAllItems = async (
       queryParams.append("page", reqQuery.page);
       queryParams.append("limit", reqQuery.limit);
     }
-
-    query.map((query) => {
-      const conditionString = QueryOperation[query.condition];
-      const field = `${query.field}`;
-      const value = `${query.value}`;
-      // double encoding the query params(remove after testing)
-      // const field = encodeURIComponent(query.field);
-      // const value = encodeURIComponent(query.value);
-      queryParams.append(`${field}:${conditionString}`, `${value}`);
-    });
-
+    if (Array.isArray(query)) {
+      query.forEach((query) => {
+        const conditionString = QueryOperation[query.condition];
+        const field = `${query.field}`;
+        const value = `${query.value}`;
+        // double encoding the query params(remove after testing)
+        // const field = encodeURIComponent(query.field);
+        // const value = encodeURIComponent(query.value);
+        queryParams.append(`${field}:${conditionString}`, `${value}`);
+      });
+    }
+    console.log("queryParams :>> ", queryParams);
     const url = `${baseurl}/collection/${collectionName}/items?${queryParams.toString()}`;
     console.log("Generated URL:", url);
 
     const response = await fetch(url, { method: "GET", headers });
+    if (!response.ok) {
+      return await createErrorResponse(response);
+    }
+
     const result = await response.json();
+    console.log("Before Process Response :>> ", result);
+    //TODO: Handle result is array
     return processResponse(result);
   } catch (error: any) {
-    return createErrorResponse(error);
+    console.log("error :>> ", error);
+    return await createErrorResponse(error);
   }
 };
 
@@ -156,15 +68,12 @@ export const createItem = async (
       headers,
       body: JSON.stringify(body),
     });
-    console.log("response.status :>> ", response.status);
-    if (response.status && response.status === 404) {
-      return {
-        success: false,
-        data: "Collection Not Found",
-        error: "",
-        message: "",
-      };
+    if (!response.ok) {
+      return await createErrorResponse(response);
     }
+
+    console.log("response.status :>> ", response.status);
+
     if (
       response.status &&
       (response.status === 200 || response.status === 201)
@@ -180,7 +89,7 @@ export const createItem = async (
       };
     }
   } catch (error: any) {
-    return createErrorResponse(error);
+    return await createErrorResponse(error);
   }
 };
 
@@ -196,7 +105,7 @@ export const getItemsWithFilter = async (
     const result = await response.json();
     return processResponse(result);
   } catch (error: any) {
-    return createErrorResponse(error);
+    return await createErrorResponse(error);
   }
 };
 
@@ -212,7 +121,7 @@ export const getItemsCountWithFilter = async (
     const result = await response.json();
     return processResponse(result);
   } catch (error: any) {
-    return createErrorResponse(error);
+    return await createErrorResponse(error);
   }
 };
 
@@ -238,7 +147,7 @@ export const getItemWithUuid = async (
       return processResponse(result);
     }
   } catch (error: any) {
-    return createErrorResponse(error);
+    return await createErrorResponse(error);
   }
 };
 
@@ -269,7 +178,7 @@ export const updateItemWithUuid = async (
       return processResponse(result);
     }
   } catch (error: any) {
-    return createErrorResponse(error);
+    return await createErrorResponse(error);
   }
 };
 
@@ -294,7 +203,7 @@ export const deleteItemWithUuid = async (
       message: "",
     };
   } catch (error: any) {
-    return createErrorResponse(error);
+    return await createErrorResponse(error);
   }
 };
 
@@ -314,7 +223,7 @@ export const bulkDeleteItems = async (
     const result = await response.json();
     return { success: true, data: result.data, error: "", message: "" };
   } catch (error: any) {
-    return createErrorResponse(error);
+    return await createErrorResponse(error);
   }
 };
 
@@ -334,7 +243,7 @@ export const getItemsByids = async (
     const result = await response.json();
     return { success: true, data: result.data, error: "", message: "" };
   } catch (error: any) {
-    return createErrorResponse(error);
+    return await createErrorResponse(error);
   }
 };
 export const sendEmail = async (
@@ -352,16 +261,6 @@ export const sendEmail = async (
     const result = await response.json();
     return { success: true, data: result, error: "", message: "" };
   } catch (error: any) {
-    return createErrorResponse(error);
+    return await createErrorResponse(error);
   }
 };
-
-/**
- * {
- * code,
- * success
- * data,
- * error,
- * message,
- * }
- */
