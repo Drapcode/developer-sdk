@@ -26,17 +26,20 @@ export class DrapcodeApis {
   private environment: string;
   // private API_PATH = "drapcode.io/api/v1/developer";
   private API_PATH = "prodeless.com:5002/api/v1/developer";
-
+  private builderKey: string; //for builder auth
+  
   constructor(
     project_seo_name: string,
     xApiKey: string = "",
     authorization: string = "",
-    environment: string = "PRODUCTION"
+    environment: string = "PRODUCTION",
+    builderKey: string = ""
   ) {
     this.project_seo_name = project_seo_name;
     this.xApiKey = xApiKey;
     this.authorization = authorization;
     this.environment = environment;
+    this.builderKey = builderKey;
   }
   public getBaseUrl(): string {
     switch (this.environment.toUpperCase()) {
@@ -63,7 +66,9 @@ export class DrapcodeApis {
     if (this.authorization) {
       headers["Authorization"] = this.authorization;
     }
-    console.log("here is header", headers);
+    if (this.builderKey) {
+      headers["BuilderKey"] = this.builderKey;
+    }
     return headers;
   }
   async getAllItems(

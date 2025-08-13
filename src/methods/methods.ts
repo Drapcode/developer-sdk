@@ -37,7 +37,6 @@ export const getAllItems = async (
     }
     const url = `${baseurl}/collection/${collectionName}/items?${queryParams.toString()}`;
     console.log("Generated URL:", url);
-
     const response = await fetch(url, { method: "GET", headers });
     if (!response.ok) {
       return await createErrorResponse(response);
@@ -75,13 +74,12 @@ export const createItem = async (
     console.log("response.status :>> ", response.status);
 
     if (
-      response.status &&
-      (response.status === 200 || response.status === 201)
+      response?.status &&
+      (response?.status === 200 || response?.status === 201)
     ) {
       const result = await response.json();
-      console.log("result :>> ", result);
       return {
-        code: response.status,
+        code: response?.status,
         success: true,
         data: result,
         error: "",
@@ -332,13 +330,7 @@ export const deleteItemWithUuid = async (
       headers,
     });
     const result = await response.json();
-    return {
-      code: result?.code,
-      success: result?.code == 200 ? true : false,
-      data: result.message,
-      error: "",
-      message: "",
-    };
+    return processResponse(result);
   } catch (error: any) {
     let message = error.message;
     if (message) {

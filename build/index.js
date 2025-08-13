@@ -53,7 +53,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DrapcodeApis = void 0;
 var methods_1 = require("./methods/methods");
 var DrapcodeApis = /** @class */ (function () {
-    function DrapcodeApis(project_seo_name, xApiKey, authorization, environment) {
+    function DrapcodeApis(project_seo_name, xApiKey, authorization, environment, builderKey) {
         if (xApiKey === void 0) { xApiKey = ""; }
         if (authorization === void 0) { authorization = ""; }
         if (environment === void 0) { environment = "PRODUCTION"; }
@@ -63,6 +63,7 @@ var DrapcodeApis = /** @class */ (function () {
         this.xApiKey = xApiKey;
         this.authorization = authorization;
         this.environment = environment;
+        this.builderKey = builderKey;
     }
     DrapcodeApis.prototype.getBaseUrl = function () {
         switch (this.environment.toUpperCase()) {
@@ -89,7 +90,9 @@ var DrapcodeApis = /** @class */ (function () {
         if (this.authorization) {
             headers["Authorization"] = this.authorization;
         }
-        console.log("here is header", headers);
+        if (this.builderKey) {
+            headers["BuilderKey"] = this.builderKey;
+        }
         return headers;
     };
     DrapcodeApis.prototype.getAllItems = function (collectionName, reqQuery, query) {
