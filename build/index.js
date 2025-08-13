@@ -57,9 +57,8 @@ var DrapcodeApis = /** @class */ (function () {
         if (xApiKey === void 0) { xApiKey = ""; }
         if (authorization === void 0) { authorization = ""; }
         if (environment === void 0) { environment = "PRODUCTION"; }
-        if (builderKey === void 0) { builderKey = ""; }
         // private API_PATH = "drapcode.io/api/v1/developer";
-        this.API_PATH = "webkonnect.site/api/v1/developer";
+        this.API_PATH = "prodeless.com:5002/api/v1/developer";
         this.project_seo_name = project_seo_name;
         this.xApiKey = xApiKey;
         this.authorization = authorization;
@@ -69,15 +68,15 @@ var DrapcodeApis = /** @class */ (function () {
     DrapcodeApis.prototype.getBaseUrl = function () {
         switch (this.environment.toUpperCase()) {
             case "PRODUCTION":
-                return "https://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
+                return "http://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
             case "PREVIEW":
-                return "https://".concat(this.project_seo_name, ".api.preview.").concat(this.API_PATH);
+                return "http://".concat(this.project_seo_name, ".api.preview.").concat(this.API_PATH);
             case "BETA":
-                return "https://".concat(this.project_seo_name, ".api.sandbox.").concat(this.API_PATH);
+                return "http://".concat(this.project_seo_name, ".api.sandbox.").concat(this.API_PATH);
             case "ALPHA":
-                return "https://".concat(this.project_seo_name, ".api.uat.").concat(this.API_PATH);
+                return "http://".concat(this.project_seo_name, ".api.uat.").concat(this.API_PATH);
             default:
-                return "https://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
+                return "http://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
         }
     };
     DrapcodeApis.prototype.getHeaders = function () {
@@ -133,10 +132,59 @@ var DrapcodeApis = /** @class */ (function () {
             });
         });
     };
+    DrapcodeApis.prototype.getItemOnly = function (collectionName, itemUuid) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, (0, methods_1.getItemOnly)(this.getBaseUrl(), this.getHeaders(), collectionName, itemUuid)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.countItemByValue = function (collectionName, fieldName, fieldValue) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, (0, methods_1.countItemByValue)(this.getBaseUrl(), this.getHeaders(), collectionName, fieldName, fieldValue)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.saveCSVData = function (collectionName, items) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, (0, methods_1.saveCSVData)(this.getBaseUrl(), this.getHeaders(), collectionName, items)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.validateItem = function (collectionName, item) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, (0, methods_1.validateItem)(this.getBaseUrl(), this.getHeaders(), collectionName, item)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.lastItem = function (collectionName) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, (0, methods_1.lastItem)(this.getBaseUrl(), this.getHeaders(), collectionName)];
+            });
+        });
+    };
     DrapcodeApis.prototype.updateItemWithUuid = function (collectionName, itemUuid, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, (0, methods_1.updateItemWithUuid)(this.getBaseUrl(), this.getHeaders(), collectionName, itemUuid, body)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.clearItem = function (collectionName) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, (0, methods_1.clearItem)(this.getBaseUrl(), this.getHeaders(), collectionName)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.deleteFieldItem = function (collectionName, fieldName) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, (0, methods_1.deleteFieldItem)(this.getBaseUrl(), this.getHeaders(), collectionName, fieldName)];
             });
         });
     };
@@ -148,6 +196,20 @@ var DrapcodeApis = /** @class */ (function () {
         });
     };
     DrapcodeApis.prototype.bulkDeleteItems = function (collectionName, body) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, (0, methods_1.bulkDeleteItems)(this.getBaseUrl(), this.getHeaders(), collectionName, body)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.removeReferenceItem = function (collectionName, body) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, (0, methods_1.bulkDeleteItems)(this.getBaseUrl(), this.getHeaders(), collectionName, body)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.addReferenceItem = function (collectionName, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, (0, methods_1.bulkDeleteItems)(this.getBaseUrl(), this.getHeaders(), collectionName, body)];
