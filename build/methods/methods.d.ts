@@ -84,6 +84,11 @@ export declare const getItemsCountWithFilter: (baseurl: string, headers: Record<
     message: any;
 }>;
 export declare const getItemWithUuid: (baseurl: string, headers: Record<string, string>, collectionName: string, itemUuid: string) => Promise<any>;
+export declare const getItemOnly: (baseurl: string, headers: Record<string, string>, collectionName: string, itemUuid: string) => Promise<any>;
+export declare const countItemByValue: (baseurl: string, headers: Record<string, string>, collectionName: string, fieldName: string, fieldValue: any) => Promise<any>;
+export declare const saveCSVData: (baseurl: string, headers: Record<string, string>, collectionName: string, items: any[]) => Promise<any>;
+export declare const validateItem: (baseurl: string, headers: Record<string, string>, collectionName: string, item: any) => Promise<any>;
+export declare const lastItem: (baseurl: string, headers: Record<string, string>, collectionName: string) => Promise<any>;
 export declare const updateItemWithUuid: (baseurl: string, headers: Record<string, string>, collectionName: string, itemUuid: string, body: any) => Promise<{
     code: any;
     success: boolean;
@@ -148,6 +153,34 @@ export declare const getItemsByids: (baseurl: string, headers: Record<string, st
     success?: undefined;
     data?: undefined;
 }>;
+export declare const clearItem: (baseurl: string, headers: Record<string, string>, collectionName: string) => Promise<{
+    code: any;
+    success: boolean;
+    data: any;
+    error: string;
+    message: string;
+} | {
+    code: number;
+    error: any;
+    message: any;
+    success?: undefined;
+    data?: undefined;
+}>;
+export declare const deleteFieldItem: (baseurl: string, headers: Record<string, string>, collectionName: string, fieldName: string) => Promise<{
+    code: any;
+    success: boolean;
+    data: any;
+    error: string;
+    message: string;
+} | {
+    code: number;
+    error: any;
+    message: any;
+    success?: undefined;
+    data?: undefined;
+}>;
+export declare const addReferenceItem: (baseurl: string, headers: Record<string, string>, collectionName: string, data: any) => Promise<any>;
+export declare const removeReferenceItem: (baseurl: string, headers: Record<string, string>, collectionName: string, data: any) => Promise<any>;
 export declare const sendEmail: (baseurl: string, headers: Record<string, string>, templateId: string, sendTo: any) => Promise<{
     success: boolean;
     data: any;

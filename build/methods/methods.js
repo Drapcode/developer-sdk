@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendEmail = exports.getItemsByids = exports.bulkDeleteItems = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.getItemWithUuid = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getAllItems = void 0;
+exports.sendEmail = exports.removeReferenceItem = exports.addReferenceItem = exports.deleteFieldItem = exports.clearItem = exports.getItemsByids = exports.bulkDeleteItems = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.lastItem = exports.validateItem = exports.saveCSVData = exports.countItemByValue = exports.getItemOnly = exports.getItemWithUuid = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getAllItems = void 0;
 var constants_1 = require("../utils/constants");
 var util_1 = require("../utils/util");
 var getAllItems = function (baseurl, headers, collectionName, reqQuery, query) { return __awaiter(void 0, void 0, void 0, function () {
@@ -222,8 +222,168 @@ var getItemWithUuid = function (baseurl, headers, collectionName, itemUuid) { re
     });
 }); };
 exports.getItemWithUuid = getItemWithUuid;
-var updateItemWithUuid = function (baseurl, headers, collectionName, itemUuid, body) { return __awaiter(void 0, void 0, void 0, function () {
+var getItemOnly = function (baseurl, headers, collectionName, itemUuid) { return __awaiter(void 0, void 0, void 0, function () {
     var url, response, result, error_6, message;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/item-only/").concat(itemUuid);
+                console.log("Generated url:getItemWithUuid :>> ", url);
+                return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
+            case 1:
+                response = _a.sent();
+                if (!!response.ok) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
+            case 2: return [2 /*return*/, _a.sent()];
+            case 3: return [4 /*yield*/, response.json()];
+            case 4:
+                result = _a.sent();
+                return [2 /*return*/, result];
+            case 5:
+                error_6 = _a.sent();
+                message = error_6.message;
+                if (message) {
+                    message = message.replace("fetch failed", "Network Error");
+                }
+                return [2 /*return*/, { code: 500, error: message, message: message }];
+            case 6: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getItemOnly = getItemOnly;
+var countItemByValue = function (baseurl, headers, collectionName, fieldName, fieldValue) { return __awaiter(void 0, void 0, void 0, function () {
+    var url, response, result, error_7, message;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/count-by-field");
+                console.log("url :>> ", url);
+                return [4 /*yield*/, fetch(url, {
+                        method: "POST",
+                        headers: headers,
+                        body: JSON.stringify({ fieldName: fieldName, fieldValue: fieldValue }),
+                    })];
+            case 1:
+                response = _a.sent();
+                if (!!response.ok) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
+            case 2: return [2 /*return*/, _a.sent()];
+            case 3: return [4 /*yield*/, response.json()];
+            case 4:
+                result = _a.sent();
+                return [2 /*return*/, result];
+            case 5:
+                error_7 = _a.sent();
+                message = error_7.message;
+                if (message) {
+                    message = message.replace("fetch failed", "Network Error");
+                }
+                return [2 /*return*/, { code: 500, error: message, message: message }];
+            case 6: return [2 /*return*/];
+        }
+    });
+}); };
+exports.countItemByValue = countItemByValue;
+var saveCSVData = function (baseurl, headers, collectionName, items) { return __awaiter(void 0, void 0, void 0, function () {
+    var url, response, result, error_8, message;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/csv-items");
+                return [4 /*yield*/, fetch(url, {
+                        method: "POST",
+                        headers: headers,
+                        body: JSON.stringify({ items: items }),
+                    })];
+            case 1:
+                response = _a.sent();
+                if (!!response.ok) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
+            case 2: return [2 /*return*/, _a.sent()];
+            case 3: return [4 /*yield*/, response.json()];
+            case 4:
+                result = _a.sent();
+                return [2 /*return*/, result];
+            case 5:
+                error_8 = _a.sent();
+                message = error_8.message;
+                if (message) {
+                    message = message.replace("fetch failed", "Network Error");
+                }
+                return [2 /*return*/, { code: 500, error: message, message: message }];
+            case 6: return [2 /*return*/];
+        }
+    });
+}); };
+exports.saveCSVData = saveCSVData;
+var validateItem = function (baseurl, headers, collectionName, item) { return __awaiter(void 0, void 0, void 0, function () {
+    var url, response, result, error_9, message;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/validate-item");
+                return [4 /*yield*/, fetch(url, {
+                        method: "POST",
+                        headers: headers,
+                        body: JSON.stringify({ itemData: item }),
+                    })];
+            case 1:
+                response = _a.sent();
+                if (!!response.ok) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
+            case 2: return [2 /*return*/, _a.sent()];
+            case 3: return [4 /*yield*/, response.json()];
+            case 4:
+                result = _a.sent();
+                return [2 /*return*/, result];
+            case 5:
+                error_9 = _a.sent();
+                message = error_9.message;
+                if (message) {
+                    message = message.replace("fetch failed", "Network Error");
+                }
+                return [2 /*return*/, { code: 500, error: message, message: message }];
+            case 6: return [2 /*return*/];
+        }
+    });
+}); };
+exports.validateItem = validateItem;
+var lastItem = function (baseurl, headers, collectionName) { return __awaiter(void 0, void 0, void 0, function () {
+    var url, response, result, error_10, message;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/last-item");
+                console.log("Generated url:getItemWithUuid :>> ", url);
+                return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
+            case 1:
+                response = _a.sent();
+                if (!!response.ok) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
+            case 2: return [2 /*return*/, _a.sent()];
+            case 3: return [4 /*yield*/, response.json()];
+            case 4:
+                result = _a.sent();
+                return [2 /*return*/, result];
+            case 5:
+                error_10 = _a.sent();
+                message = error_10.message;
+                if (message) {
+                    message = message.replace("fetch failed", "Network Error");
+                }
+                return [2 /*return*/, { code: 500, error: message, message: message }];
+            case 6: return [2 /*return*/];
+        }
+    });
+}); };
+exports.lastItem = lastItem;
+var updateItemWithUuid = function (baseurl, headers, collectionName, itemUuid, body) { return __awaiter(void 0, void 0, void 0, function () {
+    var url, response, result, error_11, message;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -245,8 +405,8 @@ var updateItemWithUuid = function (baseurl, headers, collectionName, itemUuid, b
                 result = _a.sent();
                 return [2 /*return*/, (0, util_1.processResponse)(result)];
             case 5:
-                error_6 = _a.sent();
-                message = error_6.message;
+                error_11 = _a.sent();
+                message = error_11.message;
                 if (message) {
                     message = message.replace("fetch failed", "Network Error");
                 }
@@ -257,7 +417,7 @@ var updateItemWithUuid = function (baseurl, headers, collectionName, itemUuid, b
 }); };
 exports.updateItemWithUuid = updateItemWithUuid;
 var deleteItemWithUuid = function (baseurl, headers, collectionName, itemUuid) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_7, message;
+    var url, response, result, error_12, message;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -280,8 +440,8 @@ var deleteItemWithUuid = function (baseurl, headers, collectionName, itemUuid) {
                         message: "",
                     }];
             case 3:
-                error_7 = _a.sent();
-                message = error_7.message;
+                error_12 = _a.sent();
+                message = error_12.message;
                 if (message) {
                     message = message.replace("fetch failed", "Network Error");
                 }
@@ -292,7 +452,7 @@ var deleteItemWithUuid = function (baseurl, headers, collectionName, itemUuid) {
 }); };
 exports.deleteItemWithUuid = deleteItemWithUuid;
 var bulkDeleteItems = function (baseurl, headers, collectionName, body) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_8, message;
+    var url, response, result, error_13, message;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -310,8 +470,8 @@ var bulkDeleteItems = function (baseurl, headers, collectionName, body) { return
                 result = _a.sent();
                 return [2 /*return*/, { success: true, data: result.data, error: "", message: "" }];
             case 3:
-                error_8 = _a.sent();
-                message = error_8.message;
+                error_13 = _a.sent();
+                message = error_13.message;
                 if (message) {
                     message = message.replace("fetch failed", "Network Error");
                 }
@@ -322,7 +482,7 @@ var bulkDeleteItems = function (baseurl, headers, collectionName, body) { return
 }); };
 exports.bulkDeleteItems = bulkDeleteItems;
 var getItemsByids = function (baseurl, headers, collectionName, body) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_9, message;
+    var url, response, result, error_14, message;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -340,8 +500,8 @@ var getItemsByids = function (baseurl, headers, collectionName, body) { return _
                 result = _a.sent();
                 return [2 /*return*/, { success: true, data: result.data, error: "", message: "" }];
             case 3:
-                error_9 = _a.sent();
-                message = error_9.message;
+                error_14 = _a.sent();
+                message = error_14.message;
                 if (message) {
                     message = message.replace("fetch failed", "Network Error");
                 }
@@ -351,8 +511,144 @@ var getItemsByids = function (baseurl, headers, collectionName, body) { return _
     });
 }); };
 exports.getItemsByids = getItemsByids;
+var clearItem = function (baseurl, headers, collectionName) { return __awaiter(void 0, void 0, void 0, function () {
+    var url, response, result, error_15, message;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 3, , 4]);
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/clear-item/");
+                return [4 /*yield*/, fetch(url, {
+                        method: "DELETE",
+                        headers: headers,
+                    })];
+            case 1:
+                response = _a.sent();
+                return [4 /*yield*/, response.json()];
+            case 2:
+                result = _a.sent();
+                return [2 /*return*/, {
+                        code: result === null || result === void 0 ? void 0 : result.code,
+                        success: (result === null || result === void 0 ? void 0 : result.code) == 200 ? true : false,
+                        data: result.message,
+                        error: "",
+                        message: "",
+                    }];
+            case 3:
+                error_15 = _a.sent();
+                message = error_15.message;
+                if (message) {
+                    message = message.replace("fetch failed", "Network Error");
+                }
+                return [2 /*return*/, { code: 500, error: message, message: message }];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+exports.clearItem = clearItem;
+var deleteFieldItem = function (baseurl, headers, collectionName, fieldName) { return __awaiter(void 0, void 0, void 0, function () {
+    var url, response, result, error_16, message;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 3, , 4]);
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/delete-field-record/").concat(fieldName);
+                return [4 /*yield*/, fetch(url, {
+                        method: "DELETE",
+                        headers: headers,
+                    })];
+            case 1:
+                response = _a.sent();
+                return [4 /*yield*/, response.json()];
+            case 2:
+                result = _a.sent();
+                return [2 /*return*/, {
+                        code: result === null || result === void 0 ? void 0 : result.code,
+                        success: (result === null || result === void 0 ? void 0 : result.code) == 200 ? true : false,
+                        data: result.message,
+                        error: "",
+                        message: "",
+                    }];
+            case 3:
+                error_16 = _a.sent();
+                message = error_16.message;
+                if (message) {
+                    message = message.replace("fetch failed", "Network Error");
+                }
+                return [2 /*return*/, { code: 500, error: message, message: message }];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+exports.deleteFieldItem = deleteFieldItem;
+var addReferenceItem = function (baseurl, headers, collectionName, data) { return __awaiter(void 0, void 0, void 0, function () {
+    var url, response, result, error_17, message;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/add-reference");
+                return [4 /*yield*/, fetch(url, {
+                        method: "POST",
+                        headers: headers,
+                        body: JSON.stringify(data),
+                    })];
+            case 1:
+                response = _a.sent();
+                if (!!response.ok) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
+            case 2: return [2 /*return*/, _a.sent()];
+            case 3: return [4 /*yield*/, response.json()];
+            case 4:
+                result = _a.sent();
+                return [2 /*return*/, result];
+            case 5:
+                error_17 = _a.sent();
+                message = error_17.message;
+                if (message) {
+                    message = message.replace("fetch failed", "Network Error");
+                }
+                return [2 /*return*/, { code: 500, error: message, message: message }];
+            case 6: return [2 /*return*/];
+        }
+    });
+}); };
+exports.addReferenceItem = addReferenceItem;
+var removeReferenceItem = function (baseurl, headers, collectionName, data) { return __awaiter(void 0, void 0, void 0, function () {
+    var url, response, result, error_18, message;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/remove-reference");
+                return [4 /*yield*/, fetch(url, {
+                        method: "POST",
+                        headers: headers,
+                        body: JSON.stringify(data),
+                    })];
+            case 1:
+                response = _a.sent();
+                if (!!response.ok) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
+            case 2: return [2 /*return*/, _a.sent()];
+            case 3: return [4 /*yield*/, response.json()];
+            case 4:
+                result = _a.sent();
+                return [2 /*return*/, result];
+            case 5:
+                error_18 = _a.sent();
+                message = error_18.message;
+                if (message) {
+                    message = message.replace("fetch failed", "Network Error");
+                }
+                return [2 /*return*/, { code: 500, error: message, message: message }];
+            case 6: return [2 /*return*/];
+        }
+    });
+}); };
+exports.removeReferenceItem = removeReferenceItem;
 var sendEmail = function (baseurl, headers, templateId, sendTo) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_10, message;
+    var url, response, result, error_19, message;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -369,8 +665,8 @@ var sendEmail = function (baseurl, headers, templateId, sendTo) { return __await
                 result = _a.sent();
                 return [2 /*return*/, { success: true, data: result, error: "", message: "" }];
             case 3:
-                error_10 = _a.sent();
-                message = error_10.message;
+                error_19 = _a.sent();
+                message = error_19.message;
                 if (message) {
                     message = message.replace("fetch failed", "Network Error");
                 }

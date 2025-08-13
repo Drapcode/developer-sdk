@@ -93,6 +93,11 @@ export declare class DrapcodeApis {
         message: any;
     }>;
     getItemWithUuid(collectionName: string, itemUuid: string): Promise<any>;
+    getItemOnly(collectionName: string, itemUuid: string): Promise<any>;
+    countItemByValue(collectionName: string, fieldName: string, fieldValue: any): Promise<any>;
+    saveCSVData(collectionName: string, items: any[]): Promise<any>;
+    validateItem(collectionName: string, item: any): Promise<any>;
+    lastItem(collectionName: string): Promise<any>;
     updateItemWithUuid(collectionName: string, itemUuid: string, body: any): Promise<{
         code: any;
         success: boolean;
@@ -118,6 +123,32 @@ export declare class DrapcodeApis {
         error: any;
         message: any;
     }>;
+    clearItem(collectionName: string): Promise<{
+        code: any;
+        success: boolean;
+        data: any;
+        error: string;
+        message: string;
+    } | {
+        code: number;
+        error: any;
+        message: any;
+        success?: undefined;
+        data?: undefined;
+    }>;
+    deleteFieldItem(collectionName: string, fieldName: string): Promise<{
+        code: any;
+        success: boolean;
+        data: any;
+        error: string;
+        message: string;
+    } | {
+        code: number;
+        error: any;
+        message: any;
+        success?: undefined;
+        data?: undefined;
+    }>;
     deleteItemWithUuid(collectionName: string, itemUuid: string): Promise<{
         code: any;
         success: boolean;
@@ -132,6 +163,32 @@ export declare class DrapcodeApis {
         data?: undefined;
     }>;
     bulkDeleteItems(collectionName: string, body: any): Promise<{
+        success: boolean;
+        data: any;
+        error: string;
+        message: string;
+        code?: undefined;
+    } | {
+        code: number;
+        error: any;
+        message: any;
+        success?: undefined;
+        data?: undefined;
+    }>;
+    removeReferenceItem(collectionName: string, body: any): Promise<{
+        success: boolean;
+        data: any;
+        error: string;
+        message: string;
+        code?: undefined;
+    } | {
+        code: number;
+        error: any;
+        message: any;
+        success?: undefined;
+        data?: undefined;
+    }>;
+    addReferenceItem(collectionName: string, body: any): Promise<{
         success: boolean;
         data: any;
         error: string;

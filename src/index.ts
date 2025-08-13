@@ -1,16 +1,23 @@
 import {
   bulkDeleteItems,
+  clearItem,
+  countItemByValue,
   createItem,
+  deleteFieldItem,
   deleteItemWithUuid,
   getAllItems,
+  getItemOnly,
   getItemWithUuid,
   getItemsByids,
   getItemsCountWithFilter,
   getItemsWithFilter,
+  lastItem,
+  saveCSVData,
   sendEmail,
   updateItemWithUuid,
+  validateItem,
 } from "./methods/methods";
-import { Query, QueryOperation, SearchPaginate } from "./utils/constants";
+import { Query, SearchPaginate } from "./utils/constants";
 
 export class DrapcodeApis {
   private project_seo_name: string;
@@ -104,6 +111,46 @@ export class DrapcodeApis {
       itemUuid
     );
   }
+  async getItemOnly(collectionName: string, itemUuid: string) {
+    return getItemOnly(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      collectionName,
+      itemUuid
+    );
+  }
+  async countItemByValue(
+    collectionName: string,
+    fieldName: string,
+    fieldValue: any
+  ) {
+    return countItemByValue(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      collectionName,
+      fieldName,
+      fieldValue
+    );
+  }
+  async saveCSVData(collectionName: string, items: any[]) {
+    return saveCSVData(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      collectionName,
+      items
+    );
+  }
+  async validateItem(collectionName: string, item: any) {
+    return validateItem(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      collectionName,
+      item
+    );
+  }
+  async lastItem(collectionName: string) {
+    return lastItem(this.getBaseUrl(), this.getHeaders(), collectionName);
+  }
   async updateItemWithUuid(
     collectionName: string,
     itemUuid: string,
@@ -117,6 +164,17 @@ export class DrapcodeApis {
       body
     );
   }
+  async clearItem(collectionName: string) {
+    return clearItem(this.getBaseUrl(), this.getHeaders(), collectionName);
+  }
+  async deleteFieldItem(collectionName: string, fieldName: string) {
+    return deleteFieldItem(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      collectionName,
+      fieldName
+    );
+  }
   async deleteItemWithUuid(collectionName: string, itemUuid: string) {
     return deleteItemWithUuid(
       this.getBaseUrl(),
@@ -126,6 +184,22 @@ export class DrapcodeApis {
     );
   }
   async bulkDeleteItems(collectionName: string, body: any) {
+    return bulkDeleteItems(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      collectionName,
+      body
+    );
+  }
+  async removeReferenceItem(collectionName: string, body: any) {
+    return bulkDeleteItems(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      collectionName,
+      body
+    );
+  }
+  async addReferenceItem(collectionName: string, body: any) {
     return bulkDeleteItems(
       this.getBaseUrl(),
       this.getHeaders(),
