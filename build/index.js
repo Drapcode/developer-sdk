@@ -57,6 +57,7 @@ var DrapcodeApis = /** @class */ (function () {
         if (xApiKey === void 0) { xApiKey = ""; }
         if (authorization === void 0) { authorization = ""; }
         if (environment === void 0) { environment = "PRODUCTION"; }
+        if (builderKey === void 0) { builderKey = ""; }
         // private API_PATH = "drapcode.io/api/v1/developer";
         this.API_PATH = "prodeless.com:5002/api/v1/developer";
         this.project_seo_name = project_seo_name;

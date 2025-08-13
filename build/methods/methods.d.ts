@@ -31,12 +31,6 @@ export declare const createItem: (baseurl: string, headers: Record<string, strin
     error: string;
     message: string;
 } | {
-    success: boolean;
-    data: string;
-    error: string;
-    message: string;
-} | undefined>;
-export declare const getItemsWithFilter: (baseurl: string, headers: Record<string, string>, collectionName: string, filterUuid: string) => Promise<{
     code: any;
     success: boolean;
     data: string;
@@ -123,17 +117,23 @@ export declare const updateItemWithUuid: (baseurl: string, headers: Record<strin
 export declare const deleteItemWithUuid: (baseurl: string, headers: Record<string, string>, collectionName: string, itemUuid: string) => Promise<{
     code: any;
     success: boolean;
-    data: any;
-    error: string;
-    message: string;
-} | {
-    code: any;
-    success: boolean;
     error: any;
     message: any;
     data: string;
     totalItems?: undefined;
     totalPages?: undefined;
+} | {
+    code: number;
+    success: boolean;
+    error: string;
+    message: string;
+    data: any;
+    totalItems: any;
+    totalPages: any;
+} | {
+    code: number;
+    error: any;
+    message: any;
 }>;
 export declare const bulkDeleteItems: (baseurl: string, headers: Record<string, string>, collectionName: string, body: any) => Promise<{
     success: boolean;
@@ -202,12 +202,3 @@ export declare const sendEmail: (baseurl: string, headers: Record<string, string
     success?: undefined;
     data?: undefined;
 }>;
-/**
- * {
- * code,
- * success
- * data,
- * error,
- * message,
- * }
- */
