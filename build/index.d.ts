@@ -5,7 +5,8 @@ export declare class DrapcodeApis {
     private authorization;
     private environment;
     private API_PATH;
-    constructor(project_seo_name: string, xApiKey?: string, authorization?: string, environment?: string);
+    private builderKey;
+    constructor(project_seo_name: string, xApiKey?: string, authorization?: string, environment?: string, builderKey?: string);
     getBaseUrl(): string;
     getHeaders(): Record<string, string>;
     getAllItems(collectionName: string, reqQuery?: SearchPaginate | any, query?: Query[] | []): Promise<{
@@ -40,6 +41,7 @@ export declare class DrapcodeApis {
         error: string;
         message: string;
     } | {
+        code: any;
         success: boolean;
         data: string;
         error: any;
@@ -151,15 +153,23 @@ export declare class DrapcodeApis {
     deleteItemWithUuid(collectionName: string, itemUuid: string): Promise<{
         code: any;
         success: boolean;
-        data: any;
+        error: any;
+        message: any;
+        data: string;
+        totalItems?: undefined;
+        totalPages?: undefined;
+    } | {
+        code: number;
+        success: boolean;
         error: string;
         message: string;
+        data: any;
+        totalItems: any;
+        totalPages: any;
     } | {
         code: number;
         error: any;
         message: any;
-        success?: undefined;
-        data?: undefined;
     }>;
     bulkDeleteItems(collectionName: string, body: any): Promise<{
         success: boolean;

@@ -114,14 +114,13 @@ var createItem = function (baseurl, headers, collectionName, body) { return __aw
             case 2: return [2 /*return*/, _a.sent()];
             case 3:
                 console.log("response.status :>> ", response.status);
-                if (!(response.status &&
-                    (response.status === 200 || response.status === 201))) return [3 /*break*/, 5];
+                if (!((response === null || response === void 0 ? void 0 : response.status) &&
+                    ((response === null || response === void 0 ? void 0 : response.status) === 200 || (response === null || response === void 0 ? void 0 : response.status) === 201))) return [3 /*break*/, 5];
                 return [4 /*yield*/, response.json()];
             case 4:
                 result = _a.sent();
-                console.log("result :>> ", result);
                 return [2 /*return*/, {
-                        code: response.status,
+                        code: response === null || response === void 0 ? void 0 : response.status,
                         success: true,
                         data: result,
                         error: "",
@@ -432,7 +431,7 @@ var deleteItemWithUuid = function (baseurl, headers, collectionName, itemUuid) {
                 return [4 /*yield*/, response.json()];
             case 2:
                 result = _a.sent();
-                return [2 /*return*/, processResponse(result)];
+                return [2 /*return*/, (0, util_1.processResponse)(result)];
             case 3:
                 error_12 = _a.sent();
                 message = error_12.message;

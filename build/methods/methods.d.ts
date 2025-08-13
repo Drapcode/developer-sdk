@@ -27,7 +27,7 @@ export declare const getAllItems: (baseurl: string, headers: Record<string, stri
 export declare const createItem: (baseurl: string, headers: Record<string, string>, collectionName: string, body: any) => Promise<{
     code: any;
     success: boolean;
-    data: string;
+    data: any;
     error: string;
     message: string;
 } | {
@@ -117,15 +117,23 @@ export declare const updateItemWithUuid: (baseurl: string, headers: Record<strin
 export declare const deleteItemWithUuid: (baseurl: string, headers: Record<string, string>, collectionName: string, itemUuid: string) => Promise<{
     code: any;
     success: boolean;
-    data: any;
+    error: any;
+    message: any;
+    data: string;
+    totalItems?: undefined;
+    totalPages?: undefined;
+} | {
+    code: number;
+    success: boolean;
     error: string;
     message: string;
+    data: any;
+    totalItems: any;
+    totalPages: any;
 } | {
     code: number;
     error: any;
     message: any;
-    success?: undefined;
-    data?: undefined;
 }>;
 export declare const bulkDeleteItems: (baseurl: string, headers: Record<string, string>, collectionName: string, body: any) => Promise<{
     success: boolean;

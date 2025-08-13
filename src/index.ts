@@ -27,6 +27,8 @@ export class DrapcodeApis {
   // private API_PATH = "drapcode.io/api/v1/developer";
   private API_PATH = "prodeless.com:5002/api/v1/developer";
 
+  private builderKey: string; //for builder auth
+  
   constructor(
     project_seo_name: string,
     xApiKey: string = "",
