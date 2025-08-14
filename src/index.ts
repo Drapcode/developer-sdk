@@ -25,14 +25,14 @@ export class DrapcodeApis {
   private authorization: string; //authorization
   private environment: string;
   // private API_PATH = "drapcode.io/api/v1/developer";
-  // private API_PATH = "webkonnect.site/api/v1/developer";
-  private API_PATH = "prodeless.com:5002/api/v1/developer";
+  private API_PATH = "webkonnect.site/api/v1/developer";
+  // private API_PATH = "prodeless.com:5002/api/v1/developer";
 
-  // private protocol = "https";
-  private protocol = "http";
+  private protocol = "https";
+  // private protocol = "http";
 
   private builderKey: string; //for builder auth
-  
+
   constructor(
     project_seo_name: string,
     xApiKey: string = "",
