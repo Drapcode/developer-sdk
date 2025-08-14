@@ -1,30 +1,15 @@
-export declare enum QueryOperation {
-    EQUALS = "EQUALS",
-    IS_NOT_NULL = "IS_NOT_NULL",
-    IS_NULL = "IS_NULL",
-    LIKE = "LIKE",
-    LESS_THAN_EQUALS_TO = "LESS_THAN_EQUALS_TO",
-    GREATER_THAN_EQUALS_TO = "GREATER_THAN_EQUALS_TO",
-    LESS_THAN = "LESS_THAN",
-    GREATER_THAN = "GREATER_THAN",
-    IN_LIST = "IN_LIST",
-    NOT_IN_LIST = "NOT_IN_LIST"
-}
-type Query = {
-    field: string;
-    condition: QueryOperation;
-    value: string;
-};
+import { Query, SearchPaginate } from "./utils/constants";
 export declare class DrapcodeApis {
     private project_seo_name;
     private xApiKey;
     private authorization;
     private environment;
     private API_PATH;
+    private protocol;
     constructor(project_seo_name: string, xApiKey?: string, authorization?: string, environment?: string);
-    private getBaseUrl;
-    private getHeaders;
-    getAllItems(collectionName: string, query: Query[]): Promise<{
+    getBaseUrl(): string;
+    getHeaders(): Record<string, string>;
+    getAllItems(collectionName: string, reqQuery?: SearchPaginate | any, query?: Query[] | []): Promise<{
         code: any;
         success: boolean;
         data: any;
@@ -40,18 +25,17 @@ export declare class DrapcodeApis {
         totalPages?: undefined;
     }>;
     createItem(collectionName: string, body: any): Promise<{
-        success: boolean;
-        data: string;
-        error: string;
-        message: string;
-        code?: undefined;
-    } | {
         code: any;
         success: boolean;
         data: any;
         error: string;
-        message: any;
-    }>;
+        message: string;
+    } | {
+        success: boolean;
+        data: string;
+        error: string;
+        message: string;
+    } | undefined>;
     getItemsWithFilter(collectionName: string, filterUuid: string): Promise<{
         code: any;
         success: boolean;
@@ -156,4 +140,6 @@ export declare class DrapcodeApis {
         message: string;
     }>;
 }
-export {};
+export * from "./utils/index";
+export * from "./utils/crypt";
+export * from "./utils/constants";

@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -47,11 +36,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendEmail = exports.getItemsByids = exports.bulkDeleteItems = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.getItemWithUuid = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getAllItems = exports.QueryOperation = void 0;
+exports.sendEmail = exports.getItemsByids = exports.bulkDeleteItems = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.getItemWithUuid = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getAllItems = void 0;
+var constants_1 = require("../utils/constants");
 var createErrorResponse = function (error) {
     var _a;
+    console.log("error.response :>> ", error.response);
     if (error.response && error.response.status === 404) {
         var responseData = error.response.data;
+        console.log("responseData :>> ", responseData);
         var finalData = void 0;
         if (responseData == "This url does not exist. Please publish again.") {
             finalData = "Please check your project name or publish again.";
@@ -70,7 +62,7 @@ var createErrorResponse = function (error) {
             message: "",
         };
     }
-    else if (error.response && error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
         var responseData = error.response;
         return {
             code: responseData.status,
@@ -80,7 +72,7 @@ var createErrorResponse = function (error) {
             message: "",
         };
     }
-    else if (error.response && error.response.status === 400) {
+    if (error.response && error.response.status === 400) {
         var responseData = error.response;
         return {
             code: responseData === null || responseData === void 0 ? void 0 : responseData.status,
@@ -106,9 +98,11 @@ var processResponse = function (result) {
         409: "Conflict",
         500: "Internal Server Error",
     };
+    console.log("result :>> ", result);
     if ((result === null || result === void 0 ? void 0 : result.status) === "FAILED") {
         var statusCode = ((_a = result === null || result === void 0 ? void 0 : result.error) === null || _a === void 0 ? void 0 : _a.errStatus) || 400;
         var errorMessage = ((_b = result === null || result === void 0 ? void 0 : result.error) === null || _b === void 0 ? void 0 : _b.message) || defaultMessages[statusCode] || "API Failed";
+        console.log("errorMessage :>> ", errorMessage);
         return {
             code: statusCode,
             success: false,
@@ -127,54 +121,58 @@ var processResponse = function (result) {
             data: "",
         };
     }
+    return {
+        code: 200,
+        success: true,
+        error: "",
+        message: "",
+        data: (result === null || result === void 0 ? void 0 : result.result) || result,
+        totalItems: (result === null || result === void 0 ? void 0 : result.totalItems) || 0,
+        totalPages: (result === null || result === void 0 ? void 0 : result.totalPages) || 0,
+    };
 };
-var QueryOperation;
-(function (QueryOperation) {
-    QueryOperation["EQUALS"] = "EQUALS";
-    QueryOperation["IS_NOT_NULL"] = "IS_NOT_NULL";
-    QueryOperation["IS_NULL"] = "IS_NULL";
-    QueryOperation["LIKE"] = "LIKE";
-    QueryOperation["LESS_THAN_EQUALS_TO"] = "LESS_THAN_EQUALS_TO";
-    QueryOperation["GREATER_THAN_EQUALS_TO"] = "GREATER_THAN_EQUALS_TO";
-    QueryOperation["LESS_THAN"] = "LESS_THAN";
-    QueryOperation["GREATER_THAN"] = "GREATER_THAN";
-    QueryOperation["IN_LIST"] = "IN_LIST";
-    QueryOperation["NOT_IN_LIST"] = "NOT_IN_LIST";
-})(QueryOperation = exports.QueryOperation || (exports.QueryOperation = {}));
-var getAllItems = function (baseurl, headers, collectionName, query) { return __awaiter(void 0, void 0, void 0, function () {
-    var params_1, queryParams, url, response, result, error_1;
+var getAllItems = function (baseurl, headers, collectionName, reqQuery, query) { return __awaiter(void 0, void 0, void 0, function () {
+    var queryParams_1, url, response, result, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 3, , 4]);
-                params_1 = [];
-                query.forEach(function (query, index) {
-                    var conditionString = QueryOperation[query.condition];
-                    var queryString = "".concat(encodeURIComponent(query.field), "%3A").concat(conditionString, "=").concat(encodeURIComponent(query.value));
-                    params_1.push(queryString);
+                queryParams_1 = new URLSearchParams();
+                console.log("headers :>> ", headers);
+                console.log("query :>> ", query);
+                console.log("reqQuery :>> ", reqQuery);
+                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortField)
+                    queryParams_1.append("sortField", reqQuery.sortField);
+                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortOrder)
+                    queryParams_1.append("sortOrder", reqQuery.sortOrder);
+                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.searchTerm)
+                    queryParams_1.append("searchTerm", reqQuery.searchTerm);
+                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.isPagination) {
+                    queryParams_1.append("page", reqQuery.page);
+                    queryParams_1.append("limit", reqQuery.limit);
+                }
+                query.map(function (query) {
+                    var conditionString = constants_1.QueryOperation[query.condition];
+                    var field = "".concat(query.field);
+                    var value = "".concat(query.value);
+                    // double encoding the query params(remove after testing)
+                    // const field = encodeURIComponent(query.field);
+                    // const value = encodeURIComponent(query.value);
+                    queryParams_1.append("".concat(field, ":").concat(conditionString), "".concat(value));
                 });
-                queryParams = params_1.join("&");
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat("".concat(queryParams));
+                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryParams_1.toString());
+                console.log("Generated URL:", url);
                 return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
             case 1:
-                _a.trys.push([1, 4, , 5]);
-                queryParams = new URLSearchParams(__assign(__assign(__assign(__assign({}, ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortField) && { sortField: reqQuery.sortField })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortOrder) && { sortOrder: reqQuery.sortOrder })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.searchTerm) && { searchTerm: reqQuery.searchTerm })), ((reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.isPagination) && {
-                    page: reqQuery.page,
-                    limit: reqQuery.limit,
-                })));
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryParams.toString());
-                console.log("Generated URL:", url, headers, "Query:", reqQuery);
-                return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
-            case 2:
                 response = _a.sent();
                 return [4 /*yield*/, response.json()];
-            case 3:
+            case 2:
                 result = _a.sent();
                 return [2 /*return*/, processResponse(result)];
-            case 4:
+            case 3:
                 error_1 = _a.sent();
                 return [2 /*return*/, createErrorResponse(error_1)];
-            case 5: return [2 /*return*/];
+            case 4: return [2 /*return*/];
         }
     });
 }); };
@@ -184,8 +182,9 @@ var createItem = function (baseurl, headers, collectionName, body) { return __aw
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 5, , 6]);
+                _a.trys.push([0, 4, , 5]);
                 url = "".concat(baseurl, "/collection/").concat(collectionName, "/items");
+                console.log("url :>> ", url);
                 return [4 /*yield*/, fetch(url, {
                         method: "POST",
                         headers: headers,
@@ -193,28 +192,33 @@ var createItem = function (baseurl, headers, collectionName, body) { return __aw
                     })];
             case 1:
                 response = _a.sent();
-                if (!(response.status && response.status === 404)) return [3 /*break*/, 2];
+                console.log("response.status :>> ", response.status);
+                if (response.status && response.status === 404) {
+                    return [2 /*return*/, {
+                            success: false,
+                            data: "Collection Not Found",
+                            error: "",
+                            message: "",
+                        }];
+                }
+                if (!(response.status &&
+                    (response.status === 200 || response.status === 201))) return [3 /*break*/, 3];
+                return [4 /*yield*/, response.json()];
+            case 2:
+                result = _a.sent();
+                console.log("result :>> ", result);
                 return [2 /*return*/, {
-                        success: false,
-                        data: "Collection Not Found",
+                        code: response.status,
+                        success: true,
+                        data: result,
                         error: "",
                         message: "",
                     }];
-            case 2: return [4 /*yield*/, response.json()];
-            case 3:
-                result = _a.sent();
-                return [2 /*return*/, {
-                        code: result === null || result === void 0 ? void 0 : result.code,
-                        success: true,
-                        data: result === null || result === void 0 ? void 0 : result.data,
-                        error: "",
-                        message: result.message || "",
-                    }];
-            case 4: return [3 /*break*/, 6];
-            case 5:
+            case 3: return [3 /*break*/, 5];
+            case 4:
                 error_2 = _a.sent();
                 return [2 /*return*/, createErrorResponse(error_2)];
-            case 6: return [2 /*return*/];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
