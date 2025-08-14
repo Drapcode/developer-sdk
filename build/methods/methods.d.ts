@@ -31,6 +31,11 @@ export declare const createItem: (baseurl: string, headers: Record<string, strin
     error: string;
     message: string;
 } | {
+    success: boolean;
+    error: string;
+    message: string;
+} | undefined>;
+export declare const getItemsWithFilter: (baseurl: string, headers: Record<string, string>, collectionName: string, filterUuid: string) => Promise<{
     code: any;
     success: boolean;
     data: string;
@@ -202,3 +207,12 @@ export declare const sendEmail: (baseurl: string, headers: Record<string, string
     success?: undefined;
     data?: undefined;
 }>;
+/**
+ * {
+ * code,
+ * success
+ * data,
+ * error,
+ * message,
+ * }
+ */

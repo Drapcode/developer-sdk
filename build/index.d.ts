@@ -5,8 +5,8 @@ export declare class DrapcodeApis {
     private authorization;
     private environment;
     private API_PATH;
-    private builderKey;
-    constructor(project_seo_name: string, xApiKey?: string, authorization?: string, environment?: string, builderKey?: string);
+    private protocol;
+    constructor(project_seo_name: string, xApiKey?: string, authorization?: string, environment?: string);
     getBaseUrl(): string;
     getHeaders(): Record<string, string>;
     getAllItems(collectionName: string, reqQuery?: SearchPaginate | any, query?: Query[] | []): Promise<{
@@ -41,15 +41,10 @@ export declare class DrapcodeApis {
         error: string;
         message: string;
     } | {
-        code: any;
         success: boolean;
         data: string;
-        error: any;
+        error: string;
         message: string;
-    } | {
-        code: number;
-        error: any;
-        message: any;
     } | undefined>;
     getItemsWithFilter(collectionName: string, filterUuid: string): Promise<{
         code: any;
