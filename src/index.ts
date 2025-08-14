@@ -17,7 +17,12 @@ export class DrapcodeApis {
   private xApiKey: string;
   private authorization: string; //authorization
   private environment: string;
-  private API_PATH = "drapcode.io/api/v1/developer";
+  // private API_PATH = "drapcode.io/api/v1/developer";
+  // private API_PATH = "webkonnect.site/api/v1/developer";
+  private API_PATH = "prodeless.com:5002/api/v1/developer";
+
+  // private protocol = "https";
+  private protocol = "http";
 
   constructor(
     project_seo_name: string,
@@ -33,15 +38,15 @@ export class DrapcodeApis {
   public getBaseUrl(): string {
     switch (this.environment.toUpperCase()) {
       case "PRODUCTION":
-        return `https://${this.project_seo_name}.api.${this.API_PATH}`;
+        return `${this.protocol}://${this.project_seo_name}.api.${this.API_PATH}`;
       case "PREVIEW":
-        return `https://${this.project_seo_name}.api.preview.${this.API_PATH}`;
+        return `${this.protocol}://${this.project_seo_name}.api.preview.${this.API_PATH}`;
       case "BETA":
-        return `https://${this.project_seo_name}.api.sandbox.${this.API_PATH}`;
+        return `${this.protocol}://${this.project_seo_name}.api.sandbox.${this.API_PATH}`;
       case "ALPHA":
-        return `https://${this.project_seo_name}.api.uat.${this.API_PATH}`;
+        return `${this.protocol}://${this.project_seo_name}.api.uat.${this.API_PATH}`;
       default:
-        return `https://${this.project_seo_name}.api.${this.API_PATH}`;
+        return `${this.protocol}://${this.project_seo_name}.api.${this.API_PATH}`;
     }
   }
   public getHeaders(): Record<string, string> {
