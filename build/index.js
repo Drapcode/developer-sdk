@@ -53,16 +53,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DrapcodeApis = void 0;
 var methods_1 = require("./methods/methods");
 var DrapcodeApis = /** @class */ (function () {
+    // private protocol = "http";
     function DrapcodeApis(project_seo_name, xApiKey, authorization, environment, builderKey) {
         if (xApiKey === void 0) { xApiKey = ""; }
         if (authorization === void 0) { authorization = ""; }
         if (environment === void 0) { environment = "PRODUCTION"; }
         if (builderKey === void 0) { builderKey = ""; }
-        // private API_PATH = "drapcode.io/api/v1/developer";
-        // private API_PATH = "webkonnect.site/api/v1/developer";
-        this.API_PATH = "prodeless.com:5002/api/v1/developer";
-        // private protocol = "https";
-        this.protocol = "http";
+        this.API_PATH = "drapcode.io/api/v1/developer";
+        this.protocol = "https";
         this.project_seo_name = project_seo_name;
         this.xApiKey = xApiKey;
         this.authorization = authorization;
