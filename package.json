@@ -1,6 +1,6 @@
 {
   "name": "drapcode-developer-sdk",
-  "version": "1.0.9-dev",
+  "version": "1.0.10-dev",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "files": [
