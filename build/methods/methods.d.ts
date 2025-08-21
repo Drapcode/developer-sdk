@@ -27,7 +27,7 @@ export declare const getAllItems: (baseurl: string, headers: Record<string, stri
 export declare const createItem: (baseurl: string, headers: Record<string, string>, collectionName: string, body: any) => Promise<{
     code: any;
     success: boolean;
-    data: string;
+    data: any;
     error: string;
     message: string;
 } | {
