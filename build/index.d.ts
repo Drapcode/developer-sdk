@@ -5,7 +5,6 @@ export declare class DrapcodeApis {
     private authorization;
     private environment;
     private API_PATH;
-    private protocol;
     private builderKey;
     constructor(project_seo_name: string, xApiKey?: string, authorization?: string, environment?: string, builderKey?: string);
     getBaseUrl(): string;
@@ -42,7 +41,6 @@ export declare class DrapcodeApis {
         error: string;
         message: string;
     } | {
-        code: any;
         success: boolean;
         data: string;
         error: any;
