@@ -1,101 +1,5 @@
 import { Query, QueryOperation, SearchPaginate } from "../utils/constants";
-
-const createErrorResponse = (error: any) => {
-  console.log("error.response :>> ", error.response);
-  if (error.response && error.response.status === 404) {
-    const responseData = error.response.data;
-    console.log("responseData :>> ", responseData);
-    let finalData;
-    if (responseData == "This url does not exist. Please publish again.") {
-      finalData = "Please check your project name or publish again.";
-    } else if (responseData.message) {
-      finalData = responseData.message;
-    } else {
-      finalData = responseData !== "" ? responseData : "Not found";
-    }
-    return {
-      code: error.response.status,
-      success: false,
-      data: finalData,
-      error: "",
-      message: "",
-    };
-  }
-  if (error.response && error.response.status === 401) {
-    const responseData = error.response;
-    return {
-      code: responseData.status,
-      success: false,
-      data: responseData.data.message,
-      error: "",
-      message: "",
-    };
-  }
-  if (error.response && error.response.status === 400) {
-    const responseData = error.response;
-    return {
-      code: responseData?.status,
-      success: false,
-      data: "Please Check Your Credentials",
-      error: "",
-      message: "",
-    };
-  }
-  return {
-    code: error?.response?.code,
-    success: false,
-    data: "",
-    error: "Please check your project name or publish again.",
-    message: "",
-  };
-};
-
-const processResponse = (result: any) => {
-  const defaultMessages: Record<number, string> = {
-    401: "Unauthorized",
-    404: "Not Found",
-    409: "Conflict",
-    500: "Internal Server Error",
-  };
-  console.log("result :>> ", result);
-  if (result?.status === "FAILED") {
-    const statusCode = result?.error?.errStatus || 400;
-    const errorMessage =
-      result?.error?.message || defaultMessages[statusCode] || "API Failed";
-    console.log("errorMessage :>> ", errorMessage);
-
-    return {
-      code: statusCode,
-      success: false,
-      error: errorMessage,
-      message: errorMessage,
-      data: "",
-    };
-  }
-
-  if (result?.code && result?.code !== 200) {
-    const errorMessage =
-      result?.data || defaultMessages[result?.code] || "An error occurred";
-
-    return {
-      code: result.code,
-      success: false,
-      error: errorMessage,
-      message: errorMessage,
-      data: "",
-    };
-  }
-
-  return {
-    code: 200,
-    success: true,
-    error: "",
-    message: "",
-    data: result?.result || result,
-    totalItems: result?.totalItems || 0,
-    totalPages: result?.totalPages || 0,
-  };
-};
+import { createErrorResponse, processResponse } from "../utils/util";
 
 export const getAllItems = async (
   baseurl: string,
@@ -120,25 +24,32 @@ export const getAllItems = async (
       queryParams.append("page", reqQuery.page);
       queryParams.append("limit", reqQuery.limit);
     }
-
-    query.map((query) => {
-      const conditionString = QueryOperation[query.condition];
-      const field = `${query.field}`;
-      const value = `${query.value}`;
-      // double encoding the query params(remove after testing)
-      // const field = encodeURIComponent(query.field);
-      // const value = encodeURIComponent(query.value);
-      queryParams.append(`${field}:${conditionString}`, `${value}`);
-    });
-
+    if (Array.isArray(query)) {
+      query.forEach((query) => {
+        const conditionString = QueryOperation[query.condition];
+        const field = `${query.field}`;
+        const value = `${query.value}`;
+        // double encoding the query params(remove after testing)
+        // const field = encodeURIComponent(query.field);
+        // const value = encodeURIComponent(query.value);
+        queryParams.append(`${field}:${conditionString}`, `${value}`);
+      });
+    }
     const url = `${baseurl}/collection/${collectionName}/items?${queryParams.toString()}`;
     console.log("Generated URL:", url);
-
     const response = await fetch(url, { method: "GET", headers });
+    if (!response.ok) {
+      return await createErrorResponse(response);
+    }
+
     const result = await response.json();
     return processResponse(result);
   } catch (error: any) {
-    return createErrorResponse(error);
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
   }
 };
 
@@ -156,23 +67,19 @@ export const createItem = async (
       headers,
       body: JSON.stringify(body),
     });
-    console.log("response.status :>> ", response.status);
-    if (response.status && response.status === 404) {
-      return {
-        success: false,
-        data: "Collection Not Found",
-        error: "",
-        message: "",
-      };
+    if (!response.ok) {
+      return await createErrorResponse(response);
     }
+
+    console.log("response.status :>> ", response.status);
+
     if (
-      response.status &&
-      (response.status === 200 || response.status === 201)
+      response?.status &&
+      (response?.status === 200 || response?.status === 201)
     ) {
       const result = await response.json();
-      console.log("result :>> ", result);
       return {
-        code: response.status,
+        code: response?.status,
         success: true,
         data: result,
         error: "",
@@ -180,7 +87,11 @@ export const createItem = async (
       };
     }
   } catch (error: any) {
-    return createErrorResponse(error);
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
   }
 };
 
@@ -196,7 +107,11 @@ export const getItemsWithFilter = async (
     const result = await response.json();
     return processResponse(result);
   } catch (error: any) {
-    return createErrorResponse(error);
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
   }
 };
 
@@ -212,7 +127,11 @@ export const getItemsCountWithFilter = async (
     const result = await response.json();
     return processResponse(result);
   } catch (error: any) {
-    return createErrorResponse(error);
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
   }
 };
 
@@ -224,21 +143,147 @@ export const getItemWithUuid = async (
 ) => {
   try {
     const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
+    console.log("Generated url:getItemWithUuid :>> ", url);
     const response = await fetch(url, { method: "GET", headers });
-    if (response.status && response.status === 404) {
-      return {
-        code: response.status,
-        success: false,
-        data: "Please Check ItemUuid OR Collection Name",
-        error: "",
-        message: "",
-      };
-    } else {
-      const result = await response.json();
-      return processResponse(result);
+    if (!response.ok) {
+      return await createErrorResponse(response);
     }
+    const result = await response.json();
+    return result;
   } catch (error: any) {
-    return createErrorResponse(error);
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
+  }
+};
+
+export const getItemOnly = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  collectionName: string,
+  itemUuid: string
+) => {
+  try {
+    const url = `${baseurl}/collection/${collectionName}/item-only/${itemUuid}`;
+    console.log("Generated url:getItemWithUuid :>> ", url);
+    const response = await fetch(url, { method: "GET", headers });
+    if (!response.ok) {
+      return await createErrorResponse(response);
+    }
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
+  }
+};
+
+export const countItemByValue = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  collectionName: string,
+  fieldName: string,
+  fieldValue: any
+) => {
+  try {
+    const url = `${baseurl}/collection/${collectionName}/count-by-field`;
+    console.log("url :>> ", url);
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ fieldName, fieldValue }),
+    });
+    if (!response.ok) {
+      return await createErrorResponse(response);
+    }
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
+  }
+};
+export const saveCSVData = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  collectionName: string,
+  items: any[]
+) => {
+  try {
+    const url = `${baseurl}/collection/${collectionName}/csv-items`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ items }),
+    });
+    if (!response.ok) {
+      return await createErrorResponse(response);
+    }
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
+  }
+};
+export const validateItem = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  collectionName: string,
+  item: any
+) => {
+  try {
+    const url = `${baseurl}/collection/${collectionName}/validate-item`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ itemData: item }),
+    });
+    if (!response.ok) {
+      return await createErrorResponse(response);
+    }
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
+  }
+};
+
+export const lastItem = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  collectionName: string
+) => {
+  try {
+    const url = `${baseurl}/collection/${collectionName}/last-item`;
+    console.log("Generated url:getItemWithUuid :>> ", url);
+    const response = await fetch(url, { method: "GET", headers });
+    if (!response.ok) {
+      return await createErrorResponse(response);
+    }
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
   }
 };
 
@@ -256,20 +301,19 @@ export const updateItemWithUuid = async (
       headers,
       body: JSON.stringify(body),
     });
-    if (response.status && response.status === 404) {
-      return {
-        code: response.status,
-        success: false,
-        data: "Please Check ItemUuid OR Collection Name",
-        error: "",
-        message: "",
-      };
-    } else {
-      const result = await response.json();
-      return processResponse(result);
+    if (!response.ok) {
+      console.log("Response is not okay");
+      return await createErrorResponse(response);
     }
+
+    const result = await response.json();
+    return processResponse(result);
   } catch (error: any) {
-    return createErrorResponse(error);
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
   }
 };
 
@@ -286,15 +330,13 @@ export const deleteItemWithUuid = async (
       headers,
     });
     const result = await response.json();
-    return {
-      code: result?.code,
-      success: result?.code == 200 ? true : false,
-      data: result.message,
-      error: "",
-      message: "",
-    };
+    return processResponse(result);
   } catch (error: any) {
-    return createErrorResponse(error);
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
   }
 };
 
@@ -314,7 +356,11 @@ export const bulkDeleteItems = async (
     const result = await response.json();
     return { success: true, data: result.data, error: "", message: "" };
   } catch (error: any) {
-    return createErrorResponse(error);
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
   }
 };
 
@@ -334,9 +380,124 @@ export const getItemsByids = async (
     const result = await response.json();
     return { success: true, data: result.data, error: "", message: "" };
   } catch (error: any) {
-    return createErrorResponse(error);
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
   }
 };
+export const clearItem = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  collectionName: string
+) => {
+  try {
+    const url = `${baseurl}/collection/${collectionName}/clear-item/`;
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers,
+    });
+    const result = await response.json();
+    return {
+      code: result?.code,
+      success: result?.code == 200 ? true : false,
+      data: result.message,
+      error: "",
+      message: "",
+    };
+  } catch (error: any) {
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
+  }
+};
+
+export const deleteFieldItem = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  collectionName: string,
+  fieldName: string
+) => {
+  try {
+    const url = `${baseurl}/collection/${collectionName}/delete-field-record/${fieldName}`;
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers,
+    });
+    const result = await response.json();
+    return {
+      code: result?.code,
+      success: result?.code == 200 ? true : false,
+      data: result.message,
+      error: "",
+      message: "",
+    };
+  } catch (error: any) {
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
+  }
+};
+
+export const addReferenceItem = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  collectionName: string,
+  data: any
+) => {
+  try {
+    const url = `${baseurl}/collection/${collectionName}/add-reference`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      return await createErrorResponse(response);
+    }
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
+  }
+};
+
+export const removeReferenceItem = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  collectionName: string,
+  data: any
+) => {
+  try {
+    const url = `${baseurl}/collection/${collectionName}/remove-reference`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      return await createErrorResponse(response);
+    }
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
+  }
+};
+
 export const sendEmail = async (
   baseurl: string,
   headers: Record<string, string>,
@@ -352,16 +513,10 @@ export const sendEmail = async (
     const result = await response.json();
     return { success: true, data: result, error: "", message: "" };
   } catch (error: any) {
-    return createErrorResponse(error);
+    let message = error.message;
+    if (message) {
+      message = message.replace("fetch failed", "Network Error");
+    }
+    return { code: 500, error: message, message: message };
   }
 };
-
-/**
- * {
- * code,
- * success
- * data,
- * error,
- * message,
- * }
- */
