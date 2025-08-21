@@ -59,7 +59,10 @@ var DrapcodeApis = /** @class */ (function () {
         if (environment === void 0) { environment = "PRODUCTION"; }
         if (builderKey === void 0) { builderKey = ""; }
         // private API_PATH = "drapcode.io/api/v1/developer";
+        // private API_PATH = "webkonnect.site/api/v1/developer";
         this.API_PATH = "prodeless.com:5002/api/v1/developer";
+        // private protocol = "https";
+        this.protocol = "http";
         this.project_seo_name = project_seo_name;
         this.xApiKey = xApiKey;
         this.authorization = authorization;
@@ -69,15 +72,15 @@ var DrapcodeApis = /** @class */ (function () {
     DrapcodeApis.prototype.getBaseUrl = function () {
         switch (this.environment.toUpperCase()) {
             case "PRODUCTION":
-                return "http://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
+                return "".concat(this.protocol, "://").concat(this.project_seo_name, ".api.").concat(this.API_PATH);
             case "PREVIEW":
-                return "http://".concat(this.project_seo_name, ".api.preview.").concat(this.API_PATH);
+                return "".concat(this.protocol, "://").concat(this.project_seo_name, ".api.preview.").concat(this.API_PATH);
             case "BETA":
-                return "http://".concat(this.project_seo_name, ".api.sandbox.").concat(this.API_PATH);
+                return "".concat(this.protocol, "://").concat(this.project_seo_name, ".api.sandbox.").concat(this.API_PATH);
             case "ALPHA":
-                return "http://".concat(this.project_seo_name, ".api.uat.").concat(this.API_PATH);
+                return "".concat(this.protocol, "://").concat(this.project_seo_name, ".api.uat.").concat(this.API_PATH);
             default:
-                return "http://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
+                return "".concat(this.protocol, "://").concat(this.project_seo_name, ".api.").concat(this.API_PATH);
         }
     };
     DrapcodeApis.prototype.getHeaders = function () {

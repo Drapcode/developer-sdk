@@ -31,6 +31,7 @@ export declare const createItem: (baseurl: string, headers: Record<string, strin
     error: string;
     message: string;
 } | {
+    code: any;
     success: boolean;
     data: string;
     error: any;
