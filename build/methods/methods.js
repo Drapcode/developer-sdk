@@ -36,636 +36,257 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendEmail = exports.removeReferenceItem = exports.addReferenceItem = exports.deleteFieldItem = exports.clearItem = exports.getItemsByids = exports.bulkDeleteItems = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.lastItem = exports.validateItem = exports.saveCSVData = exports.countItemByValue = exports.getItemOnly = exports.getItemWithUuid = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getAllItems = void 0;
+exports.sendEmail = exports.deleteFieldItem = exports.clearItem = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.lastItem = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.getItemOnly = exports.getAllItems = exports.removeReferenceItem = exports.addReferenceItem = exports.getItemsByids = exports.bulkDeleteItems = exports.validateItem = exports.getItemWithUuid = exports.saveCSVData = exports.countItemByValue = exports.bulkCreateItems = exports.createItem = void 0;
 var constants_1 = require("../utils/constants");
 var util_1 = require("../utils/util");
-var getAllItems = function (baseurl, headers, collectionName, reqQuery, query) { return __awaiter(void 0, void 0, void 0, function () {
-    var queryParams_1, url, response, result, error_1, message;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 5, , 6]);
-                queryParams_1 = new URLSearchParams();
-                console.log("headers :>> ", headers);
-                console.log("query :>> ", query);
-                console.log("reqQuery :>> ", reqQuery);
-                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortField)
-                    queryParams_1.append("sortField", reqQuery.sortField);
-                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortOrder)
-                    queryParams_1.append("sortOrder", reqQuery.sortOrder);
-                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.searchTerm)
-                    queryParams_1.append("searchTerm", reqQuery.searchTerm);
-                if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.isPagination) {
-                    queryParams_1.append("page", reqQuery.page);
-                    queryParams_1.append("limit", reqQuery.limit);
-                }
-                if (Array.isArray(query)) {
-                    query.forEach(function (query) {
-                        var conditionString = constants_1.QueryOperation[query.condition];
-                        var field = "".concat(query.field);
-                        var value = "".concat(query.value);
-                        // double encoding the query params(remove after testing)
-                        // const field = encodeURIComponent(query.field);
-                        // const value = encodeURIComponent(query.value);
-                        queryParams_1.append("".concat(field, ":").concat(conditionString), "".concat(value));
-                    });
-                }
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryParams_1.toString());
-                console.log("Generated URL:", url);
-                return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
-            case 1:
-                response = _a.sent();
-                if (!!response.ok) return [3 /*break*/, 3];
-                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
-            case 2: return [2 /*return*/, _a.sent()];
-            case 3: return [4 /*yield*/, response.json()];
-            case 4:
-                result = _a.sent();
-                return [2 /*return*/, (0, util_1.processResponse)(result)];
-            case 5:
-                error_1 = _a.sent();
-                message = error_1.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 6: return [2 /*return*/];
-        }
+var request = function (url, options, process) {
+    if (process === void 0) { process = true; }
+    return __awaiter(void 0, void 0, void 0, function () {
+        var response, result, error_1, message;
+        var _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 5, , 6]);
+                    return [4 /*yield*/, fetch(url, options)];
+                case 1:
+                    response = _b.sent();
+                    if (!!response.ok) return [3 /*break*/, 3];
+                    return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
+                case 2: return [2 /*return*/, _b.sent()];
+                case 3: return [4 /*yield*/, response.json()];
+                case 4:
+                    result = _b.sent();
+                    return [2 /*return*/, process ? (0, util_1.processResponse)(result) : result];
+                case 5:
+                    error_1 = _b.sent();
+                    message = (_a = error_1 === null || error_1 === void 0 ? void 0 : error_1.message) === null || _a === void 0 ? void 0 : _a.replace("fetch failed", "Network Error");
+                    return [2 /*return*/, { code: 500, error: message, message: message }];
+                case 6: return [2 /*return*/];
+            }
+        });
     });
-}); };
-exports.getAllItems = getAllItems;
+};
+/**
+ * POST Calls
+ */
 var createItem = function (baseurl, headers, collectionName, body) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_2, message;
+    var url;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 6, , 7]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/items");
-                console.log("url :>> ", url);
-                return [4 /*yield*/, fetch(url, {
-                        method: "POST",
-                        headers: headers,
-                        body: JSON.stringify(body),
-                    })];
-            case 1:
-                response = _a.sent();
-                if (!!response.ok) return [3 /*break*/, 3];
-                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
-            case 2: return [2 /*return*/, _a.sent()];
-            case 3:
-                console.log("response.status :>> ", response.status);
-                if (!((response === null || response === void 0 ? void 0 : response.status) &&
-                    ((response === null || response === void 0 ? void 0 : response.status) === 200 || (response === null || response === void 0 ? void 0 : response.status) === 201))) return [3 /*break*/, 5];
-                return [4 /*yield*/, response.json()];
-            case 4:
-                result = _a.sent();
-                return [2 /*return*/, {
-                        code: response === null || response === void 0 ? void 0 : response.status,
-                        success: true,
-                        data: result,
-                        error: "",
-                        message: "",
-                    }];
-            case 5: return [3 /*break*/, 7];
-            case 6:
-                error_2 = _a.sent();
-                message = error_2.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 7: return [2 /*return*/];
-        }
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/items");
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "POST", headers: headers, body: JSON.stringify(body) })];
     });
 }); };
 exports.createItem = createItem;
-var getItemsWithFilter = function (baseurl, headers, collectionName, filterUuid) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_3, message;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 3, , 4]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/filter/").concat(filterUuid, "/items");
-                return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
-            case 1:
-                response = _a.sent();
-                return [4 /*yield*/, response.json()];
-            case 2:
-                result = _a.sent();
-                return [2 /*return*/, (0, util_1.processResponse)(result)];
-            case 3:
-                error_3 = _a.sent();
-                message = error_3.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
-exports.getItemsWithFilter = getItemsWithFilter;
-var getItemsCountWithFilter = function (baseurl, headers, collectionName, filterUuid) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_4, message;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 3, , 4]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/filter/").concat(filterUuid, "/count");
-                return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
-            case 1:
-                response = _a.sent();
-                return [4 /*yield*/, response.json()];
-            case 2:
-                result = _a.sent();
-                return [2 /*return*/, (0, util_1.processResponse)(result)];
-            case 3:
-                error_4 = _a.sent();
-                message = error_4.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
-exports.getItemsCountWithFilter = getItemsCountWithFilter;
-var getItemWithUuid = function (baseurl, headers, collectionName, itemUuid) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_5, message;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 5, , 6]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/item/").concat(itemUuid);
-                console.log("Generated url:getItemWithUuid :>> ", url);
-                return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
-            case 1:
-                response = _a.sent();
-                if (!!response.ok) return [3 /*break*/, 3];
-                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
-            case 2: return [2 /*return*/, _a.sent()];
-            case 3: return [4 /*yield*/, response.json()];
-            case 4:
-                result = _a.sent();
-                return [2 /*return*/, result];
-            case 5:
-                error_5 = _a.sent();
-                message = error_5.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 6: return [2 /*return*/];
-        }
-    });
-}); };
-exports.getItemWithUuid = getItemWithUuid;
-var getItemOnly = function (baseurl, headers, collectionName, itemUuid) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_6, message;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 5, , 6]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/item-only/").concat(itemUuid);
-                console.log("Generated url:getItemWithUuid :>> ", url);
-                return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
-            case 1:
-                response = _a.sent();
-                if (!!response.ok) return [3 /*break*/, 3];
-                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
-            case 2: return [2 /*return*/, _a.sent()];
-            case 3: return [4 /*yield*/, response.json()];
-            case 4:
-                result = _a.sent();
-                return [2 /*return*/, result];
-            case 5:
-                error_6 = _a.sent();
-                message = error_6.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 6: return [2 /*return*/];
-        }
-    });
-}); };
-exports.getItemOnly = getItemOnly;
+var bulkCreateItems = function (baseurl, headers, collectionName, body) {
+    var url = "".concat(baseurl, "/collection/").concat(collectionName, "/items/bulk");
+    console.log("url :>> ", url);
+    return request(url, { method: "POST", headers: headers, body: JSON.stringify(body) });
+};
+exports.bulkCreateItems = bulkCreateItems;
 var countItemByValue = function (baseurl, headers, collectionName, fieldName, fieldValue) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_7, message;
+    var url;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 5, , 6]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/count-by-field");
-                console.log("url :>> ", url);
-                return [4 /*yield*/, fetch(url, {
-                        method: "POST",
-                        headers: headers,
-                        body: JSON.stringify({ fieldName: fieldName, fieldValue: fieldValue }),
-                    })];
-            case 1:
-                response = _a.sent();
-                if (!!response.ok) return [3 /*break*/, 3];
-                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
-            case 2: return [2 /*return*/, _a.sent()];
-            case 3: return [4 /*yield*/, response.json()];
-            case 4:
-                result = _a.sent();
-                return [2 /*return*/, result];
-            case 5:
-                error_7 = _a.sent();
-                message = error_7.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 6: return [2 /*return*/];
-        }
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/count-by-field");
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify({ fieldName: fieldName, fieldValue: fieldValue }),
+            })];
     });
 }); };
 exports.countItemByValue = countItemByValue;
 var saveCSVData = function (baseurl, headers, collectionName, items) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_8, message;
+    var url;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 5, , 6]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/csv-items");
-                return [4 /*yield*/, fetch(url, {
-                        method: "POST",
-                        headers: headers,
-                        body: JSON.stringify({ items: items }),
-                    })];
-            case 1:
-                response = _a.sent();
-                if (!!response.ok) return [3 /*break*/, 3];
-                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
-            case 2: return [2 /*return*/, _a.sent()];
-            case 3: return [4 /*yield*/, response.json()];
-            case 4:
-                result = _a.sent();
-                return [2 /*return*/, result];
-            case 5:
-                error_8 = _a.sent();
-                message = error_8.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 6: return [2 /*return*/];
-        }
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/csv-items");
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify({ items: items }),
+            })];
     });
 }); };
 exports.saveCSVData = saveCSVData;
-var validateItem = function (baseurl, headers, collectionName, item) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_9, message;
+var getItemWithUuid = function (baseurl, headers, collectionName, itemId) { return __awaiter(void 0, void 0, void 0, function () {
+    var url;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 5, , 6]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/validate-item");
-                return [4 /*yield*/, fetch(url, {
-                        method: "POST",
-                        headers: headers,
-                        body: JSON.stringify({ itemData: item }),
-                    })];
-            case 1:
-                response = _a.sent();
-                if (!!response.ok) return [3 /*break*/, 3];
-                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
-            case 2: return [2 /*return*/, _a.sent()];
-            case 3: return [4 /*yield*/, response.json()];
-            case 4:
-                result = _a.sent();
-                return [2 /*return*/, result];
-            case 5:
-                error_9 = _a.sent();
-                message = error_9.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 6: return [2 /*return*/];
-        }
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/item/").concat(itemId);
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "POST", headers: headers })];
+    });
+}); };
+exports.getItemWithUuid = getItemWithUuid;
+var validateItem = function (baseurl, headers, collectionName, item) { return __awaiter(void 0, void 0, void 0, function () {
+    var url;
+    return __generator(this, function (_a) {
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/validate-item");
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify({ itemData: item }),
+            })];
     });
 }); };
 exports.validateItem = validateItem;
-var lastItem = function (baseurl, headers, collectionName) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_10, message;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 5, , 6]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/last-item");
-                console.log("Generated url:getItemWithUuid :>> ", url);
-                return [4 /*yield*/, fetch(url, { method: "GET", headers: headers })];
-            case 1:
-                response = _a.sent();
-                if (!!response.ok) return [3 /*break*/, 3];
-                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
-            case 2: return [2 /*return*/, _a.sent()];
-            case 3: return [4 /*yield*/, response.json()];
-            case 4:
-                result = _a.sent();
-                return [2 /*return*/, result];
-            case 5:
-                error_10 = _a.sent();
-                message = error_10.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 6: return [2 /*return*/];
-        }
-    });
-}); };
-exports.lastItem = lastItem;
-var updateItemWithUuid = function (baseurl, headers, collectionName, itemUuid, body) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_11, message;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 5, , 6]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/item/").concat(itemUuid);
-                return [4 /*yield*/, fetch(url, {
-                        method: "PUT",
-                        headers: headers,
-                        body: JSON.stringify(body),
-                    })];
-            case 1:
-                response = _a.sent();
-                if (!!response.ok) return [3 /*break*/, 3];
-                console.log("Response is not okay");
-                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
-            case 2: return [2 /*return*/, _a.sent()];
-            case 3: return [4 /*yield*/, response.json()];
-            case 4:
-                result = _a.sent();
-                return [2 /*return*/, (0, util_1.processResponse)(result)];
-            case 5:
-                error_11 = _a.sent();
-                message = error_11.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 6: return [2 /*return*/];
-        }
-    });
-}); };
-exports.updateItemWithUuid = updateItemWithUuid;
-var deleteItemWithUuid = function (baseurl, headers, collectionName, itemUuid) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_12, message;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 3, , 4]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/item/").concat(itemUuid);
-                return [4 /*yield*/, fetch(url, {
-                        method: "DELETE",
-                        headers: headers,
-                    })];
-            case 1:
-                response = _a.sent();
-                return [4 /*yield*/, response.json()];
-            case 2:
-                result = _a.sent();
-                return [2 /*return*/, (0, util_1.processResponse)(result)];
-            case 3:
-                error_12 = _a.sent();
-                message = error_12.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
-exports.deleteItemWithUuid = deleteItemWithUuid;
 var bulkDeleteItems = function (baseurl, headers, collectionName, body) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_13, message;
+    var url;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 3, , 4]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/bulkDelete");
-                return [4 /*yield*/, fetch(url, {
-                        method: "POST",
-                        headers: headers,
-                        body: body,
-                    })];
-            case 1:
-                response = _a.sent();
-                return [4 /*yield*/, response.json()];
-            case 2:
-                result = _a.sent();
-                return [2 /*return*/, { success: true, data: result.data, error: "", message: "" }];
-            case 3:
-                error_13 = _a.sent();
-                message = error_13.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 4: return [2 /*return*/];
-        }
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/bulkDelete");
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "POST", headers: headers, body: body })];
     });
 }); };
 exports.bulkDeleteItems = bulkDeleteItems;
 var getItemsByids = function (baseurl, headers, collectionName, body) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_14, message;
+    var url;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 3, , 4]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/itemsbyids");
-                return [4 /*yield*/, fetch(url, {
-                        method: "POST",
-                        headers: headers,
-                        body: body,
-                    })];
-            case 1:
-                response = _a.sent();
-                return [4 /*yield*/, response.json()];
-            case 2:
-                result = _a.sent();
-                return [2 /*return*/, { success: true, data: result.data, error: "", message: "" }];
-            case 3:
-                error_14 = _a.sent();
-                message = error_14.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 4: return [2 /*return*/];
-        }
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/itemsbyids");
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "POST", headers: headers, body: body })];
     });
 }); };
 exports.getItemsByids = getItemsByids;
-var clearItem = function (baseurl, headers, collectionName) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_15, message;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 3, , 4]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/clear-item/");
-                return [4 /*yield*/, fetch(url, {
-                        method: "DELETE",
-                        headers: headers,
-                    })];
-            case 1:
-                response = _a.sent();
-                return [4 /*yield*/, response.json()];
-            case 2:
-                result = _a.sent();
-                return [2 /*return*/, {
-                        code: result === null || result === void 0 ? void 0 : result.code,
-                        success: (result === null || result === void 0 ? void 0 : result.code) == 200 ? true : false,
-                        data: result.message,
-                        error: "",
-                        message: "",
-                    }];
-            case 3:
-                error_15 = _a.sent();
-                message = error_15.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
-exports.clearItem = clearItem;
-var deleteFieldItem = function (baseurl, headers, collectionName, fieldName) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_16, message;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 3, , 4]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/delete-field-record/").concat(fieldName);
-                return [4 /*yield*/, fetch(url, {
-                        method: "DELETE",
-                        headers: headers,
-                    })];
-            case 1:
-                response = _a.sent();
-                return [4 /*yield*/, response.json()];
-            case 2:
-                result = _a.sent();
-                return [2 /*return*/, {
-                        code: result === null || result === void 0 ? void 0 : result.code,
-                        success: (result === null || result === void 0 ? void 0 : result.code) == 200 ? true : false,
-                        data: result.message,
-                        error: "",
-                        message: "",
-                    }];
-            case 3:
-                error_16 = _a.sent();
-                message = error_16.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
-exports.deleteFieldItem = deleteFieldItem;
 var addReferenceItem = function (baseurl, headers, collectionName, data) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_17, message;
+    var url;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 5, , 6]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/add-reference");
-                return [4 /*yield*/, fetch(url, {
-                        method: "POST",
-                        headers: headers,
-                        body: JSON.stringify(data),
-                    })];
-            case 1:
-                response = _a.sent();
-                if (!!response.ok) return [3 /*break*/, 3];
-                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
-            case 2: return [2 /*return*/, _a.sent()];
-            case 3: return [4 /*yield*/, response.json()];
-            case 4:
-                result = _a.sent();
-                return [2 /*return*/, result];
-            case 5:
-                error_17 = _a.sent();
-                message = error_17.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 6: return [2 /*return*/];
-        }
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/add-reference");
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "POST", headers: headers, body: JSON.stringify(data) })];
     });
 }); };
 exports.addReferenceItem = addReferenceItem;
 var removeReferenceItem = function (baseurl, headers, collectionName, data) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_18, message;
+    var url;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 5, , 6]);
-                url = "".concat(baseurl, "/collection/").concat(collectionName, "/remove-reference");
-                return [4 /*yield*/, fetch(url, {
-                        method: "POST",
-                        headers: headers,
-                        body: JSON.stringify(data),
-                    })];
-            case 1:
-                response = _a.sent();
-                if (!!response.ok) return [3 /*break*/, 3];
-                return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
-            case 2: return [2 /*return*/, _a.sent()];
-            case 3: return [4 /*yield*/, response.json()];
-            case 4:
-                result = _a.sent();
-                return [2 /*return*/, result];
-            case 5:
-                error_18 = _a.sent();
-                message = error_18.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 6: return [2 /*return*/];
-        }
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/remove-reference");
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "POST", headers: headers, body: JSON.stringify(data) })];
     });
 }); };
 exports.removeReferenceItem = removeReferenceItem;
-var sendEmail = function (baseurl, headers, templateId, sendTo) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, response, result, error_19, message;
+/**
+ * GET Calls
+ */
+var getAllItems = function (baseurl, headers, collectionName, reqQuery, query) { return __awaiter(void 0, void 0, void 0, function () {
+    var queryParams, url;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 3, , 4]);
-                url = "".concat(baseurl, "/sendEmail/").concat(templateId, "/user/").concat(sendTo);
-                return [4 /*yield*/, fetch(url, {
-                        method: "POST",
-                        headers: headers,
-                    })];
-            case 1:
-                response = _a.sent();
-                return [4 /*yield*/, response.json()];
-            case 2:
-                result = _a.sent();
-                return [2 /*return*/, { success: true, data: result, error: "", message: "" }];
-            case 3:
-                error_19 = _a.sent();
-                message = error_19.message;
-                if (message) {
-                    message = message.replace("fetch failed", "Network Error");
-                }
-                return [2 /*return*/, { code: 500, error: message, message: message }];
-            case 4: return [2 /*return*/];
+        queryParams = new URLSearchParams();
+        if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortField)
+            queryParams.append("sortField", reqQuery.sortField);
+        if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortOrder)
+            queryParams.append("sortOrder", reqQuery.sortOrder);
+        if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.searchTerm)
+            queryParams.append("searchTerm", reqQuery.searchTerm);
+        if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.isPagination) {
+            queryParams.append("page", reqQuery.page);
+            queryParams.append("limit", reqQuery.limit);
         }
+        if (Array.isArray(query)) {
+            query.forEach(function (query) {
+                var conditionString = constants_1.QueryOperation[query.condition];
+                var field = "".concat(query.field);
+                var value = "".concat(query.value);
+                queryParams.append("".concat(field, ":").concat(conditionString), "".concat(value));
+            });
+        }
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryParams.toString());
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "GET", headers: headers })];
+    });
+}); };
+exports.getAllItems = getAllItems;
+var getItemOnly = function (baseurl, headers, collectionName, itemUuid) { return __awaiter(void 0, void 0, void 0, function () {
+    var url;
+    return __generator(this, function (_a) {
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/item-only/").concat(itemUuid);
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "GET", headers: headers })];
+    });
+}); };
+exports.getItemOnly = getItemOnly;
+var getItemsWithFilter = function (baseurl, headers, collectionName, filterUuid) { return __awaiter(void 0, void 0, void 0, function () {
+    var url;
+    return __generator(this, function (_a) {
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/filter/").concat(filterUuid, "/items");
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "GET", headers: headers })];
+    });
+}); };
+exports.getItemsWithFilter = getItemsWithFilter;
+var getItemsCountWithFilter = function (baseurl, headers, collectionName, filterUuid) { return __awaiter(void 0, void 0, void 0, function () {
+    var url;
+    return __generator(this, function (_a) {
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/filter/").concat(filterUuid, "/count");
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "GET", headers: headers })];
+    });
+}); };
+exports.getItemsCountWithFilter = getItemsCountWithFilter;
+var lastItem = function (baseurl, headers, collectionName) { return __awaiter(void 0, void 0, void 0, function () {
+    var url;
+    return __generator(this, function (_a) {
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/last-item");
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "GET", headers: headers })];
+    });
+}); };
+exports.lastItem = lastItem;
+/**
+ * PUT Call
+ */
+var updateItemWithUuid = function (baseurl, headers, collectionName, itemUuid, body) { return __awaiter(void 0, void 0, void 0, function () {
+    var url;
+    return __generator(this, function (_a) {
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/item/").concat(itemUuid);
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "PUT", headers: headers, body: JSON.stringify(body) })];
+    });
+}); };
+exports.updateItemWithUuid = updateItemWithUuid;
+/**
+ * DELETE Call
+ */
+var deleteItemWithUuid = function (baseurl, headers, collectionName, itemUuid) { return __awaiter(void 0, void 0, void 0, function () {
+    var url;
+    return __generator(this, function (_a) {
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/item/").concat(itemUuid);
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "DELETE", headers: headers })];
+    });
+}); };
+exports.deleteItemWithUuid = deleteItemWithUuid;
+var clearItem = function (baseurl, headers, collectionName) { return __awaiter(void 0, void 0, void 0, function () {
+    var url;
+    return __generator(this, function (_a) {
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/clear-item/");
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "DELETE", headers: headers })];
+    });
+}); };
+exports.clearItem = clearItem;
+var deleteFieldItem = function (baseurl, headers, collectionName, fieldName) { return __awaiter(void 0, void 0, void 0, function () {
+    var url;
+    return __generator(this, function (_a) {
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/delete-field-record/").concat(fieldName);
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "DELETE", headers: headers })];
+    });
+}); };
+exports.deleteFieldItem = deleteFieldItem;
+/**
+ * EMAIL
+ */
+var sendEmail = function (baseurl, headers, templateId, sendTo) { return __awaiter(void 0, void 0, void 0, function () {
+    var url;
+    return __generator(this, function (_a) {
+        url = "".concat(baseurl, "/sendEmail/").concat(templateId, "/user/").concat(sendTo);
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(url, { method: "POST", headers: headers })];
     });
 }); };
 exports.sendEmail = sendEmail;
