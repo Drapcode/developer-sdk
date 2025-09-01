@@ -47,10 +47,10 @@ export class DrapcodeApis {
 
   // private API_PATH = "drapcode.io/api/";
   // private API_PATH = "webkonnect.site/api/";
+
   private API_PATH = "prodeless.com:5002/api";
 
-  // private version?:number = 1;
-  private version?: number = 2;
+  private version?: number = 1;
 
   // private protocol :string= "https"
   private protocol: string = "http";
@@ -107,6 +107,22 @@ export class DrapcodeApis {
 
   public getVersion(): number | undefined {
     return this.version;
+  }
+
+  public info(): any {
+    // private protocol :string= "https"
+    return {
+      seoName: this.seoName,
+      xApiKey: this.xApiKey,
+      authorization: this.authorization,
+      environment: this.environment,
+      builderKey: this.builderKey,
+      api: this.API_PATH,
+      version: this.version,
+      protocol: this.protocol,
+      headers: this.getHeaders(),
+      url: this.getBaseUrl(),
+    };
   }
 
   private getEnvSubdomain(): string {

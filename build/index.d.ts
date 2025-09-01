@@ -34,6 +34,7 @@ export declare class DrapcodeApis {
     getBuilderKey(): string | undefined;
     setVersion(version: number): void;
     getVersion(): number | undefined;
+    info(): any;
     private getEnvSubdomain;
     getBaseUrl(): string;
     getHeaders(): Record<string, string>;

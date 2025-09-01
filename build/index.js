@@ -75,8 +75,7 @@ var DrapcodeApis = /** @class */ (function () {
         // private API_PATH = "drapcode.io/api/";
         // private API_PATH = "webkonnect.site/api/";
         this.API_PATH = "prodeless.com:5002/api";
-        // private version?:number = 1;
-        this.version = 2;
+        this.version = 1;
         // private protocol :string= "https"
         this.protocol = "http";
         this.seoName = projectSeoName;
@@ -122,6 +121,21 @@ var DrapcodeApis = /** @class */ (function () {
     };
     DrapcodeApis.prototype.getVersion = function () {
         return this.version;
+    };
+    DrapcodeApis.prototype.info = function () {
+        // private protocol :string= "https"
+        return {
+            seoName: this.seoName,
+            xApiKey: this.xApiKey,
+            authorization: this.authorization,
+            environment: this.environment,
+            builderKey: this.builderKey,
+            api: this.API_PATH,
+            version: this.version,
+            protocol: this.protocol,
+            headers: this.getHeaders(),
+            url: this.getBaseUrl(),
+        };
     };
     DrapcodeApis.prototype.getEnvSubdomain = function () {
         var env = String(this.environment).toUpperCase();
