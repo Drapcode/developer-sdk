@@ -73,7 +73,7 @@ var DrapcodeApis = /** @class */ (function () {
         var _a;
         //Network/URL Related
         // private API_PATH = "drapcode.io/api/";
-        this.API_PATH = "webkonnect.site/api/";
+        this.API_PATH = "webkonnect.site/api";
         // private API_PATH = "prodeless.com:5002/api";
         this.version = 1;
         // private protocol :string= "https"
