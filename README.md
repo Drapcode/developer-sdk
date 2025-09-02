@@ -29,7 +29,7 @@ If using version 2:
 
 ```typescript
 const opts = { xApiKey: "", authorization: "", environment, version: 2 };
-const api = new DrapcodeApis(seoName, opts);
+const api = new DrapcodeApis(project_seo_name, opts);
 ```
 
 **project_seo_name (Required):** The SEO name of your Drapcode project.
