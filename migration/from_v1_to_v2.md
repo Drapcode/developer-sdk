@@ -38,7 +38,7 @@ We have new key version, to add support of both versions 1 & 2. According to thi
 
 Now we have more options, so instead of passing it all, we have created _DrapcodeApiOptions_
 
-### Changes in method return
+### Changes in Developer SDK methods return
 
 | Method                  | Version 1      | Version 2                                            |
 | ----------------------- | -------------- | ---------------------------------------------------- |
@@ -48,3 +48,14 @@ Now we have more options, so instead of passing it all, we have created _Drapcod
 | getItemsCountWithFilter | no change      | no change                                            |
 | getItemsByids           | [item1, item2] | {code, result:[item1, item2],totalItems, totalPages} |
 | getItemWithUuid         | no change      | no change                                            |
+
+### Changes in Developer API return
+
+| Method                       | Version 1      | Version 2                                            |
+| ---------------------------- | -------------- | ---------------------------------------------------- |
+| get all items                | [item1, item2] | {code, result:[item1, item2],totalItems, totalPages} |
+| create item                  | item           | {code, message, data: item, status, error}           |
+| get items using filter       | no change      | no change                                            |
+| get items count using filter | no change      | no change                                            |
+| get all items by ids         | [item1, item2] | {code, result:[item1, item2],totalItems, totalPages} |
+| get item detail via uuid     | no change      | no change                                            |
