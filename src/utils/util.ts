@@ -6,9 +6,17 @@ const defaultMessages: Record<number, string> = {
 };
 export const createErrorResponse = async (error: any) => {
   const status = error?.status;
+  const cloneError = error.clone();
   console.log("status :>> ", status);
+  let responseData;
+  try {
+    // Try parsing as JSON
+    responseData = await error.json();
+  } catch {
+    // If it's not JSON, fallback to text
+    responseData = await cloneError.text();
+  }
 
-  const responseData = await error.json();
   console.log("responseData :>> ", responseData);
 
   if (status === 404) {
@@ -45,7 +53,7 @@ export const createErrorResponse = async (error: any) => {
     return {
       code: status,
       success: false,
-      data: "Please check your credentials",
+      data: responseData || "Please check your credentials",
       error: "",
       message: "",
     };
@@ -75,7 +83,7 @@ export const processResponse = (result: any) => {
       data: "",
     };
   }
-  console.log("2");
+  console.log("2", result?.code);
   if (![200, 201].includes(result?.code)) {
     const errorMessage =
       result?.data || defaultMessages[result?.code] || "An error occurred";

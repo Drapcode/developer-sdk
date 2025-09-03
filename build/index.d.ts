@@ -21,7 +21,7 @@ export declare class DrapcodeApis {
     private API_PATH;
     private version?;
     private protocol;
-    constructor(projectSeoName: string, opts: DrapcodeApiOptions);
+    constructor(projectSeoName: string, opts?: DrapcodeApiOptions);
     setProjectSeoName(seo_name: string): void;
     getProjectSeoName(): string;
     setXApiKey(apiKey: string): void;

@@ -39,7 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendEmail = exports.deleteFieldItem = exports.clearItem = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.lastItem = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.getItemOnly = exports.getAllItems = exports.removeReferenceItem = exports.addReferenceItem = exports.getItemsByids = exports.bulkDeleteItems = exports.validateItem = exports.getItemWithUuid = exports.saveCSVData = exports.countItemByValue = exports.bulkCreateItems = exports.createItem = void 0;
 var constants_1 = require("../utils/constants");
 var util_1 = require("../utils/util");
-var request = function (url, options, process) {
+var request = function (version, url, options, process) {
     if (process === void 0) { process = true; }
     return __awaiter(void 0, void 0, void 0, function () {
         var response, result, error_1, message;
@@ -51,12 +51,17 @@ var request = function (url, options, process) {
                     return [4 /*yield*/, fetch(url, options)];
                 case 1:
                     response = _b.sent();
+                    console.log("response.ok :>> ", response.ok);
                     if (!!response.ok) return [3 /*break*/, 3];
                     return [4 /*yield*/, (0, util_1.createErrorResponse)(response)];
                 case 2: return [2 /*return*/, _b.sent()];
                 case 3: return [4 /*yield*/, response.json()];
                 case 4:
                     result = _b.sent();
+                    console.log("result :>> ", result);
+                    if (version === 1) {
+                        return [2 /*return*/, result];
+                    }
                     return [2 /*return*/, process ? (0, util_1.processResponse)(result) : result];
                 case 5:
                     error_1 = _b.sent();
@@ -70,27 +75,35 @@ var request = function (url, options, process) {
 /**
  * POST Calls
  */
-var createItem = function (baseurl, headers, collectionName, body) { return __awaiter(void 0, void 0, void 0, function () {
+var createItem = function (baseurl, headers, version, collectionName, body) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/items");
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "POST", headers: headers, body: JSON.stringify(body) })];
+        return [2 /*return*/, request(version, url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(body),
+            })];
     });
 }); };
 exports.createItem = createItem;
-var bulkCreateItems = function (baseurl, headers, collectionName, body) {
+var bulkCreateItems = function (baseurl, headers, version, collectionName, body) {
     var url = "".concat(baseurl, "/collection/").concat(collectionName, "/items/bulk");
     console.log("url :>> ", url);
-    return request(url, { method: "POST", headers: headers, body: JSON.stringify(body) });
+    return request(version, url, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(body),
+    });
 };
 exports.bulkCreateItems = bulkCreateItems;
-var countItemByValue = function (baseurl, headers, collectionName, fieldName, fieldValue) { return __awaiter(void 0, void 0, void 0, function () {
+var countItemByValue = function (baseurl, headers, version, collectionName, fieldName, fieldValue) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/count-by-field");
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, {
+        return [2 /*return*/, request(version, url, {
                 method: "POST",
                 headers: headers,
                 body: JSON.stringify({ fieldName: fieldName, fieldValue: fieldValue }),
@@ -98,12 +111,12 @@ var countItemByValue = function (baseurl, headers, collectionName, fieldName, fi
     });
 }); };
 exports.countItemByValue = countItemByValue;
-var saveCSVData = function (baseurl, headers, collectionName, items) { return __awaiter(void 0, void 0, void 0, function () {
+var saveCSVData = function (baseurl, headers, version, collectionName, items) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/csv-items");
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, {
+        return [2 /*return*/, request(version, url, {
                 method: "POST",
                 headers: headers,
                 body: JSON.stringify({ items: items }),
@@ -111,21 +124,21 @@ var saveCSVData = function (baseurl, headers, collectionName, items) { return __
     });
 }); };
 exports.saveCSVData = saveCSVData;
-var getItemWithUuid = function (baseurl, headers, collectionName, itemId) { return __awaiter(void 0, void 0, void 0, function () {
+var getItemWithUuid = function (baseurl, headers, version, collectionName, itemId) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/item/").concat(itemId);
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "POST", headers: headers })];
+        return [2 /*return*/, request(version, url, { method: "POST", headers: headers })];
     });
 }); };
 exports.getItemWithUuid = getItemWithUuid;
-var validateItem = function (baseurl, headers, collectionName, item) { return __awaiter(void 0, void 0, void 0, function () {
+var validateItem = function (baseurl, headers, version, collectionName, item) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/validate-item");
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, {
+        return [2 /*return*/, request(version, url, {
                 method: "POST",
                 headers: headers,
                 body: JSON.stringify({ itemData: item }),
@@ -133,46 +146,54 @@ var validateItem = function (baseurl, headers, collectionName, item) { return __
     });
 }); };
 exports.validateItem = validateItem;
-var bulkDeleteItems = function (baseurl, headers, collectionName, body) { return __awaiter(void 0, void 0, void 0, function () {
+var bulkDeleteItems = function (baseurl, headers, version, collectionName, body) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/bulkDelete");
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "POST", headers: headers, body: body })];
+        return [2 /*return*/, request(version, url, { method: "POST", headers: headers, body: body })];
     });
 }); };
 exports.bulkDeleteItems = bulkDeleteItems;
-var getItemsByids = function (baseurl, headers, collectionName, body) { return __awaiter(void 0, void 0, void 0, function () {
+var getItemsByids = function (baseurl, headers, version, collectionName, body) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/itemsbyids");
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "POST", headers: headers, body: body })];
+        return [2 /*return*/, request(version, url, { method: "POST", headers: headers, body: body })];
     });
 }); };
 exports.getItemsByids = getItemsByids;
-var addReferenceItem = function (baseurl, headers, collectionName, data) { return __awaiter(void 0, void 0, void 0, function () {
+var addReferenceItem = function (baseurl, headers, version, collectionName, data) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/add-reference");
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "POST", headers: headers, body: JSON.stringify(data) })];
+        return [2 /*return*/, request(version, url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(data),
+            })];
     });
 }); };
 exports.addReferenceItem = addReferenceItem;
-var removeReferenceItem = function (baseurl, headers, collectionName, data) { return __awaiter(void 0, void 0, void 0, function () {
+var removeReferenceItem = function (baseurl, headers, version, collectionName, data) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/remove-reference");
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "POST", headers: headers, body: JSON.stringify(data) })];
+        return [2 /*return*/, request(version, url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(data),
+            })];
     });
 }); };
 exports.removeReferenceItem = removeReferenceItem;
 /**
  * GET Calls
  */
-var getAllItems = function (baseurl, headers, collectionName, reqQuery, query) { return __awaiter(void 0, void 0, void 0, function () {
+var getAllItems = function (baseurl, headers, version, collectionName, reqQuery, query) { return __awaiter(void 0, void 0, void 0, function () {
     var queryParams, url;
     return __generator(this, function (_a) {
         queryParams = new URLSearchParams();
@@ -196,97 +217,101 @@ var getAllItems = function (baseurl, headers, collectionName, reqQuery, query) {
         }
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/items?").concat(queryParams.toString());
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "GET", headers: headers })];
+        return [2 /*return*/, request(version, url, { method: "GET", headers: headers })];
     });
 }); };
 exports.getAllItems = getAllItems;
-var getItemOnly = function (baseurl, headers, collectionName, itemUuid) { return __awaiter(void 0, void 0, void 0, function () {
+var getItemOnly = function (baseurl, headers, version, collectionName, itemUuid) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/item-only/").concat(itemUuid);
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "GET", headers: headers })];
+        return [2 /*return*/, request(version, url, { method: "GET", headers: headers })];
     });
 }); };
 exports.getItemOnly = getItemOnly;
-var getItemsWithFilter = function (baseurl, headers, collectionName, filterUuid) { return __awaiter(void 0, void 0, void 0, function () {
+var getItemsWithFilter = function (baseurl, headers, version, collectionName, filterUuid) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/filter/").concat(filterUuid, "/items");
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "GET", headers: headers })];
+        return [2 /*return*/, request(version, url, { method: "GET", headers: headers })];
     });
 }); };
 exports.getItemsWithFilter = getItemsWithFilter;
-var getItemsCountWithFilter = function (baseurl, headers, collectionName, filterUuid) { return __awaiter(void 0, void 0, void 0, function () {
+var getItemsCountWithFilter = function (baseurl, headers, version, collectionName, filterUuid) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/filter/").concat(filterUuid, "/count");
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "GET", headers: headers })];
+        return [2 /*return*/, request(version, url, { method: "GET", headers: headers })];
     });
 }); };
 exports.getItemsCountWithFilter = getItemsCountWithFilter;
-var lastItem = function (baseurl, headers, collectionName) { return __awaiter(void 0, void 0, void 0, function () {
+var lastItem = function (baseurl, headers, version, collectionName) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/last-item");
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "GET", headers: headers })];
+        return [2 /*return*/, request(version, url, { method: "GET", headers: headers })];
     });
 }); };
 exports.lastItem = lastItem;
 /**
  * PUT Call
  */
-var updateItemWithUuid = function (baseurl, headers, collectionName, itemUuid, body) { return __awaiter(void 0, void 0, void 0, function () {
+var updateItemWithUuid = function (baseurl, headers, version, collectionName, itemUuid, body) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/item/").concat(itemUuid);
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "PUT", headers: headers, body: JSON.stringify(body) })];
+        return [2 /*return*/, request(version, url, {
+                method: "PUT",
+                headers: headers,
+                body: JSON.stringify(body),
+            })];
     });
 }); };
 exports.updateItemWithUuid = updateItemWithUuid;
 /**
  * DELETE Call
  */
-var deleteItemWithUuid = function (baseurl, headers, collectionName, itemUuid) { return __awaiter(void 0, void 0, void 0, function () {
+var deleteItemWithUuid = function (baseurl, headers, version, collectionName, itemUuid) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/item/").concat(itemUuid);
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "DELETE", headers: headers })];
+        return [2 /*return*/, request(version, url, { method: "DELETE", headers: headers })];
     });
 }); };
 exports.deleteItemWithUuid = deleteItemWithUuid;
-var clearItem = function (baseurl, headers, collectionName) { return __awaiter(void 0, void 0, void 0, function () {
+var clearItem = function (baseurl, headers, version, collectionName) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/clear-item/");
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "DELETE", headers: headers })];
+        return [2 /*return*/, request(version, url, { method: "DELETE", headers: headers })];
     });
 }); };
 exports.clearItem = clearItem;
-var deleteFieldItem = function (baseurl, headers, collectionName, fieldName) { return __awaiter(void 0, void 0, void 0, function () {
+var deleteFieldItem = function (baseurl, headers, version, collectionName, fieldName) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/collection/").concat(collectionName, "/delete-field-record/").concat(fieldName);
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "DELETE", headers: headers })];
+        return [2 /*return*/, request(version, url, { method: "DELETE", headers: headers })];
     });
 }); };
 exports.deleteFieldItem = deleteFieldItem;
 /**
  * EMAIL
  */
-var sendEmail = function (baseurl, headers, templateId, sendTo) { return __awaiter(void 0, void 0, void 0, function () {
+var sendEmail = function (baseurl, headers, version, templateId, sendTo) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
         url = "".concat(baseurl, "/sendEmail/").concat(templateId, "/user/").concat(sendTo);
         console.log("url :>> ", url);
-        return [2 /*return*/, request(url, { method: "POST", headers: headers })];
+        return [2 /*return*/, request(version, url, { method: "POST", headers: headers })];
     });
 }); };
 exports.sendEmail = sendEmail;

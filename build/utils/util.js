@@ -44,15 +44,29 @@ var defaultMessages = {
     500: "Internal Server Error",
 };
 var createErrorResponse = function (error) { return __awaiter(void 0, void 0, void 0, function () {
-    var status, responseData, finalMessage;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var status, cloneError, responseData, _a, finalMessage;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
                 status = error === null || error === void 0 ? void 0 : error.status;
+                cloneError = error.clone();
                 console.log("status :>> ", status);
-                return [4 /*yield*/, error.json()];
+                _b.label = 1;
             case 1:
-                responseData = _a.sent();
+                _b.trys.push([1, 3, , 5]);
+                return [4 /*yield*/, error.json()];
+            case 2:
+                // Try parsing as JSON
+                responseData = _b.sent();
+                return [3 /*break*/, 5];
+            case 3:
+                _a = _b.sent();
+                return [4 /*yield*/, cloneError.text()];
+            case 4:
+                // If it's not JSON, fallback to text
+                responseData = _b.sent();
+                return [3 /*break*/, 5];
+            case 5:
                 console.log("responseData :>> ", responseData);
                 if (status === 404) {
                     finalMessage = "Not found";
@@ -89,7 +103,7 @@ var createErrorResponse = function (error) { return __awaiter(void 0, void 0, vo
                     return [2 /*return*/, {
                             code: status,
                             success: false,
-                            data: "Please check your credentials",
+                            data: responseData || "Please check your credentials",
                             error: "",
                             message: "",
                         }];
@@ -120,7 +134,7 @@ var processResponse = function (result) {
             data: "",
         };
     }
-    console.log("2");
+    console.log("2", result === null || result === void 0 ? void 0 : result.code);
     if (![200, 201].includes(result === null || result === void 0 ? void 0 : result.code)) {
         var errorMessage = (result === null || result === void 0 ? void 0 : result.data) || defaultMessages[result === null || result === void 0 ? void 0 : result.code] || "An error occurred";
         return {

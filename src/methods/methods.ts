@@ -2,6 +2,7 @@ import { Query, QueryOperation, SearchPaginate } from "../utils/constants";
 import { createErrorResponse, processResponse } from "../utils/util";
 
 const request = async <T>(
+  version: number,
   url: string,
   options: RequestInit,
   process: boolean = true
@@ -10,6 +11,9 @@ const request = async <T>(
     const response = await fetch(url, options);
     if (!response.ok) return await createErrorResponse(response);
     const result = await response.json();
+    if (version === 1) {
+      return result;
+    }
     return process ? processResponse(result) : result;
   } catch (error: any) {
     const message = error?.message?.replace("fetch failed", "Network Error");
@@ -23,35 +27,46 @@ const request = async <T>(
 export const createItem = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   body: any
 ) => {
   const url = `${baseurl}/collection/${collectionName}/items`;
   console.log("url :>> ", url);
-  return request(url, { method: "POST", headers, body: JSON.stringify(body) });
+  return request(version, url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+  });
 };
 
 export const bulkCreateItems = (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   body: any[]
 ) => {
   const url = `${baseurl}/collection/${collectionName}/items/bulk`;
   console.log("url :>> ", url);
-  return request(url, { method: "POST", headers, body: JSON.stringify(body) });
+  return request(version, url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+  });
 };
 
 export const countItemByValue = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   fieldName: string,
   fieldValue: any
 ) => {
   const url = `${baseurl}/collection/${collectionName}/count-by-field`;
   console.log("url :>> ", url);
-  return request(url, {
+  return request(version, url, {
     method: "POST",
     headers,
     body: JSON.stringify({ fieldName, fieldValue }),
@@ -61,12 +76,13 @@ export const countItemByValue = async (
 export const saveCSVData = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   items: any[]
 ) => {
   const url = `${baseurl}/collection/${collectionName}/csv-items`;
   console.log("url :>> ", url);
-  return request(url, {
+  return request(version, url, {
     method: "POST",
     headers,
     body: JSON.stringify({ items }),
@@ -76,23 +92,25 @@ export const saveCSVData = async (
 export const getItemWithUuid = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   itemId: string
 ) => {
   const url = `${baseurl}/collection/${collectionName}/item/${itemId}`;
   console.log("url :>> ", url);
-  return request(url, { method: "POST", headers });
+  return request(version, url, { method: "POST", headers });
 };
 
 export const validateItem = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   item: any
 ) => {
   const url = `${baseurl}/collection/${collectionName}/validate-item`;
   console.log("url :>> ", url);
-  return request(url, {
+  return request(version, url, {
     method: "POST",
     headers,
     body: JSON.stringify({ itemData: item }),
@@ -102,45 +120,57 @@ export const validateItem = async (
 export const bulkDeleteItems = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   body: any
 ) => {
   const url = `${baseurl}/collection/${collectionName}/bulkDelete`;
   console.log("url :>> ", url);
-  return request(url, { method: "POST", headers, body });
+  return request(version, url, { method: "POST", headers, body });
 };
 
 export const getItemsByids = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   body: any
 ) => {
   const url = `${baseurl}/collection/${collectionName}/itemsbyids`;
   console.log("url :>> ", url);
-  return request(url, { method: "POST", headers, body });
+  return request(version, url, { method: "POST", headers, body });
 };
 
 export const addReferenceItem = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   data: any
 ) => {
   const url = `${baseurl}/collection/${collectionName}/add-reference`;
   console.log("url :>> ", url);
-  return request(url, { method: "POST", headers, body: JSON.stringify(data) });
+  return request(version, url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(data),
+  });
 };
 
 export const removeReferenceItem = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   data: any
 ) => {
   const url = `${baseurl}/collection/${collectionName}/remove-reference`;
   console.log("url :>> ", url);
-  return request(url, { method: "POST", headers, body: JSON.stringify(data) });
+  return request(version, url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(data),
+  });
 };
 
 /**
@@ -150,6 +180,7 @@ export const removeReferenceItem = async (
 export const getAllItems = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   reqQuery: SearchPaginate,
   query: Query[]
@@ -174,50 +205,54 @@ export const getAllItems = async (
   }
   const url = `${baseurl}/collection/${collectionName}/items?${queryParams.toString()}`;
   console.log("url :>> ", url);
-  return request(url, { method: "GET", headers });
+  return request(version, url, { method: "GET", headers });
 };
 
 export const getItemOnly = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   itemUuid: string
 ) => {
   const url = `${baseurl}/collection/${collectionName}/item-only/${itemUuid}`;
   console.log("url :>> ", url);
-  return request(url, { method: "GET", headers });
+  return request(version, url, { method: "GET", headers });
 };
 
 export const getItemsWithFilter = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   filterUuid: string
 ) => {
   const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/items`;
   console.log("url :>> ", url);
-  return request(url, { method: "GET", headers });
+  return request(version, url, { method: "GET", headers });
 };
 
 export const getItemsCountWithFilter = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   filterUuid: string
 ) => {
   const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/count`;
   console.log("url :>> ", url);
-  return request(url, { method: "GET", headers });
+  return request(version, url, { method: "GET", headers });
 };
 
 export const lastItem = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string
 ) => {
   const url = `${baseurl}/collection/${collectionName}/last-item`;
   console.log("url :>> ", url);
-  return request(url, { method: "GET", headers });
+  return request(version, url, { method: "GET", headers });
 };
 /**
  * PUT Call
@@ -226,13 +261,18 @@ export const lastItem = async (
 export const updateItemWithUuid = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   itemUuid: string,
   body: any
 ) => {
   const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
   console.log("url :>> ", url);
-  return request(url, { method: "PUT", headers, body: JSON.stringify(body) });
+  return request(version, url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+  });
 };
 
 /**
@@ -241,33 +281,36 @@ export const updateItemWithUuid = async (
 export const deleteItemWithUuid = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   itemUuid: string
 ) => {
   const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
   console.log("url :>> ", url);
-  return request(url, { method: "DELETE", headers });
+  return request(version, url, { method: "DELETE", headers });
 };
 
 export const clearItem = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string
 ) => {
   const url = `${baseurl}/collection/${collectionName}/clear-item/`;
   console.log("url :>> ", url);
-  return request(url, { method: "DELETE", headers });
+  return request(version, url, { method: "DELETE", headers });
 };
 
 export const deleteFieldItem = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   collectionName: string,
   fieldName: string
 ) => {
   const url = `${baseurl}/collection/${collectionName}/delete-field-record/${fieldName}`;
   console.log("url :>> ", url);
-  return request(url, { method: "DELETE", headers });
+  return request(version, url, { method: "DELETE", headers });
 };
 
 /**
@@ -276,10 +319,11 @@ export const deleteFieldItem = async (
 export const sendEmail = async (
   baseurl: string,
   headers: Record<string, string>,
+  version: number,
   templateId: string,
   sendTo: any
 ) => {
   const url = `${baseurl}/sendEmail/${templateId}/user/${sendTo}`;
   console.log("url :>> ", url);
-  return request(url, { method: "POST", headers });
+  return request(version, url, { method: "POST", headers });
 };
