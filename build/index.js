@@ -69,7 +69,6 @@ var Environment;
     Environment["ALPHA"] = "ALPHA";
 })(Environment = exports.Environment || (exports.Environment = {}));
 var DrapcodeApis = /** @class */ (function () {
-    // private protocol: string = "http";
     function DrapcodeApis(projectSeoName, opts) {
         if (opts === void 0) { opts = {}; }
         var _a;
@@ -78,6 +77,7 @@ var DrapcodeApis = /** @class */ (function () {
         this.API_PATH = "webkonnect.site/api";
         // private API_PATH = "prodeless.com:5002/api";
         this.version = 1;
+        // private protocol :string= "https"
         this.protocol = "https";
         this.seoName = projectSeoName;
         this.xApiKey = opts.xApiKey;
