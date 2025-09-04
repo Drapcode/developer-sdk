@@ -49,33 +49,115 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DrapcodeApis = void 0;
-var methods_1 = require("./methods/methods");
-var DrapcodeApis = /** @class */ (function () {
-    function DrapcodeApis(project_seo_name, xApiKey, authorization, environment) {
-        if (xApiKey === void 0) { xApiKey = ""; }
-        if (authorization === void 0) { authorization = ""; }
-        if (environment === void 0) { environment = "PRODUCTION"; }
-        this.API_PATH = "drapcode.io/api/v1/developer";
-        this.project_seo_name = project_seo_name;
-        this.xApiKey = xApiKey;
-        this.authorization = authorization;
-        this.environment = environment;
-    }
-    DrapcodeApis.prototype.getBaseUrl = function () {
-        switch (this.environment.toUpperCase()) {
-            case "PRODUCTION":
-                return "https://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
-            case "PREVIEW":
-                return "https://".concat(this.project_seo_name, ".api.preview.").concat(this.API_PATH);
-            case "BETA":
-                return "https://".concat(this.project_seo_name, ".api.sandbox.").concat(this.API_PATH);
-            case "ALPHA":
-                return "https://".concat(this.project_seo_name, ".api.uat.").concat(this.API_PATH);
-            default:
-                return "https://".concat(this.project_seo_name, ".api.").concat(this.API_PATH);
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
         }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DrapcodeApis = exports.Environment = void 0;
+var methods_1 = require("./methods/methods");
+var Environment;
+(function (Environment) {
+    Environment["PRODUCTION"] = "PRODUCTION";
+    Environment["PREVIEW"] = "PREVIEW";
+    Environment["BETA"] = "BETA";
+    Environment["ALPHA"] = "ALPHA";
+})(Environment = exports.Environment || (exports.Environment = {}));
+var DrapcodeApis = /** @class */ (function () {
+    // private protocol: string = "http";
+    function DrapcodeApis(projectSeoName, opts) {
+        if (opts === void 0) { opts = {}; }
+        var _a;
+        //Network/URL Related
+        // private API_PATH = "drapcode.io/api/";
+        this.API_PATH = "webkonnect.site/api";
+        // private API_PATH = "prodeless.com:5002/api";
+        this.version = 1;
+        this.protocol = "https";
+        this.seoName = projectSeoName;
+        this.xApiKey = opts.xApiKey;
+        this.authorization = opts.authorization;
+        this.environment =
+            (_a = opts.environment) !== null && _a !== void 0 ? _a : Environment.PRODUCTION;
+        this.builderKey = opts.builderKey;
+        this.version = opts.version;
+    }
+    DrapcodeApis.prototype.setProjectSeoName = function (seo_name) {
+        this.seoName = seo_name;
+    };
+    DrapcodeApis.prototype.getProjectSeoName = function () {
+        return this.seoName;
+    };
+    DrapcodeApis.prototype.setXApiKey = function (apiKey) {
+        this.xApiKey = apiKey;
+    };
+    DrapcodeApis.prototype.getXApiKey = function () {
+        return this.xApiKey;
+    };
+    DrapcodeApis.prototype.setAuthorization = function (authorization) {
+        this.authorization = authorization;
+    };
+    DrapcodeApis.prototype.getAuthorization = function () {
+        return this.authorization;
+    };
+    DrapcodeApis.prototype.setEnvironment = function (env) {
+        this.environment = env;
+    };
+    DrapcodeApis.prototype.getEnvironment = function () {
+        return this.environment;
+    };
+    DrapcodeApis.prototype.setBuilderKey = function (builderKey) {
+        this.builderKey = builderKey;
+    };
+    DrapcodeApis.prototype.getBuilderKey = function () {
+        return this.builderKey;
+    };
+    DrapcodeApis.prototype.setVersion = function (version) {
+        this.version = version;
+    };
+    DrapcodeApis.prototype.getVersion = function () {
+        return this.version;
+    };
+    DrapcodeApis.prototype.info = function () {
+        // private protocol :string= "https"
+        return {
+            seoName: this.seoName,
+            xApiKey: this.xApiKey,
+            authorization: this.authorization,
+            environment: this.environment,
+            builderKey: this.builderKey,
+            api: this.API_PATH,
+            version: this.version,
+            protocol: this.protocol,
+            headers: this.getHeaders(),
+            url: this.getBaseUrl(),
+        };
+    };
+    DrapcodeApis.prototype.getEnvSubdomain = function () {
+        var env = String(this.environment).toUpperCase();
+        switch (env) {
+            case Environment.PREVIEW:
+                return "preview";
+            case Environment.BETA:
+                return "sandbox";
+            case Environment.ALPHA:
+                return "uat";
+            case Environment.PRODUCTION:
+            default:
+                return ""; // no extra subdomain for prod
+        }
+    };
+    DrapcodeApis.prototype.getBaseUrl = function () {
+        var envSub = this.getEnvSubdomain();
+        if (envSub) {
+            return "".concat(this.protocol, "://").concat(this.seoName, ".api.").concat(envSub, ".").concat(this.API_PATH, "/v").concat(this.version, "/developer");
+        }
+        return "".concat(this.protocol, "://").concat(this.seoName, ".api.").concat(this.API_PATH, "/v").concat(this.version, "/developer");
     };
     DrapcodeApis.prototype.getHeaders = function () {
         var headers = {
@@ -88,78 +170,157 @@ var DrapcodeApis = /** @class */ (function () {
         if (this.authorization) {
             headers["Authorization"] = this.authorization;
         }
-        console.log("here is header", headers);
+        if (this.builderKey) {
+            headers["BuilderKey"] = this.builderKey;
+        }
         return headers;
+    };
+    DrapcodeApis.prototype.callApi = function (fn, name) {
+        var args = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            args[_i - 2] = arguments[_i];
+        }
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, fn.apply(void 0, __spreadArray([this.getBaseUrl(),
+                        this.getHeaders(),
+                        this.getVersion() || 2,
+                        name], args, false))];
+            });
+        });
     };
     DrapcodeApis.prototype.getAllItems = function (collectionName, reqQuery, query) {
         if (reqQuery === void 0) { reqQuery = null; }
         if (query === void 0) { query = []; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, (0, methods_1.getAllItems)(this.getBaseUrl(), this.getHeaders(), collectionName, reqQuery, query)];
+                return [2 /*return*/, this.callApi(methods_1.getAllItems, collectionName, reqQuery, query)];
             });
         });
     };
     DrapcodeApis.prototype.createItem = function (collectionName, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, (0, methods_1.createItem)(this.getBaseUrl(), this.getHeaders(), collectionName, body)];
+                return [2 /*return*/, this.callApi(methods_1.createItem, collectionName, body)];
             });
         });
     };
     DrapcodeApis.prototype.getItemsWithFilter = function (collectionName, filterUuid) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, (0, methods_1.getItemsWithFilter)(this.getBaseUrl(), this.getHeaders(), collectionName, filterUuid)];
+                return [2 /*return*/, this.callApi(methods_1.getItemsWithFilter, collectionName, filterUuid)];
             });
         });
     };
     DrapcodeApis.prototype.getItemsCountWithFilter = function (collectionName, filterUuid) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, (0, methods_1.getItemsCountWithFilter)(this.getBaseUrl(), this.getHeaders(), collectionName, filterUuid)];
+                return [2 /*return*/, this.callApi(methods_1.getItemsCountWithFilter, collectionName, filterUuid)];
             });
         });
     };
     DrapcodeApis.prototype.getItemWithUuid = function (collectionName, itemUuid) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, (0, methods_1.getItemWithUuid)(this.getBaseUrl(), this.getHeaders(), collectionName, itemUuid)];
+                return [2 /*return*/, this.callApi(methods_1.getItemWithUuid, collectionName, itemUuid)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.getItemOnly = function (collectionName, itemUuid) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.callApi(methods_1.getItemOnly, collectionName, itemUuid)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.countItemByValue = function (collectionName, fieldName, fieldValue) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.callApi(methods_1.countItemByValue, collectionName, fieldName, fieldValue)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.saveCSVData = function (collectionName, items) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.callApi(methods_1.saveCSVData, collectionName, items)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.validateItem = function (collectionName, item) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.callApi(methods_1.validateItem, collectionName, item)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.lastItem = function (collectionName) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.callApi(methods_1.lastItem, collectionName)];
             });
         });
     };
     DrapcodeApis.prototype.updateItemWithUuid = function (collectionName, itemUuid, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, (0, methods_1.updateItemWithUuid)(this.getBaseUrl(), this.getHeaders(), collectionName, itemUuid, body)];
+                return [2 /*return*/, this.callApi(methods_1.updateItemWithUuid, collectionName, itemUuid, body)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.clearItem = function (collectionName) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.callApi(methods_1.clearItem, collectionName)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.deleteFieldItem = function (collectionName, fieldName) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.callApi(methods_1.deleteFieldItem, collectionName, fieldName)];
             });
         });
     };
     DrapcodeApis.prototype.deleteItemWithUuid = function (collectionName, itemUuid) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, (0, methods_1.deleteItemWithUuid)(this.getBaseUrl(), this.getHeaders(), collectionName, itemUuid)];
+                return [2 /*return*/, this.callApi(methods_1.deleteItemWithUuid, collectionName, itemUuid)];
             });
         });
     };
     DrapcodeApis.prototype.bulkDeleteItems = function (collectionName, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, (0, methods_1.bulkDeleteItems)(this.getBaseUrl(), this.getHeaders(), collectionName, body)];
+                return [2 /*return*/, this.callApi(methods_1.bulkDeleteItems, collectionName, body)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.removeReferenceItem = function (collectionName, body) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.callApi(methods_1.removeReferenceItem, collectionName, body)];
+            });
+        });
+    };
+    DrapcodeApis.prototype.addReferenceItem = function (collectionName, body) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.callApi(methods_1.addReferenceItem, collectionName, body)];
             });
         });
     };
     DrapcodeApis.prototype.getItemsByids = function (collectionName, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, (0, methods_1.getItemsByids)(this.getBaseUrl(), this.getHeaders(), collectionName, body)];
+                return [2 /*return*/, this.callApi(methods_1.getItemsByids, collectionName, body)];
             });
         });
     };
     DrapcodeApis.prototype.sendEmail = function (templateId, sendTo) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, (0, methods_1.sendEmail)(this.getBaseUrl(), this.getHeaders(), templateId, sendTo)];
+                return [2 /*return*/, this.callApi(methods_1.sendEmail, templateId, sendTo)];
             });
         });
     };

@@ -12,13 +12,24 @@ npm install drapcode-developer-sdk
 
 ```typescript
 import { DrapcodeApis } from "drapcode-developer-sdk";
+```
 
+If using version 1:
+
+```typescript
 const api = new DrapcodeApis(
   project_seo_name,
   xApiKey,
   authorization,
   environment
 );
+```
+
+If using version 2:
+
+```typescript
+const opts = { xApiKey: "", authorization: "", environment, version: 2 };
+const api = new DrapcodeApis(project_seo_name, opts);
 ```
 
 **project_seo_name (Required):** The SEO name of your Drapcode project.
@@ -29,10 +40,31 @@ const api = new DrapcodeApis(
 
 **environment (Optional)**: The environment (PRODUCTION, PREVIEW, SANDBOX, UAT). Defaults to PRODUCTION if not provided.
 
+**version (Optional, default version is 1)**: This is used to decide which version you want to use.
+
 ### Example:
 
+If using version 1:
+
+```typescript
+V1: const drapcodeApi = new DrapcodeApis(
+  "test-project-7138",
+  xApiKey,
+  authorization,
+  environment
+);
 ```
-const drapcodeApi = new DrapcodeApis("test-project-7138",xApiKey, authorization, environment);
+
+If using version 2:
+
+```typescript
+V2: const opts = {
+  xApiKey: "xApiKey",
+  authorization: "authorization",
+  environment: "environment",
+  version: 2,
+};
+const drapcodeApi = new DrapcodeApis("test-project-7138", opts);
 ```
 
 # Methods
@@ -48,6 +80,14 @@ Retrieves all items from a specified collection. The items will come under 'data
 ```
 const items = await drapcodeApi.getAllItems("users");
 ```
+
+### In version 2, we have info methods
+
+```typescript
+info();
+```
+
+This will return an object with all the information which you have provided.
 
 Retrieves items from the "users" collection.
 
