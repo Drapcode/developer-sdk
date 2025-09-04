@@ -46,14 +46,14 @@ export class DrapcodeApis {
   //Network/URL Related
 
   // private API_PATH = "drapcode.io/api/";
-  // private API_PATH = "webkonnect.site/api/";
+  private API_PATH = "webkonnect.site/api";
 
-  private API_PATH = "prodeless.com:5002/api";
+  // private API_PATH = "prodeless.com:5002/api";
 
   private version?: number = 1;
 
-  // private protocol :string= "https"
-  private protocol: string = "http";
+  private protocol: string = "https";
+  // private protocol: string = "http";
 
   constructor(projectSeoName: string, opts: DrapcodeApiOptions = {}) {
     this.seoName = projectSeoName;

@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.processResponse = exports.createErrorResponse = void 0;
+exports.processResponse = exports.processListResponse = exports.processCreateErrorResponse = exports.processCreateItemResponse = exports.processCountFilterResponse = exports.processFilterResponse = exports.createErrorResponse = void 0;
 var defaultMessages = {
     401: "Unauthorized",
     404: "Not Found",
@@ -119,9 +119,80 @@ var createErrorResponse = function (error) { return __awaiter(void 0, void 0, vo
     });
 }); };
 exports.createErrorResponse = createErrorResponse;
+var processFilterResponse = function (response) {
+    console.log("response :>> ", response);
+    var code = response.code, message = response.message, result = response.result, count = response.count;
+    if (code === 200) {
+        return {
+            code: code,
+            data: result,
+            count: count,
+            error: "",
+            status: "success",
+            message: "",
+        };
+    }
+    return {
+        code: code,
+        data: [],
+        count: 0,
+        error: message,
+        status: "failed",
+        message: message,
+    };
+};
+exports.processFilterResponse = processFilterResponse;
+var processCountFilterResponse = function () { };
+exports.processCountFilterResponse = processCountFilterResponse;
+var processCreateItemResponse = function (response) {
+    console.log("1", response);
+    var code = response.code, message = response.message, data = response.data, status = response.status, error = response.error;
+    if ([200, 201].includes(code)) {
+        return {
+            code: code,
+            data: data,
+            status: status,
+            error: error,
+            message: message,
+        };
+    }
+};
+exports.processCreateItemResponse = processCreateItemResponse;
+var processCreateErrorResponse = function (error) { return __awaiter(void 0, void 0, void 0, function () {
+    var status, cloneError, responseData, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                status = error === null || error === void 0 ? void 0 : error.status;
+                cloneError = error.clone();
+                console.log("status :>> ", status);
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 3, , 5]);
+                return [4 /*yield*/, error.json()];
+            case 2:
+                // Try parsing as JSON
+                responseData = _b.sent();
+                return [3 /*break*/, 5];
+            case 3:
+                _a = _b.sent();
+                return [4 /*yield*/, cloneError.text()];
+            case 4:
+                // If it's not JSON, fallback to text
+                responseData = _b.sent();
+                return [3 /*break*/, 5];
+            case 5:
+                console.log("responseData :>> ", responseData);
+                return [2 /*return*/, responseData];
+        }
+    });
+}); };
+exports.processCreateErrorResponse = processCreateErrorResponse;
+var processListResponse = function () { };
+exports.processListResponse = processListResponse;
 var processResponse = function (result) {
     var _a, _b;
-    console.log("1");
+    console.log("1", result);
     if ((result === null || result === void 0 ? void 0 : result.status) === "FAILED") {
         var statusCode = ((_a = result === null || result === void 0 ? void 0 : result.error) === null || _a === void 0 ? void 0 : _a.errStatus) || 400;
         var errorMessage = ((_b = result === null || result === void 0 ? void 0 : result.error) === null || _b === void 0 ? void 0 : _b.message) || defaultMessages[statusCode] || "API Failed";

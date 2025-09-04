@@ -1,5 +1,11 @@
 import { Query, QueryOperation, SearchPaginate } from "../utils/constants";
-import { createErrorResponse, processResponse } from "../utils/util";
+import {
+  createErrorResponse,
+  processCreateErrorResponse,
+  processCreateItemResponse,
+  processFilterResponse,
+  processResponse,
+} from "../utils/util";
 
 const request = async <T>(
   version: number,
@@ -24,21 +30,6 @@ const request = async <T>(
 /**
  * POST Calls
  */
-export const createItem = async (
-  baseurl: string,
-  headers: Record<string, string>,
-  version: number,
-  collectionName: string,
-  body: any
-) => {
-  const url = `${baseurl}/collection/${collectionName}/items`;
-  console.log("url :>> ", url);
-  return request(version, url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-  });
-};
 
 export const bulkCreateItems = (
   baseurl: string,
@@ -47,7 +38,7 @@ export const bulkCreateItems = (
   collectionName: string,
   body: any[]
 ) => {
-  const url = `${baseurl}/collection/${collectionName}/items/bulk`;
+  const url = `${baseurl}/collection/${collectionName}/bulk`;
   console.log("url :>> ", url);
   return request(version, url, {
     method: "POST",
@@ -89,18 +80,6 @@ export const saveCSVData = async (
   });
 };
 
-export const getItemWithUuid = async (
-  baseurl: string,
-  headers: Record<string, string>,
-  version: number,
-  collectionName: string,
-  itemId: string
-) => {
-  const url = `${baseurl}/collection/${collectionName}/item/${itemId}`;
-  console.log("url :>> ", url);
-  return request(version, url, { method: "POST", headers });
-};
-
 export const validateItem = async (
   baseurl: string,
   headers: Record<string, string>,
@@ -126,19 +105,11 @@ export const bulkDeleteItems = async (
 ) => {
   const url = `${baseurl}/collection/${collectionName}/bulkDelete`;
   console.log("url :>> ", url);
-  return request(version, url, { method: "POST", headers, body });
-};
-
-export const getItemsByids = async (
-  baseurl: string,
-  headers: Record<string, string>,
-  version: number,
-  collectionName: string,
-  body: any
-) => {
-  const url = `${baseurl}/collection/${collectionName}/itemsbyids`;
-  console.log("url :>> ", url);
-  return request(version, url, { method: "POST", headers, body });
+  return request(version, url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+  });
 };
 
 export const addReferenceItem = async (
@@ -177,6 +148,95 @@ export const removeReferenceItem = async (
  * GET Calls
  */
 
+export const getItemOnly = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  version: number,
+  collectionName: string,
+  itemUuid: string
+) => {
+  const url = `${baseurl}/collection/${collectionName}/item-only/${itemUuid}`;
+  console.log("url :>> ", url);
+  return request(version, url, { method: "GET", headers });
+};
+/**
+ * Final Start
+ */
+export const createItem = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  version: number,
+  collectionName: string,
+  body: any
+) => {
+  const url = `${baseurl}/collection/${collectionName}/items`;
+  console.log("url :>> ", url);
+  try {
+    console.log("version :>> ", version);
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) return await processCreateErrorResponse(response);
+
+    const result = await response.json();
+    console.log("result request:>> ", result);
+    if (version === 1) {
+      return result;
+    }
+    return processCreateItemResponse(result);
+    ``;
+  } catch (error: any) {
+    const message = error?.message?.replace("fetch failed", "Network Error");
+    return { code: 500, error: message, data: [], count: 0, status: "failed" };
+  }
+};
+
+export const getItemsWithFilter = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  version: number,
+  collectionName: string,
+  filterUuid: string
+) => {
+  const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/items`;
+  console.log("url :>> ", url);
+  try {
+    console.log("version :>> ", version);
+    const response = await fetch(url, { method: "GET", headers });
+    if (!response.ok) return await processCreateErrorResponse(response);
+
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    const message = error?.message?.replace("fetch failed", "Network Error");
+    return { code: 500, error: message, data: [], count: 0, status: "failed" };
+  }
+};
+
+export const getItemsCountWithFilter = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  version: number,
+  collectionName: string,
+  filterUuid: string
+) => {
+  const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/count`;
+  console.log("url :>> ", url);
+  try {
+    console.log("version :>> ", version);
+    const response = await fetch(url, { method: "GET", headers });
+    if (!response.ok) return await createErrorResponse(response);
+
+    const result = await response.json();
+    return processFilterResponse(result);
+  } catch (error: any) {
+    const message = error?.message?.replace("fetch failed", "Network Error");
+    return { code: 500, error: message, data: [], count: 0, status: "failed" };
+  }
+};
+
 export const getAllItems = async (
   baseurl: string,
   headers: Record<string, string>,
@@ -207,42 +267,46 @@ export const getAllItems = async (
   console.log("url :>> ", url);
   return request(version, url, { method: "GET", headers });
 };
-
-export const getItemOnly = async (
+export const getItemsByids = async (
   baseurl: string,
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  itemUuid: string
+  body: any
 ) => {
-  const url = `${baseurl}/collection/${collectionName}/item-only/${itemUuid}`;
+  const url = `${baseurl}/collection/${collectionName}/itemsbyids`;
   console.log("url :>> ", url);
-  return request(version, url, { method: "GET", headers });
+  return request(version, url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+  });
 };
 
-export const getItemsWithFilter = async (
+export const getItemWithUuid = async (
   baseurl: string,
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  filterUuid: string
+  itemId: string
 ) => {
-  const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/items`;
+  const url = `${baseurl}/collection/${collectionName}/item/${itemId}`;
   console.log("url :>> ", url);
-  return request(version, url, { method: "GET", headers });
-};
+  try {
+    console.log("version :>> ", version);
+    const response = await fetch(url, { method: "GET", headers });
+    if (!response.ok) return await processCreateErrorResponse(response);
 
-export const getItemsCountWithFilter = async (
-  baseurl: string,
-  headers: Record<string, string>,
-  version: number,
-  collectionName: string,
-  filterUuid: string
-) => {
-  const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/count`;
-  console.log("url :>> ", url);
-  return request(version, url, { method: "GET", headers });
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    const message = error?.message?.replace("fetch failed", "Network Error");
+    return { code: 500, error: message, data: [], count: 0, status: "failed" };
+  }
 };
+/**
+ * Final Stop
+ */
 
 export const lastItem = async (
   baseurl: string,
