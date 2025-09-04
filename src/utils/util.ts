@@ -6,9 +6,17 @@ const defaultMessages: Record<number, string> = {
 };
 export const createErrorResponse = async (error: any) => {
   const status = error?.status;
+  const cloneError = error.clone();
   console.log("status :>> ", status);
+  let responseData;
+  try {
+    // Try parsing as JSON
+    responseData = await error.json();
+  } catch {
+    // If it's not JSON, fallback to text
+    responseData = await cloneError.text();
+  }
 
-  const responseData = await error.json();
   console.log("responseData :>> ", responseData);
 
   if (status === 404) {
@@ -45,7 +53,7 @@ export const createErrorResponse = async (error: any) => {
     return {
       code: status,
       success: false,
-      data: "Please check your credentials",
+      data: responseData || "Please check your credentials",
       error: "",
       message: "",
     };
@@ -59,8 +67,62 @@ export const createErrorResponse = async (error: any) => {
   };
 };
 
+export const processFilterResponse = (response: any) => {
+  console.log("response :>> ", response);
+  const { code, message, result, count } = response;
+  if (code === 200) {
+    return {
+      code,
+      data: result,
+      count,
+      error: "",
+      status: "success",
+      message: "",
+    };
+  }
+  return {
+    code,
+    data: [],
+    count: 0,
+    error: message,
+    status: "failed",
+    message,
+  };
+};
+export const processCountFilterResponse = () => {};
+export const processCreateItemResponse = (response: any) => {
+  console.log("1", response);
+  const { code, message, data, status, error } = response;
+  if ([200, 201].includes(code)) {
+    return {
+      code,
+      data,
+      status,
+      error,
+      message,
+    };
+  }
+};
+export const processCreateErrorResponse = async (error: any) => {
+  const status = error?.status;
+  const cloneError = error.clone();
+  console.log("status :>> ", status);
+  let responseData;
+  try {
+    // Try parsing as JSON
+    responseData = await error.json();
+  } catch {
+    // If it's not JSON, fallback to text
+    responseData = await cloneError.text();
+  }
+
+  console.log("responseData :>> ", responseData);
+  return responseData;
+};
+export const processListResponse = () => {};
+
 export const processResponse = (result: any) => {
-  console.log("1");
+  console.log("1", result);
   if (result?.status === "FAILED") {
     const statusCode = result?.error?.errStatus || 400;
     const errorMessage =
@@ -75,7 +137,7 @@ export const processResponse = (result: any) => {
       data: "",
     };
   }
-  console.log("2");
+  console.log("2", result?.code);
   if (![200, 201].includes(result?.code)) {
     const errorMessage =
       result?.data || defaultMessages[result?.code] || "An error occurred";

@@ -1,4 +1,5 @@
 import {
+  addReferenceItem,
   bulkDeleteItems,
   clearItem,
   countItemByValue,
@@ -12,6 +13,7 @@ import {
   getItemsCountWithFilter,
   getItemsWithFilter,
   lastItem,
+  removeReferenceItem,
   saveCSVData,
   sendEmail,
   updateItemWithUuid,
@@ -19,46 +21,133 @@ import {
 } from "./methods/methods";
 import { Query, SearchPaginate } from "./utils/constants";
 
-export class DrapcodeApis {
-  private project_seo_name: string;
-  private xApiKey: string;
-  private authorization: string; //authorization
-  private environment: string;
-  // private API_PATH = "drapcode.io/api/v1/developer";
-  // private API_PATH = "webkonnect.site/api/v1/developer";
-  private API_PATH = "prodeless.com:5002/api/v1/developer";
-  private builderKey: string; //for builder auth
-  
-  // private protocol = "https";
-  private protocol = "http";
+export enum Environment {
+  PRODUCTION = "PRODUCTION",
+  PREVIEW = "PREVIEW",
+  BETA = "BETA",
+  ALPHA = "ALPHA",
+}
 
-  constructor(
-    project_seo_name: string,
-    xApiKey: string = "",
-    authorization: string = "",
-    environment: string = "PRODUCTION",
-    builderKey: string = ""
-  ) {
-    this.project_seo_name = project_seo_name;
-    this.xApiKey = xApiKey;
+export interface DrapcodeApiOptions {
+  xApiKey?: string;
+  authorization?: string;
+  environment?: Environment | keyof typeof Environment | string;
+  builderKey?: string;
+  version?: number;
+}
+
+export class DrapcodeApis {
+  private seoName: string;
+  private xApiKey?: string;
+  private authorization?: string; //authorization
+  private environment: Environment | string;
+  private builderKey?: string; //for builder auth
+
+  //Network/URL Related
+
+  // private API_PATH = "drapcode.io/api/";
+  private API_PATH = "webkonnect.site/api";
+
+  // private API_PATH = "prodeless.com:5002/api";
+
+  private version?: number = 1;
+
+  private protocol: string = "https";
+  // private protocol: string = "http";
+
+  constructor(projectSeoName: string, opts: DrapcodeApiOptions = {}) {
+    this.seoName = projectSeoName;
+
+    this.xApiKey = opts.xApiKey;
+    this.authorization = opts.authorization;
+    this.environment =
+      (opts.environment as Environment) ?? Environment.PRODUCTION;
+    this.builderKey = opts.builderKey;
+    this.version = opts.version;
+  }
+
+  public setProjectSeoName(seo_name: string): void {
+    this.seoName = seo_name;
+  }
+  public getProjectSeoName(): string {
+    return this.seoName;
+  }
+
+  public setXApiKey(apiKey: string) {
+    this.xApiKey = apiKey;
+  }
+  public getXApiKey(): string | undefined {
+    return this.xApiKey;
+  }
+
+  public setAuthorization(authorization: string) {
     this.authorization = authorization;
-    this.environment = environment;
+  }
+  public getAuthorization(): string | undefined {
+    return this.authorization;
+  }
+
+  public setEnvironment(env: string) {
+    this.environment = env;
+  }
+  public getEnvironment(): string | undefined {
+    return this.environment;
+  }
+
+  public setBuilderKey(builderKey: string) {
     this.builderKey = builderKey;
   }
-  public getBaseUrl(): string {
-    switch (this.environment.toUpperCase()) {
-      case "PRODUCTION":
-        return `${this.protocol}://${this.project_seo_name}.api.${this.API_PATH}`;
-      case "PREVIEW":
-        return `${this.protocol}://${this.project_seo_name}.api.preview.${this.API_PATH}`;
-      case "BETA":
-        return `${this.protocol}://${this.project_seo_name}.api.sandbox.${this.API_PATH}`;
-      case "ALPHA":
-        return `${this.protocol}://${this.project_seo_name}.api.uat.${this.API_PATH}`;
+  public getBuilderKey(): string | undefined {
+    return this.builderKey;
+  }
+
+  public setVersion(version: number) {
+    this.version = version;
+  }
+
+  public getVersion(): number | undefined {
+    return this.version;
+  }
+
+  public info(): any {
+    // private protocol :string= "https"
+    return {
+      seoName: this.seoName,
+      xApiKey: this.xApiKey,
+      authorization: this.authorization,
+      environment: this.environment,
+      builderKey: this.builderKey,
+      api: this.API_PATH,
+      version: this.version,
+      protocol: this.protocol,
+      headers: this.getHeaders(),
+      url: this.getBaseUrl(),
+    };
+  }
+
+  private getEnvSubdomain(): string {
+    const env = String(this.environment).toUpperCase();
+    switch (env) {
+      case Environment.PREVIEW:
+        return "preview";
+      case Environment.BETA:
+        return "sandbox";
+      case Environment.ALPHA:
+        return "uat";
+      case Environment.PRODUCTION:
       default:
-        return `${this.protocol}://${this.project_seo_name}.api.${this.API_PATH}`;
+        return ""; // no extra subdomain for prod
     }
   }
+
+  public getBaseUrl(): string {
+    const envSub = this.getEnvSubdomain();
+    if (envSub) {
+      return `${this.protocol}://${this.seoName}.api.${envSub}.${this.API_PATH}/v${this.version}/developer`;
+    }
+    return `${this.protocol}://${this.seoName}.api.${this.API_PATH}/v${this.version}/developer`;
+  }
+
   public getHeaders(): Record<string, string> {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
@@ -75,157 +164,99 @@ export class DrapcodeApis {
     }
     return headers;
   }
+
+  private async callApi<T>(
+    fn: (
+      baseUrl: string,
+      headers: Record<string, string>,
+      version: number,
+      ...args: any[]
+    ) => Promise<T>,
+    name: string,
+    ...args: any[]
+  ): Promise<T> {
+    return fn(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      this.getVersion() || 2,
+      name,
+      ...args
+    );
+  }
+
   async getAllItems(
     collectionName: string,
     reqQuery: SearchPaginate | any = null,
     query: Query[] | [] = []
   ) {
-    return getAllItems(
-      this.getBaseUrl(),
-      this.getHeaders(),
-      collectionName,
-      reqQuery,
-      query
-    );
+    return this.callApi(getAllItems, collectionName, reqQuery, query);
   }
   async createItem(collectionName: string, body: any) {
-    return createItem(
-      this.getBaseUrl(),
-      this.getHeaders(),
-      collectionName,
-      body
-    );
+    return this.callApi(createItem, collectionName, body);
   }
   async getItemsWithFilter(collectionName: string, filterUuid: string) {
-    return getItemsWithFilter(
-      this.getBaseUrl(),
-      this.getHeaders(),
-      collectionName,
-      filterUuid
-    );
+    return this.callApi(getItemsWithFilter, collectionName, filterUuid);
   }
   async getItemsCountWithFilter(collectionName: string, filterUuid: string) {
-    return getItemsCountWithFilter(
-      this.getBaseUrl(),
-      this.getHeaders(),
-      collectionName,
-      filterUuid
-    );
+    return this.callApi(getItemsCountWithFilter, collectionName, filterUuid);
   }
   async getItemWithUuid(collectionName: string, itemUuid: string) {
-    return getItemWithUuid(
-      this.getBaseUrl(),
-      this.getHeaders(),
-      collectionName,
-      itemUuid
-    );
+    return this.callApi(getItemWithUuid, collectionName, itemUuid);
   }
   async getItemOnly(collectionName: string, itemUuid: string) {
-    return getItemOnly(
-      this.getBaseUrl(),
-      this.getHeaders(),
-      collectionName,
-      itemUuid
-    );
+    return this.callApi(getItemOnly, collectionName, itemUuid);
   }
   async countItemByValue(
     collectionName: string,
     fieldName: string,
     fieldValue: any
   ) {
-    return countItemByValue(
-      this.getBaseUrl(),
-      this.getHeaders(),
+    return this.callApi(
+      countItemByValue,
       collectionName,
       fieldName,
       fieldValue
     );
   }
   async saveCSVData(collectionName: string, items: any[]) {
-    return saveCSVData(
-      this.getBaseUrl(),
-      this.getHeaders(),
-      collectionName,
-      items
-    );
+    return this.callApi(saveCSVData, collectionName, items);
   }
   async validateItem(collectionName: string, item: any) {
-    return validateItem(
-      this.getBaseUrl(),
-      this.getHeaders(),
-      collectionName,
-      item
-    );
+    return this.callApi(validateItem, collectionName, item);
   }
   async lastItem(collectionName: string) {
-    return lastItem(this.getBaseUrl(), this.getHeaders(), collectionName);
+    return this.callApi(lastItem, collectionName);
   }
   async updateItemWithUuid(
     collectionName: string,
     itemUuid: string,
     body: any
   ) {
-    return updateItemWithUuid(
-      this.getBaseUrl(),
-      this.getHeaders(),
-      collectionName,
-      itemUuid,
-      body
-    );
+    return this.callApi(updateItemWithUuid, collectionName, itemUuid, body);
   }
   async clearItem(collectionName: string) {
-    return clearItem(this.getBaseUrl(), this.getHeaders(), collectionName);
+    return this.callApi(clearItem, collectionName);
   }
   async deleteFieldItem(collectionName: string, fieldName: string) {
-    return deleteFieldItem(
-      this.getBaseUrl(),
-      this.getHeaders(),
-      collectionName,
-      fieldName
-    );
+    return this.callApi(deleteFieldItem, collectionName, fieldName);
   }
   async deleteItemWithUuid(collectionName: string, itemUuid: string) {
-    return deleteItemWithUuid(
-      this.getBaseUrl(),
-      this.getHeaders(),
-      collectionName,
-      itemUuid
-    );
+    return this.callApi(deleteItemWithUuid, collectionName, itemUuid);
   }
   async bulkDeleteItems(collectionName: string, body: any) {
-    return bulkDeleteItems(
-      this.getBaseUrl(),
-      this.getHeaders(),
-      collectionName,
-      body
-    );
+    return this.callApi(bulkDeleteItems, collectionName, body);
   }
   async removeReferenceItem(collectionName: string, body: any) {
-    return bulkDeleteItems(
-      this.getBaseUrl(),
-      this.getHeaders(),
-      collectionName,
-      body
-    );
+    return this.callApi(removeReferenceItem, collectionName, body);
   }
   async addReferenceItem(collectionName: string, body: any) {
-    return bulkDeleteItems(
-      this.getBaseUrl(),
-      this.getHeaders(),
-      collectionName,
-      body
-    );
+    return this.callApi(addReferenceItem, collectionName, body);
   }
   async getItemsByids(collectionName: string, body: any) {
-    return getItemsByids(
-      this.getBaseUrl(),
-      this.getHeaders(),
-      collectionName,
-      body
-    );
+    return this.callApi(getItemsByids, collectionName, body);
   }
   async sendEmail(templateId: string, sendTo: string) {
-    return sendEmail(this.getBaseUrl(), this.getHeaders(), templateId, sendTo);
+    return this.callApi(sendEmail, templateId, sendTo);
   }
 }
 export * from "./utils/index";

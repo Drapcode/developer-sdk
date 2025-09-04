@@ -10,10 +10,10 @@ To use the `DrapcodeApis` class, you need to instantiate it with the required pa
 npm install drapcode-developer-sdk
 ```
 
-
 ```typescript
 import { DrapcodeApis } from "drapcode-developer-sdk";
 ```
+
 If using version 1:
 
 ```typescript
@@ -24,10 +24,12 @@ const api = new DrapcodeApis(
   environment
 );
 ```
+
 If using version 2:
+
 ```typescript
-const opts = { xApiKey: '', authorization: '', environment, version: 2 };
-const api = new DrapcodeApis(seoName, opts);
+const opts = { xApiKey: "", authorization: "", environment, version: 2 };
+const api = new DrapcodeApis(project_seo_name, opts);
 ```
 
 **project_seo_name (Required):** The SEO name of your Drapcode project.
@@ -41,21 +43,28 @@ const api = new DrapcodeApis(seoName, opts);
 **version (Optional, default version is 1)**: This is used to decide which version you want to use.
 
 ### Example:
+
 If using version 1:
 
 ```typescript
-
-V1:
-const drapcodeApi = new DrapcodeApis("test-project-7138", xApiKey, authorization, environment);
-
+V1: const drapcodeApi = new DrapcodeApis(
+  "test-project-7138",
+  xApiKey,
+  authorization,
+  environment
+);
 ```
+
 If using version 2:
+
 ```typescript
-
-V2:
-const opts = { xApiKey: 'xApiKey', authorization: 'authorization', environment: 'environment', version: 2 };
+V2: const opts = {
+  xApiKey: "xApiKey",
+  authorization: "authorization",
+  environment: "environment",
+  version: 2,
+};
 const drapcodeApi = new DrapcodeApis("test-project-7138", opts);
-
 ```
 
 # Methods
@@ -73,10 +82,11 @@ const items = await drapcodeApi.getAllItems("users");
 ```
 
 ### In version 2, we have info methods
-```typescript
-info()
 
+```typescript
+info();
 ```
+
 This will return an object with all the information which you have provided.
 
 Retrieves items from the "users" collection.

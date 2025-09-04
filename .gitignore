@@ -4,3 +4,4 @@ node_modules
 package-lock.json
 testing.js
 fresh_sdk.sh
+.vscode
