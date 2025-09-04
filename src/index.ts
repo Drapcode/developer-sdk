@@ -56,7 +56,7 @@ export class DrapcodeApis {
   // private protocol :string= "https"
   private protocol: string = "https";
 
-  constructor(projectSeoName: string, opts: DrapcodeApiOptions) {
+  constructor(projectSeoName: string, opts: DrapcodeApiOptions = {}) {
     this.seoName = projectSeoName;
 
     this.xApiKey = opts.xApiKey;
@@ -170,12 +170,19 @@ export class DrapcodeApis {
     fn: (
       baseUrl: string,
       headers: Record<string, string>,
+      version: number,
       ...args: any[]
     ) => Promise<T>,
     name: string,
     ...args: any[]
   ): Promise<T> {
-    return fn(this.getBaseUrl(), this.getHeaders(), name, ...args);
+    return fn(
+      this.getBaseUrl(),
+      this.getHeaders(),
+      this.getVersion() || 2,
+      name,
+      ...args
+    );
   }
 
   async getAllItems(

@@ -21,7 +21,7 @@ export declare class DrapcodeApis {
     private API_PATH;
     private version?;
     private protocol;
-    constructor(projectSeoName: string, opts: DrapcodeApiOptions);
+    constructor(projectSeoName: string, opts?: DrapcodeApiOptions);
     setProjectSeoName(seo_name: string): void;
     getProjectSeoName(): string;
     setXApiKey(apiKey: string): void;
@@ -40,10 +40,42 @@ export declare class DrapcodeApis {
     getHeaders(): Record<string, string>;
     private callApi;
     getAllItems(collectionName: string, reqQuery?: SearchPaginate | any, query?: Query[] | []): Promise<unknown>;
-    createItem(collectionName: string, body: any): Promise<unknown>;
-    getItemsWithFilter(collectionName: string, filterUuid: string): Promise<unknown>;
-    getItemsCountWithFilter(collectionName: string, filterUuid: string): Promise<unknown>;
-    getItemWithUuid(collectionName: string, itemUuid: string): Promise<unknown>;
+    createItem(collectionName: string, body: any): Promise<any>;
+    getItemsWithFilter(collectionName: string, filterUuid: string): Promise<any>;
+    getItemsCountWithFilter(collectionName: string, filterUuid: string): Promise<{
+        code: any;
+        success: boolean;
+        data: any;
+        error: string;
+        message: string;
+    } | {
+        code: any;
+        success: boolean;
+        data: string;
+        error: any;
+        message: string;
+    } | {
+        code: any;
+        data: any;
+        count: any;
+        error: string;
+        status: string;
+        message: string;
+    } | {
+        code: any;
+        data: never[];
+        count: number;
+        error: any;
+        status: string;
+        message: any;
+    } | {
+        code: number;
+        error: any;
+        data: never[];
+        count: number;
+        status: string;
+    }>;
+    getItemWithUuid(collectionName: string, itemUuid: string): Promise<any>;
     getItemOnly(collectionName: string, itemUuid: string): Promise<unknown>;
     countItemByValue(collectionName: string, fieldName: string, fieldValue: any): Promise<unknown>;
     saveCSVData(collectionName: string, items: any[]): Promise<unknown>;

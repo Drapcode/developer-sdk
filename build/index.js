@@ -69,14 +69,15 @@ var Environment;
     Environment["ALPHA"] = "ALPHA";
 })(Environment = exports.Environment || (exports.Environment = {}));
 var DrapcodeApis = /** @class */ (function () {
+    // private protocol: string = "http";
     function DrapcodeApis(projectSeoName, opts) {
+        if (opts === void 0) { opts = {}; }
         var _a;
         //Network/URL Related
         // private API_PATH = "drapcode.io/api/";
         this.API_PATH = "webkonnect.site/api";
         // private API_PATH = "prodeless.com:5002/api";
         this.version = 1;
-        // private protocol :string= "https"
         this.protocol = "https";
         this.seoName = projectSeoName;
         this.xApiKey = opts.xApiKey;
@@ -181,7 +182,10 @@ var DrapcodeApis = /** @class */ (function () {
         }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, fn.apply(void 0, __spreadArray([this.getBaseUrl(), this.getHeaders(), name], args, false))];
+                return [2 /*return*/, fn.apply(void 0, __spreadArray([this.getBaseUrl(),
+                        this.getHeaders(),
+                        this.getVersion() || 2,
+                        name], args, false))];
             });
         });
     };
