@@ -7,7 +7,6 @@ export declare const countItemByValue: (baseurl: string, headers: Record<string,
 export declare const saveCSVData: (baseurl: string, headers: Record<string, string>, version: number, collectionName: string, items: any[]) => Promise<unknown>;
 export declare const validateItem: (baseurl: string, headers: Record<string, string>, version: number, collectionName: string, item: any) => Promise<unknown>;
 export declare const bulkDeleteItems: (baseurl: string, headers: Record<string, string>, version: number, collectionName: string, body: any) => Promise<unknown>;
-export declare const getItemsByids: (baseurl: string, headers: Record<string, string>, version: number, collectionName: string, body: any) => Promise<unknown>;
 export declare const addReferenceItem: (baseurl: string, headers: Record<string, string>, version: number, collectionName: string, data: any) => Promise<unknown>;
 export declare const removeReferenceItem: (baseurl: string, headers: Record<string, string>, version: number, collectionName: string, data: any) => Promise<unknown>;
 /**
@@ -53,6 +52,7 @@ export declare const getItemsCountWithFilter: (baseurl: string, headers: Record<
     status: string;
 }>;
 export declare const getAllItems: (baseurl: string, headers: Record<string, string>, version: number, collectionName: string, reqQuery: SearchPaginate, query: Query[]) => Promise<unknown>;
+export declare const getItemsByids: (baseurl: string, headers: Record<string, string>, version: number, collectionName: string, body: any) => Promise<unknown>;
 export declare const getItemWithUuid: (baseurl: string, headers: Record<string, string>, version: number, collectionName: string, itemId: string) => Promise<any>;
 /**
  * Final Stop
