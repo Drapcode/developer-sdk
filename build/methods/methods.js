@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendEmail = exports.deleteFieldItem = exports.clearItem = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.lastItem = exports.getItemWithUuid = exports.getAllItems = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getItemOnly = exports.removeReferenceItem = exports.addReferenceItem = exports.getItemsByids = exports.bulkDeleteItems = exports.validateItem = exports.saveCSVData = exports.countItemByValue = exports.bulkCreateItems = void 0;
+exports.sendEmail = exports.deleteFieldItem = exports.clearItem = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.lastItem = exports.getItemWithUuid = exports.getItemsByids = exports.getAllItems = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getItemOnly = exports.removeReferenceItem = exports.addReferenceItem = exports.bulkDeleteItems = exports.validateItem = exports.saveCSVData = exports.countItemByValue = exports.bulkCreateItems = void 0;
 var constants_1 = require("../utils/constants");
 var util_1 = require("../utils/util");
 var request = function (version, url, options, process) {
@@ -135,19 +135,6 @@ var bulkDeleteItems = function (baseurl, headers, version, collectionName, body)
     });
 }); };
 exports.bulkDeleteItems = bulkDeleteItems;
-var getItemsByids = function (baseurl, headers, version, collectionName, body) { return __awaiter(void 0, void 0, void 0, function () {
-    var url;
-    return __generator(this, function (_a) {
-        url = "".concat(baseurl, "/collection/").concat(collectionName, "/itemsbyids");
-        console.log("url :>> ", url);
-        return [2 /*return*/, request(version, url, {
-                method: "POST",
-                headers: headers,
-                body: JSON.stringify(body),
-            })];
-    });
-}); };
-exports.getItemsByids = getItemsByids;
 var addReferenceItem = function (baseurl, headers, version, collectionName, data) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
@@ -318,6 +305,19 @@ var getAllItems = function (baseurl, headers, version, collectionName, reqQuery,
     });
 }); };
 exports.getAllItems = getAllItems;
+var getItemsByids = function (baseurl, headers, version, collectionName, body) { return __awaiter(void 0, void 0, void 0, function () {
+    var url;
+    return __generator(this, function (_a) {
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/itemsbyids");
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(version, url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(body),
+            })];
+    });
+}); };
+exports.getItemsByids = getItemsByids;
 var getItemWithUuid = function (baseurl, headers, version, collectionName, itemId) { return __awaiter(void 0, void 0, void 0, function () {
     var url, response, result, error_5, message;
     var _a;
