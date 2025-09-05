@@ -161,7 +161,7 @@ export class DrapcodeApis {
       headers["Authorization"] = this.authorization;
     }
     if (this.builderKey) {
-      headers["BuilderKey"] = this.builderKey;
+      headers["builder-key"] = this.builderKey;
     }
     return headers;
   }
