@@ -81,6 +81,8 @@ var DrapcodeApis = /** @class */ (function () {
         this.protocol = "https";
         this.seoName = projectSeoName;
         this.xApiKey = opts.xApiKey;
+        this.xTenantId = opts.xTenantId;
+        this.xSubTenantId = opts.xSubTenantId;
         this.authorization = opts.authorization;
         this.environment =
             (_a = opts.environment) !== null && _a !== void 0 ? _a : Environment.PRODUCTION;
@@ -123,11 +125,25 @@ var DrapcodeApis = /** @class */ (function () {
     DrapcodeApis.prototype.getVersion = function () {
         return this.version;
     };
+    DrapcodeApis.prototype.setXTenantId = function (tenantId) {
+        this.xTenantId = tenantId;
+    };
+    DrapcodeApis.prototype.getXTenantId = function () {
+        return this.xTenantId;
+    };
+    DrapcodeApis.prototype.setXSubTenantId = function (subTenantId) {
+        this.xSubTenantId = subTenantId;
+    };
+    DrapcodeApis.prototype.getXSubTenantId = function () {
+        return this.xSubTenantId;
+    };
     DrapcodeApis.prototype.info = function () {
         // private protocol :string= "https"
         return {
             seoName: this.seoName,
             xApiKey: this.xApiKey,
+            xTenantId: this.xTenantId,
+            xSubTenantId: this.xSubTenantId,
             authorization: this.authorization,
             environment: this.environment,
             builderKey: this.builderKey,
@@ -167,11 +183,17 @@ var DrapcodeApis = /** @class */ (function () {
         if (this.xApiKey) {
             headers["x-api-key"] = this.xApiKey;
         }
+        if (this.xTenantId) {
+            headers["x-tenant-id"] = this.xTenantId;
+        }
+        if (this.xSubTenantId) {
+            headers["x-sub-tenant-id"] = this.xSubTenantId;
+        }
         if (this.authorization) {
             headers["Authorization"] = this.authorization;
         }
         if (this.builderKey) {
-            headers["BuilderKey"] = this.builderKey;
+            headers["builder-key"] = this.builderKey;
         }
         return headers;
     };
