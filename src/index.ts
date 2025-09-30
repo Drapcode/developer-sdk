@@ -30,6 +30,8 @@ export enum Environment {
 
 export interface DrapcodeApiOptions {
   xApiKey?: string;
+  xTenantId?: string;
+  xSubTenantId?: string;
   authorization?: string;
   environment?: Environment | keyof typeof Environment | string;
   builderKey?: string;
@@ -39,6 +41,8 @@ export interface DrapcodeApiOptions {
 export class DrapcodeApis {
   private seoName: string;
   private xApiKey?: string;
+  private xTenantId?: string;
+  private xSubTenantId?: string;
   private authorization?: string; //authorization
   private environment: Environment | string;
   private builderKey?: string; //for builder auth
@@ -60,6 +64,8 @@ export class DrapcodeApis {
     this.seoName = projectSeoName;
 
     this.xApiKey = opts.xApiKey;
+    this.xTenantId = opts.xTenantId;
+    this.xSubTenantId = opts.xSubTenantId;
     this.authorization = opts.authorization;
     this.environment =
       (opts.environment as Environment) ?? Environment.PRODUCTION;
@@ -110,11 +116,27 @@ export class DrapcodeApis {
     return this.version;
   }
 
+  public setXTenantId(tenantId: string) {
+    this.xTenantId = tenantId;
+  }
+  public getXTenantId(): string | undefined {
+    return this.xTenantId;
+  }
+
+  public setXSubTenantId(subTenantId: string) {
+    this.xSubTenantId = subTenantId;
+  }
+  public getXSubTenantId(): string | undefined {
+    return this.xSubTenantId;
+  }
+
   public info(): any {
     // private protocol :string= "https"
     return {
       seoName: this.seoName,
       xApiKey: this.xApiKey,
+      xTenantId: this.xTenantId,
+      xSubTenantId: this.xSubTenantId,
       authorization: this.authorization,
       environment: this.environment,
       builderKey: this.builderKey,
@@ -156,6 +178,12 @@ export class DrapcodeApis {
     };
     if (this.xApiKey) {
       headers["x-api-key"] = this.xApiKey;
+    }
+    if (this.xTenantId) {
+      headers["x-tenant-id"] = this.xTenantId;
+    }
+    if (this.xSubTenantId) {
+      headers["x-sub-tenant-id"] = this.xSubTenantId;
     }
     if (this.authorization) {
       headers["Authorization"] = this.authorization;
