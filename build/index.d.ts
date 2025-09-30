@@ -7,6 +7,8 @@ export declare enum Environment {
 }
 export interface DrapcodeApiOptions {
     xApiKey?: string;
+    xTenantId?: string;
+    xSubTenantId?: string;
     authorization?: string;
     environment?: Environment | keyof typeof Environment | string;
     builderKey?: string;
@@ -15,6 +17,8 @@ export interface DrapcodeApiOptions {
 export declare class DrapcodeApis {
     private seoName;
     private xApiKey?;
+    private xTenantId?;
+    private xSubTenantId?;
     private authorization?;
     private environment;
     private builderKey?;
@@ -34,6 +38,10 @@ export declare class DrapcodeApis {
     getBuilderKey(): string | undefined;
     setVersion(version: number): void;
     getVersion(): number | undefined;
+    setXTenantId(tenantId: string): void;
+    getXTenantId(): string | undefined;
+    setXSubTenantId(subTenantId: string): void;
+    getXSubTenantId(): string | undefined;
     info(): any;
     private getEnvSubdomain;
     getBaseUrl(): string;
