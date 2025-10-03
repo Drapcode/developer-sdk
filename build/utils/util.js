@@ -196,7 +196,6 @@ var processResponse = function (result) {
     if ((result === null || result === void 0 ? void 0 : result.status) === "FAILED") {
         var statusCode = ((_a = result === null || result === void 0 ? void 0 : result.error) === null || _a === void 0 ? void 0 : _a.errStatus) || 400;
         var errorMessage = ((_b = result === null || result === void 0 ? void 0 : result.error) === null || _b === void 0 ? void 0 : _b.message) || defaultMessages[statusCode] || "API Failed";
-        console.log("errorMessage :>> ", errorMessage);
         return {
             code: statusCode,
             success: false,
@@ -216,8 +215,6 @@ var processResponse = function (result) {
             data: "",
         };
     }
-    console.log("3");
-    console.log("After all check result :>> ", result);
     return {
         code: 200,
         success: true,
