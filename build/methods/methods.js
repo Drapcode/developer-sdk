@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendEmail = exports.deleteFieldItem = exports.clearItem = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.lastItem = exports.getItemWithUuid = exports.getItemsByids = exports.getAllItems = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getItemOnly = exports.removeReferenceItem = exports.addReferenceItem = exports.bulkDeleteItems = exports.validateItem = exports.saveCSVData = exports.countItemByValue = exports.bulkCreateItems = void 0;
+exports.sendEmail = exports.deleteFieldItem = exports.clearItem = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.lastItem = exports.getItemWithUuid = exports.getItemsByids = exports.getAllItemsOnly = exports.getAllItems = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getItemOnly = exports.removeReferenceItem = exports.addReferenceItem = exports.bulkDeleteItems = exports.validateItem = exports.saveCSVData = exports.countItemByValue = exports.bulkCreateItems = void 0;
 var constants_1 = require("../utils/constants");
 var util_1 = require("../utils/util");
 var request = function (version, url, options, process) {
@@ -70,9 +70,6 @@ var request = function (version, url, options, process) {
         });
     });
 };
-/**
- * POST Calls
- */
 var bulkCreateItems = function (baseurl, headers, version, collectionName, body) {
     var url = "".concat(baseurl, "/collection/").concat(collectionName, "/bulk");
     console.log("url :>> ", url);
@@ -161,9 +158,6 @@ var removeReferenceItem = function (baseurl, headers, version, collectionName, d
     });
 }); };
 exports.removeReferenceItem = removeReferenceItem;
-/**
- * GET Calls
- */
 var getItemOnly = function (baseurl, headers, version, collectionName, itemUuid) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {
@@ -173,9 +167,6 @@ var getItemOnly = function (baseurl, headers, version, collectionName, itemUuid)
     });
 }); };
 exports.getItemOnly = getItemOnly;
-/**
- * Final Start
- */
 var createItem = function (baseurl, headers, version, collectionName, body) { return __awaiter(void 0, void 0, void 0, function () {
     var url, response, result, error_2, message;
     var _a;
@@ -305,6 +296,34 @@ var getAllItems = function (baseurl, headers, version, collectionName, reqQuery,
     });
 }); };
 exports.getAllItems = getAllItems;
+var getAllItemsOnly = function (baseurl, headers, version, collectionName, reqQuery, query) { return __awaiter(void 0, void 0, void 0, function () {
+    var queryParams, url;
+    return __generator(this, function (_a) {
+        queryParams = new URLSearchParams();
+        if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortField)
+            queryParams.append("sortField", reqQuery.sortField);
+        if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortOrder)
+            queryParams.append("sortOrder", reqQuery.sortOrder);
+        if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.searchTerm)
+            queryParams.append("searchTerm", reqQuery.searchTerm);
+        if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.isPagination) {
+            queryParams.append("page", reqQuery.page);
+            queryParams.append("limit", reqQuery.limit);
+        }
+        if (Array.isArray(query)) {
+            query.forEach(function (query) {
+                var conditionString = constants_1.QueryOperation[query.condition];
+                var field = "".concat(query.field);
+                var value = "".concat(query.value);
+                queryParams.append("".concat(field, ":").concat(conditionString), "".concat(value));
+            });
+        }
+        url = "".concat(baseurl, "/collection/").concat(collectionName, "/items-only?").concat(queryParams.toString());
+        console.log("url :>> ", url);
+        return [2 /*return*/, request(version, url, { method: "GET", headers: headers })];
+    });
+}); };
+exports.getAllItemsOnly = getAllItemsOnly;
 var getItemsByids = function (baseurl, headers, version, collectionName, body) { return __awaiter(void 0, void 0, void 0, function () {
     var url;
     return __generator(this, function (_a) {

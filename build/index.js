@@ -220,6 +220,15 @@ var DrapcodeApis = /** @class */ (function () {
             });
         });
     };
+    DrapcodeApis.prototype.getAllItemsOnly = function (collectionName, reqQuery, query) {
+        if (reqQuery === void 0) { reqQuery = null; }
+        if (query === void 0) { query = []; }
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.callApi(methods_1.getAllItemsOnly, collectionName, reqQuery, query)];
+            });
+        });
+    };
     DrapcodeApis.prototype.createItem = function (collectionName, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

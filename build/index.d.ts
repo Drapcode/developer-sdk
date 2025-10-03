@@ -48,6 +48,7 @@ export declare class DrapcodeApis {
     getHeaders(): Record<string, string>;
     private callApi;
     getAllItems(collectionName: string, reqQuery?: SearchPaginate | any, query?: Query[] | []): Promise<unknown>;
+    getAllItemsOnly(collectionName: string, reqQuery?: SearchPaginate | any, query?: Query[] | []): Promise<unknown>;
     createItem(collectionName: string, body: any): Promise<any>;
     getItemsWithFilter(collectionName: string, filterUuid: string): Promise<any>;
     getItemsCountWithFilter(collectionName: string, filterUuid: string): Promise<{
