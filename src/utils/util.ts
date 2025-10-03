@@ -127,7 +127,6 @@ export const processResponse = (result: any) => {
     const statusCode = result?.error?.errStatus || 400;
     const errorMessage =
       result?.error?.message || defaultMessages[statusCode] || "API Failed";
-    console.log("errorMessage :>> ", errorMessage);
 
     return {
       code: statusCode,
@@ -150,8 +149,6 @@ export const processResponse = (result: any) => {
       data: "",
     };
   }
-  console.log("3");
-  console.log("After all check result :>> ", result);
   return {
     code: 200,
     success: true,
