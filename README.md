@@ -28,7 +28,14 @@ const api = new DrapcodeApis(
 If using version 2:
 
 ```typescript
-const opts = { xApiKey: "", authorization: "", environment, version: 2 };
+const opts = {
+  xApiKey: "",
+  authorization: "",
+  xTenantId: "",
+  xSubTenantId: "",
+  environment,
+  version: 2,
+};
 const api = new DrapcodeApis(project_seo_name, opts);
 ```
 
@@ -37,6 +44,10 @@ const api = new DrapcodeApis(project_seo_name, opts);
 **xApiKey (Optional)**: Your Developer API key to authorize API calls, if enabled.
 
 **authorization (Optional)**: Authorization token for authentication, if applicable.
+
+**xTenantId (Optional)**: Tenant UUID for filtering Tenant based data, if applicable.
+
+**xSubTenantId (Optional)**: Sub-Tenant UUID for filtering Sub-Tenant based data, if applicable.
 
 **environment (Optional)**: The environment (PRODUCTION, PREVIEW, SANDBOX, UAT). Defaults to PRODUCTION if not provided.
 
@@ -61,6 +72,8 @@ If using version 2:
 V2: const opts = {
   xApiKey: "xApiKey",
   authorization: "authorization",
+  xTenantId: "xTenantId",
+  xSubTenantId: "xSubTenantId",
   environment: "environment",
   version: 2,
 };

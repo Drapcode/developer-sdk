@@ -27,10 +27,6 @@ const request = async <T>(
   }
 };
 
-/**
- * POST Calls
- */
-
 export const bulkCreateItems = (
   baseurl: string,
   headers: Record<string, string>,
@@ -144,10 +140,6 @@ export const removeReferenceItem = async (
   });
 };
 
-/**
- * GET Calls
- */
-
 export const getItemOnly = async (
   baseurl: string,
   headers: Record<string, string>,
@@ -159,9 +151,7 @@ export const getItemOnly = async (
   console.log("url :>> ", url);
   return request(version, url, { method: "GET", headers });
 };
-/**
- * Final Start
- */
+
 export const createItem = async (
   baseurl: string,
   headers: Record<string, string>,
@@ -264,6 +254,37 @@ export const getAllItems = async (
     });
   }
   const url = `${baseurl}/collection/${collectionName}/items?${queryParams.toString()}`;
+  console.log("url :>> ", url);
+  return request(version, url, { method: "GET", headers });
+};
+
+export const getAllItemsOnly = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  version: number,
+  collectionName: string,
+  reqQuery: SearchPaginate,
+  query: Query[]
+) => {
+  const queryParams = new URLSearchParams();
+
+  if (reqQuery?.sortField) queryParams.append("sortField", reqQuery.sortField);
+  if (reqQuery?.sortOrder) queryParams.append("sortOrder", reqQuery.sortOrder);
+  if (reqQuery?.searchTerm)
+    queryParams.append("searchTerm", reqQuery.searchTerm);
+  if (reqQuery?.isPagination) {
+    queryParams.append("page", reqQuery.page);
+    queryParams.append("limit", reqQuery.limit);
+  }
+  if (Array.isArray(query)) {
+    query.forEach((query) => {
+      const conditionString = QueryOperation[query.condition];
+      const field = `${query.field}`;
+      const value = `${query.value}`;
+      queryParams.append(`${field}:${conditionString}`, `${value}`);
+    });
+  }
+  const url = `${baseurl}/collection/${collectionName}/items-only?${queryParams.toString()}`;
   console.log("url :>> ", url);
   return request(version, url, { method: "GET", headers });
 };
