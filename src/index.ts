@@ -7,7 +7,6 @@ import {
   deleteFieldItem,
   deleteItemWithUuid,
   getAllItems,
-  getAllItemsOnly,
   getItemOnly,
   getItemWithUuid,
   getItemsByids,
@@ -219,13 +218,6 @@ export class DrapcodeApis {
     query: Query[] | [] = []
   ) {
     return this.callApi(getAllItems, collectionName, reqQuery, query);
-  }
-  async getAllItemsOnly(
-    collectionName: string,
-    reqQuery: SearchPaginate | any = null,
-    query: Query[] | [] = []
-  ) {
-    return this.callApi(getAllItemsOnly, collectionName, reqQuery, query);
   }
   async createItem(collectionName: string, body: any) {
     return this.callApi(createItem, collectionName, body);
