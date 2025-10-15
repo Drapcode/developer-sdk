@@ -61,17 +61,37 @@ export class DrapcodeApis {
   // private protocol :string= "https"
   private protocol: string = "https";
 
-  constructor(projectSeoName: string, opts: DrapcodeApiOptions = {}) {
+  constructor(projectSeoName: string, opts?: DrapcodeApiOptions);
+  constructor(
+    project_seo_name: string,
+    xApiKey: string,
+    authorization: string,
+    environment: Environment | string
+  );
+
+  constructor(
+    projectSeoName: string,
+    opts?: DrapcodeApiOptions | string,
+    authorization?: string,
+    environment?: Environment | string
+  ) {
     this.seoName = projectSeoName;
 
-    this.xApiKey = opts.xApiKey;
-    this.xTenantId = opts.xTenantId;
-    this.xSubTenantId = opts.xSubTenantId;
-    this.authorization = opts.authorization;
-    this.environment =
-      (opts.environment as Environment) ?? Environment.PRODUCTION;
-    this.builderKey = opts.builderKey;
-    this.version = opts.version;
+    if (typeof opts === "object" && opts != null) {
+      this.xApiKey = opts.xApiKey;
+      this.xTenantId = opts.xTenantId;
+      this.xSubTenantId = opts.xSubTenantId;
+      this.authorization = opts.authorization;
+      this.environment =
+        (opts.environment as Environment) ?? Environment.PRODUCTION;
+      this.builderKey = opts.builderKey;
+      this.version = opts.version;
+    } else {
+      this.xApiKey = opts;
+      this.authorization = authorization;
+      this.environment = environment ?? Environment.PRODUCTION;
+      this.version = 1;
+    }
   }
 
   public setProjectSeoName(seo_name: string): void {
