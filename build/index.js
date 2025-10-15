@@ -69,8 +69,7 @@ var Environment;
     Environment["ALPHA"] = "ALPHA";
 })(Environment = exports.Environment || (exports.Environment = {}));
 var DrapcodeApis = /** @class */ (function () {
-    function DrapcodeApis(projectSeoName, opts) {
-        if (opts === void 0) { opts = {}; }
+    function DrapcodeApis(projectSeoName, opts, authorization, environment) {
         var _a;
         //Network/URL Related
         // private API_PATH = "drapcode.io/api/";
@@ -80,14 +79,22 @@ var DrapcodeApis = /** @class */ (function () {
         // private protocol :string= "https"
         this.protocol = "https";
         this.seoName = projectSeoName;
-        this.xApiKey = opts.xApiKey;
-        this.xTenantId = opts.xTenantId;
-        this.xSubTenantId = opts.xSubTenantId;
-        this.authorization = opts.authorization;
-        this.environment =
-            (_a = opts.environment) !== null && _a !== void 0 ? _a : Environment.PRODUCTION;
-        this.builderKey = opts.builderKey;
-        this.version = opts.version;
+        if (typeof opts === "object" && opts != null) {
+            this.xApiKey = opts.xApiKey;
+            this.xTenantId = opts.xTenantId;
+            this.xSubTenantId = opts.xSubTenantId;
+            this.authorization = opts.authorization;
+            this.environment =
+                (_a = opts.environment) !== null && _a !== void 0 ? _a : Environment.PRODUCTION;
+            this.builderKey = opts.builderKey;
+            this.version = opts.version;
+        }
+        else {
+            this.xApiKey = opts;
+            this.authorization = authorization;
+            this.environment = environment !== null && environment !== void 0 ? environment : Environment.PRODUCTION;
+            this.version = 1;
+        }
     }
     DrapcodeApis.prototype.setProjectSeoName = function (seo_name) {
         this.seoName = seo_name;
