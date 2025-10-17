@@ -412,3 +412,17 @@ export const sendEmail = async (
   console.log("url :>> ", url);
   return request(version, url, { method: "POST", headers });
 };
+
+export const aboutMe = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  version: number,
+  body: any
+) => {
+  const url = `${baseurl}/user/me`;
+  return request(version, url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+  });
+};
