@@ -99,6 +99,7 @@ export declare class DrapcodeApis {
     addReferenceItem(collectionName: string, body: any): Promise<unknown>;
     getItemsByids(collectionName: string, body: any): Promise<unknown>;
     sendEmail(templateId: string, sendTo: string): Promise<unknown>;
+    aboutMe(body: any): Promise<unknown>;
 }
 export * from "./utils/index";
 export * from "./utils/crypt";

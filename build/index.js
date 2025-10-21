@@ -352,6 +352,13 @@ var DrapcodeApis = /** @class */ (function () {
             });
         });
     };
+    DrapcodeApis.prototype.aboutMe = function (body) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.callApi(methods_1.aboutMe, body)];
+            });
+        });
+    };
     return DrapcodeApis;
 }());
 exports.DrapcodeApis = DrapcodeApis;
