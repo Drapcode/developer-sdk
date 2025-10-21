@@ -1,4 +1,5 @@
 import {
+  aboutMe,
   addReferenceItem,
   bulkDeleteItems,
   clearItem,
@@ -306,6 +307,9 @@ export class DrapcodeApis {
   }
   async sendEmail(templateId: string, sendTo: string) {
     return this.callApi(sendEmail, templateId, sendTo);
+  }
+  async aboutMe(body: any) {
+    return this.callApi(aboutMe, body);
   }
 }
 export * from "./utils/index";
