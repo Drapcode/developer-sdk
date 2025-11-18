@@ -72,3 +72,4 @@ export declare const deleteFieldItem: (baseurl: string, headers: Record<string, 
  * EMAIL
  */
 export declare const sendEmail: (baseurl: string, headers: Record<string, string>, version: number, templateId: string, sendTo: any) => Promise<unknown>;
+export declare const aboutMe: (baseurl: string, headers: Record<string, string>, version: number, body: any) => Promise<unknown>;
