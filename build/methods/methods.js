@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendEmail = exports.deleteFieldItem = exports.clearItem = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.lastItem = exports.getItemWithUuid = exports.getItemsByids = exports.getAllItemsOnly = exports.getAllItems = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getItemOnly = exports.removeReferenceItem = exports.addReferenceItem = exports.bulkDeleteItems = exports.validateItem = exports.saveCSVData = exports.countItemByValue = exports.bulkCreateItems = void 0;
+exports.aboutMe = exports.sendEmail = exports.deleteFieldItem = exports.clearItem = exports.deleteItemWithUuid = exports.updateItemWithUuid = exports.lastItem = exports.getItemWithUuid = exports.getItemsByids = exports.getAllItems = exports.getItemsCountWithFilter = exports.getItemsWithFilter = exports.createItem = exports.getItemOnly = exports.removeReferenceItem = exports.addReferenceItem = exports.bulkDeleteItems = exports.validateItem = exports.saveCSVData = exports.countItemByValue = exports.bulkCreateItems = void 0;
 var constants_1 = require("../utils/constants");
 var util_1 = require("../utils/util");
 var request = function (version, url, options, process) {
@@ -276,6 +276,10 @@ var getAllItems = function (baseurl, headers, version, collectionName, reqQuery,
             queryParams.append("sortField", reqQuery.sortField);
         if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortOrder)
             queryParams.append("sortOrder", reqQuery.sortOrder);
+        if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.includeFields)
+            queryParams.append("includeFields", reqQuery.includeFields);
+        if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.excludeFields)
+            queryParams.append("excludeFields", reqQuery.excludeFields);
         if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.searchTerm)
             queryParams.append("searchTerm", reqQuery.searchTerm);
         if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.isPagination) {
@@ -438,3 +442,15 @@ var sendEmail = function (baseurl, headers, version, templateId, sendTo) { retur
     });
 }); };
 exports.sendEmail = sendEmail;
+var aboutMe = function (baseurl, headers, version, body) { return __awaiter(void 0, void 0, void 0, function () {
+    var url;
+    return __generator(this, function (_a) {
+        url = "".concat(baseurl, "/user/me");
+        return [2 /*return*/, request(version, url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(body),
+            })];
+    });
+}); };
+exports.aboutMe = aboutMe;
