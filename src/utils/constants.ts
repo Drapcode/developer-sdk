@@ -23,4 +23,6 @@ export type SearchPaginate = {
   isPagination?: boolean;
   page?: number | string | any;
   limit?: number | string | any;
+  includeFields?:string | any;
+  excludeFields?:string | any;
 };
