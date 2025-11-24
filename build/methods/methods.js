@@ -285,6 +285,10 @@ var getAllItems = function (baseurl, headers, version, collectionName, reqQuery,
             queryParams.append("sortField", reqQuery.sortField);
         if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.sortOrder)
             queryParams.append("sortOrder", reqQuery.sortOrder);
+        if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.includeFields)
+            queryParams.append("includeFields", reqQuery.includeFields);
+        if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.excludeFields)
+            queryParams.append("excludeFields", reqQuery.excludeFields);
         if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.searchTerm)
             queryParams.append("searchTerm", reqQuery.searchTerm);
         if (reqQuery === null || reqQuery === void 0 ? void 0 : reqQuery.isPagination) {
