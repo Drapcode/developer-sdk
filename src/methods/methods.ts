@@ -249,6 +249,8 @@ export const getAllItems = async (
 
   if (reqQuery?.sortField) queryParams.append("sortField", reqQuery.sortField);
   if (reqQuery?.sortOrder) queryParams.append("sortOrder", reqQuery.sortOrder);
+  if (reqQuery?.includeFields) queryParams.append("includeFields", reqQuery.includeFields);
+  if (reqQuery?.excludeFields) queryParams.append("excludeFields", reqQuery.excludeFields);
   if (reqQuery?.searchTerm)
     queryParams.append("searchTerm", reqQuery.searchTerm);
   if (reqQuery?.isPagination) {
