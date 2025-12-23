@@ -186,6 +186,7 @@ export class DrapcodeApis {
 
   public getBaseUrl(): string {
     const envSub = this.getEnvSubdomain();
+    console.log("envSub :>> ", envSub);
     if (envSub) {
       if (envSub !== "preview") {
         return `${this.protocol}://${this.seoName}.api.${envSub}.${this.API_PATH}/v${this.version}/developer`;
