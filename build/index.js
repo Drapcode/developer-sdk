@@ -177,9 +177,9 @@ var DrapcodeApis = /** @class */ (function () {
     DrapcodeApis.prototype.getBaseUrl = function () {
         var envSub = this.getEnvSubdomain();
         if (envSub) {
-            return "".concat(this.protocol, "://").concat(this.seoName, ".api.").concat(envSub, ".").concat(this.API_PATH, "/v").concat(this.version, "/developer");
+            return "".concat(this.protocol, "://").concat(this.seoName, ".").concat(envSub, ".").concat(this.API_PATH, "/v").concat(this.version, "/developer");
         }
-        return "".concat(this.protocol, "://").concat(this.seoName, ".api.").concat(this.API_PATH, "/v").concat(this.version, "/developer");
+        return "".concat(this.protocol, "://").concat(this.seoName, ".").concat(this.API_PATH, "/v").concat(this.version, "/developer");
     };
     DrapcodeApis.prototype.getHeaders = function () {
         var headers = {
