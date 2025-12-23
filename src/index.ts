@@ -191,7 +191,7 @@ export class DrapcodeApis {
       }
       return `${this.protocol}://${this.seoName}.${envSub}.${this.API_PATH}/v${this.version}/developer`;
     }
-    return `${this.protocol}://${this.seoName}.${this.API_PATH}/v${this.version}/developer`;
+    return `${this.protocol}://${this.seoName}.api.${this.API_PATH}/v${this.version}/developer`;
   }
 
   public getHeaders(): Record<string, string> {
