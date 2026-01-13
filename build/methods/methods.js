@@ -60,9 +60,11 @@ var request = function (version, url, options, process) {
                     if (version === 1) {
                         return [2 /*return*/, result];
                     }
+                    console.log("result :>> ", result);
                     return [2 /*return*/, process ? (0, util_1.processResponse)(result) : result];
                 case 5:
                     error_1 = _b.sent();
+                    console.log("error :>> ", error_1);
                     message = (_a = error_1 === null || error_1 === void 0 ? void 0 : error_1.message) === null || _a === void 0 ? void 0 : _a.replace("fetch failed", "Network Error");
                     return [2 /*return*/, { code: 500, error: message, message: message }];
                 case 6: return [2 /*return*/];
