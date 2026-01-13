@@ -20,8 +20,10 @@ const request = async <T>(
     if (version === 1) {
       return result;
     }
+    console.log("result :>> ", result);
     return process ? processResponse(result) : result;
   } catch (error: any) {
+    console.log("error :>> ", error);
     const message = error?.message?.replace("fetch failed", "Network Error");
     return { code: 500, error: message, message };
   }
@@ -249,8 +251,10 @@ export const getAllItems = async (
 
   if (reqQuery?.sortField) queryParams.append("sortField", reqQuery.sortField);
   if (reqQuery?.sortOrder) queryParams.append("sortOrder", reqQuery.sortOrder);
-  if (reqQuery?.includeFields) queryParams.append("includeFields", reqQuery.includeFields);
-  if (reqQuery?.excludeFields) queryParams.append("excludeFields", reqQuery.excludeFields);
+  if (reqQuery?.includeFields)
+    queryParams.append("includeFields", reqQuery.includeFields);
+  if (reqQuery?.excludeFields)
+    queryParams.append("excludeFields", reqQuery.excludeFields);
   if (reqQuery?.searchTerm)
     queryParams.append("searchTerm", reqQuery.searchTerm);
   if (reqQuery?.isPagination) {
