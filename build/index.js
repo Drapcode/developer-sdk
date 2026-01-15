@@ -175,15 +175,14 @@ var DrapcodeApis = /** @class */ (function () {
         }
     };
     DrapcodeApis.prototype.getBaseUrl = function () {
-        var envSub = this.getEnvSubdomain();
-        console.log("envSub :>> ", envSub);
-        if (envSub) {
-            if (envSub !== "preview") {
-                return "".concat(this.protocol, "://").concat(this.seoName, ".api.").concat(envSub, ".").concat(this.API_PATH, "/v").concat(this.version, "/developer");
-            }
-            return "".concat(this.protocol, "://").concat(this.seoName, ".").concat(envSub, ".").concat(this.API_PATH, "/v").concat(this.version, "/developer");
-        }
-        return "".concat(this.protocol, "://").concat(this.seoName, ".api.").concat(this.API_PATH, "/v").concat(this.version, "/developer");
+        // const envSub = this.getEnvSubdomain();
+        // if (envSub) {
+        //   if (envSub !== "preview") {
+        //     return `${this.protocol}://${this.seoName}.api.${envSub}.${this.API_PATH}/v${this.version}/developer`;
+        //   }
+        //   return `${this.protocol}://${this.seoName}.${envSub}.${this.API_PATH}/v${this.version}/developer`;
+        // }
+        return "".concat(this.protocol, "://").concat(this.seoName, ".").concat(this.API_PATH, "/v").concat(this.version, "/developer");
     };
     DrapcodeApis.prototype.getHeaders = function () {
         var headers = {
