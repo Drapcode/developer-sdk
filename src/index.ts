@@ -185,13 +185,10 @@ export class DrapcodeApis {
   }
 
   public getBaseUrl(): string {
-    // const envSub = this.getEnvSubdomain();
-    // if (envSub) {
-    //   if (envSub !== "preview") {
-    //     return `${this.protocol}://${this.seoName}.api.${envSub}.${this.API_PATH}/v${this.version}/developer`;
-    //   }
-    //   return `${this.protocol}://${this.seoName}.${envSub}.${this.API_PATH}/v${this.version}/developer`;
-    // }
+    const envSub = this.getEnvSubdomain();
+    if (envSub) {
+      return `${this.protocol}://${this.seoName}.${envSub}.${this.API_PATH}/v${this.version}/developer`;
+    }
     return `${this.protocol}://${this.seoName}.${this.API_PATH}/v${this.version}/developer`;
   }
 
