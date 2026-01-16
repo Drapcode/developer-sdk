@@ -51,7 +51,7 @@ export class DrapcodeApis {
   //Network/URL Related
 
   // private API_PATH = "drapcode.io/api/";
-  private API_PATH = "webkonnect.site/api";
+  private API_PATH = "webkonnect.space/api";
 
   // private API_PATH = "prodeless.com:5002/api";
 
