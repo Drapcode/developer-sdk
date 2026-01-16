@@ -52,8 +52,7 @@ export class DrapcodeApis {
   //Network/URL Related
 
   // private API_PATH = "drapcode.io/api/";
-
-  private API_PATH = "webkonnect.site/api";
+  private API_PATH = "webkonnect.space/api";
 
   // private API_PATH = "prodeless.com:5002/api";
 
@@ -188,7 +187,7 @@ export class DrapcodeApis {
   public getBaseUrl(): string {
     const envSub = this.getEnvSubdomain();
     if (envSub) {
-      return `${this.protocol}://${this.seoName}.api.${envSub}.${this.API_PATH}/v${this.version}/developer`;
+      return `${this.protocol}://${this.seoName}.${envSub}.${this.API_PATH}/v${this.version}/developer`;
     }
     return `${this.protocol}://${this.seoName}.api.${this.API_PATH}/v${this.version}/developer`;
   }
