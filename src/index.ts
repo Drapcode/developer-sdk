@@ -66,14 +66,14 @@ export class DrapcodeApis {
     project_seo_name: string,
     xApiKey: string,
     authorization: string,
-    environment: Environment | string
+    environment: Environment | string,
   );
 
   constructor(
     projectSeoName: string,
     opts?: DrapcodeApiOptions | string,
     authorization?: string,
-    environment?: Environment | string
+    environment?: Environment | string,
   ) {
     this.seoName = projectSeoName;
 
@@ -189,7 +189,7 @@ export class DrapcodeApis {
     if (envSub) {
       return `${this.protocol}://${this.seoName}.${envSub}.${this.API_PATH}/v${this.version}/developer`;
     }
-    return `${this.protocol}://${this.seoName}.api.${this.API_PATH}/v${this.version}/developer`;
+    return `${this.protocol}://${this.seoName}.${this.API_PATH}/v${this.version}/developer`;
   }
 
   public getHeaders(): Record<string, string> {
@@ -230,21 +230,21 @@ export class DrapcodeApis {
       this.getHeaders(),
       this.getVersion() || 2,
       name,
-      ...args
+      ...args,
     );
   }
 
   async getAllItems(
     collectionName: string,
     reqQuery: SearchPaginate | any = null,
-    query: Query[] | [] = []
+    query: Query[] | [] = [],
   ) {
     return this.callApi(getAllItems, collectionName, reqQuery, query);
   }
   async getAllItemsOnly(
     collectionName: string,
     reqQuery: SearchPaginate | any = null,
-    query: Query[] | [] = []
+    query: Query[] | [] = [],
   ) {
     return this.callApi(getAllItemsOnly, collectionName, reqQuery, query);
   }
@@ -267,13 +267,13 @@ export class DrapcodeApis {
   async countItemByValue(
     collectionName: string,
     fieldName: string,
-    fieldValue: any
+    fieldValue: any,
   ) {
     return this.callApi(
       countItemByValue,
       collectionName,
       fieldName,
-      fieldValue
+      fieldValue,
     );
   }
   async saveCSVData(collectionName: string, items: any[]) {
@@ -288,7 +288,7 @@ export class DrapcodeApis {
   async updateItemWithUuid(
     collectionName: string,
     itemUuid: string,
-    body: any
+    body: any,
   ) {
     return this.callApi(updateItemWithUuid, collectionName, itemUuid, body);
   }
