@@ -11,7 +11,7 @@ const request = async <T>(
   version: number,
   url: string,
   options: RequestInit,
-  process: boolean = true
+  process: boolean = true,
 ): Promise<T | { code: number; error: string; message: string }> => {
   try {
     const response = await fetch(url, options);
@@ -32,7 +32,7 @@ export const bulkCreateItems = (
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  body: any[]
+  body: any[],
 ) => {
   const url = `${baseurl}/collection/${collectionName}/bulk`;
   console.log("url :>> ", url);
@@ -49,7 +49,7 @@ export const countItemByValue = async (
   version: number,
   collectionName: string,
   fieldName: string,
-  fieldValue: any
+  fieldValue: any,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/count-by-field`;
   console.log("url :>> ", url);
@@ -65,7 +65,7 @@ export const saveCSVData = async (
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  items: any[]
+  items: any[],
 ) => {
   const url = `${baseurl}/collection/${collectionName}/csv-items`;
   console.log("url :>> ", url);
@@ -81,7 +81,7 @@ export const validateItem = async (
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  item: any
+  item: any,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/validate-item`;
   console.log("url :>> ", url);
@@ -97,7 +97,7 @@ export const bulkDeleteItems = async (
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  body: any
+  body: any,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/bulkDelete`;
   console.log("url :>> ", url);
@@ -113,7 +113,7 @@ export const addReferenceItem = async (
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  data: any
+  data: any,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/add-reference`;
   console.log("url :>> ", url);
@@ -129,7 +129,7 @@ export const removeReferenceItem = async (
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  data: any
+  data: any,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/remove-reference`;
   console.log("url :>> ", url);
@@ -145,7 +145,7 @@ export const getItemOnly = async (
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  itemUuid: string
+  itemUuid: string,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/item-only/${itemUuid}`;
   console.log("url :>> ", url);
@@ -157,7 +157,7 @@ export const createItem = async (
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  body: any
+  body: any,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/items`;
   console.log("url :>> ", url);
@@ -188,7 +188,7 @@ export const getItemsWithFilter = async (
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  filterUuid: string
+  filterUuid: string,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/items`;
   console.log("url :>> ", url);
@@ -210,7 +210,7 @@ export const getItemsCountWithFilter = async (
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  filterUuid: string
+  filterUuid: string,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/filter/${filterUuid}/count`;
   console.log("url :>> ", url);
@@ -233,14 +233,16 @@ export const getAllItems = async (
   version: number,
   collectionName: string,
   reqQuery: SearchPaginate,
-  query: Query[]
+  query: Query[],
 ) => {
   const queryParams = new URLSearchParams();
 
   if (reqQuery?.sortField) queryParams.append("sortField", reqQuery.sortField);
   if (reqQuery?.sortOrder) queryParams.append("sortOrder", reqQuery.sortOrder);
-  if (reqQuery?.includeFields) queryParams.append("includeFields", reqQuery.includeFields);
-  if (reqQuery?.excludeFields) queryParams.append("excludeFields", reqQuery.excludeFields);
+  if (reqQuery?.includeFields)
+    queryParams.append("includeFields", reqQuery.includeFields);
+  if (reqQuery?.excludeFields)
+    queryParams.append("excludeFields", reqQuery.excludeFields);
   if (reqQuery?.searchTerm)
     queryParams.append("searchTerm", reqQuery.searchTerm);
   if (reqQuery?.isPagination) {
@@ -290,12 +292,49 @@ export const getAllItemsOnly = async (
   console.log("url :>> ", url);
   return request(version, url, { method: "GET", headers });
 };
+export const getAllItemsPost = async (
+  baseurl: string,
+  headers: Record<string, string>,
+  version: number,
+  collectionName: string,
+  reqQuery: SearchPaginate,
+  query: Query[],
+) => {
+  const queryParams = new URLSearchParams();
+
+  if (reqQuery?.sortField) queryParams.append("sortField", reqQuery.sortField);
+  if (reqQuery?.sortOrder) queryParams.append("sortOrder", reqQuery.sortOrder);
+  if (reqQuery?.includeFields)
+    queryParams.append("includeFields", reqQuery.includeFields);
+  if (reqQuery?.excludeFields)
+    queryParams.append("excludeFields", reqQuery.excludeFields);
+  if (reqQuery?.searchTerm)
+    queryParams.append("searchTerm", reqQuery.searchTerm);
+  if (reqQuery?.isPagination) {
+    queryParams.append("page", reqQuery.page);
+    queryParams.append("limit", reqQuery.limit);
+  }
+  const searchBody: Record<string, string> = {};
+  if (Array.isArray(query)) {
+    query.forEach((body) => {
+      const conditionString = QueryOperation[body.condition];
+      searchBody[`${body.field}:${conditionString}`] = `${body.value}`;
+    });
+  }
+  const url = `${baseurl}/collection/${collectionName}/items/search?${queryParams.toString()}`;
+  console.log("url :>> ", url);
+  return request(version, url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(searchBody),
+  });
+};
 export const getItemsByids = async (
   baseurl: string,
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  body: any
+  body: any,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/itemsbyids`;
   console.log("url :>> ", url);
@@ -311,7 +350,7 @@ export const getItemWithUuid = async (
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  itemId: string
+  itemId: string,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/item/${itemId}`;
   console.log("url :>> ", url);
@@ -335,7 +374,7 @@ export const lastItem = async (
   baseurl: string,
   headers: Record<string, string>,
   version: number,
-  collectionName: string
+  collectionName: string,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/last-item`;
   console.log("url :>> ", url);
@@ -351,7 +390,7 @@ export const updateItemWithUuid = async (
   version: number,
   collectionName: string,
   itemUuid: string,
-  body: any
+  body: any,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
   console.log("url :>> ", url);
@@ -370,7 +409,7 @@ export const deleteItemWithUuid = async (
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  itemUuid: string
+  itemUuid: string,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/item/${itemUuid}`;
   console.log("url :>> ", url);
@@ -381,7 +420,7 @@ export const clearItem = async (
   baseurl: string,
   headers: Record<string, string>,
   version: number,
-  collectionName: string
+  collectionName: string,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/clear-item/`;
   console.log("url :>> ", url);
@@ -393,7 +432,7 @@ export const deleteFieldItem = async (
   headers: Record<string, string>,
   version: number,
   collectionName: string,
-  fieldName: string
+  fieldName: string,
 ) => {
   const url = `${baseurl}/collection/${collectionName}/delete-field-record/${fieldName}`;
   console.log("url :>> ", url);
@@ -408,7 +447,7 @@ export const sendEmail = async (
   headers: Record<string, string>,
   version: number,
   templateId: string,
-  sendTo: any
+  sendTo: any,
 ) => {
   const url = `${baseurl}/sendEmail/${templateId}/user/${sendTo}`;
   console.log("url :>> ", url);
@@ -419,7 +458,7 @@ export const aboutMe = async (
   baseurl: string,
   headers: Record<string, string>,
   version: number,
-  body: any
+  body: any,
 ) => {
   const url = `${baseurl}/user/me`;
   return request(version, url, {
