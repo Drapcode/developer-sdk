@@ -52,6 +52,7 @@ export declare const getItemsCountWithFilter: (baseurl: string, headers: Record<
     status: string;
 }>;
 export declare const getAllItems: (baseurl: string, headers: Record<string, string>, version: number, collectionName: string, reqQuery: SearchPaginate, query: Query[]) => Promise<unknown>;
+export declare const getAllItemsPost: (baseurl: string, headers: Record<string, string>, version: number, collectionName: string, reqQuery: SearchPaginate, query: Query[]) => Promise<unknown>;
 export declare const getItemsByids: (baseurl: string, headers: Record<string, string>, version: number, collectionName: string, body: any) => Promise<unknown>;
 export declare const getItemWithUuid: (baseurl: string, headers: Record<string, string>, version: number, collectionName: string, itemId: string) => Promise<any>;
 /**
