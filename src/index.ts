@@ -8,6 +8,7 @@ import {
   deleteFieldItem,
   deleteItemWithUuid,
   getAllItems,
+  getAllItemsPost,
   getItemOnly,
   getItemWithUuid,
   getItemsByids,
@@ -66,14 +67,14 @@ export class DrapcodeApis {
     project_seo_name: string,
     xApiKey: string,
     authorization: string,
-    environment: Environment | string
+    environment: Environment | string,
   );
 
   constructor(
     projectSeoName: string,
     opts?: DrapcodeApiOptions | string,
     authorization?: string,
-    environment?: Environment | string
+    environment?: Environment | string,
   ) {
     this.seoName = projectSeoName;
 
@@ -230,16 +231,23 @@ export class DrapcodeApis {
       this.getHeaders(),
       this.getVersion() || 2,
       name,
-      ...args
+      ...args,
     );
   }
 
   async getAllItems(
     collectionName: string,
     reqQuery: SearchPaginate | any = null,
-    query: Query[] | [] = []
+    query: Query[] | [] = [],
   ) {
     return this.callApi(getAllItems, collectionName, reqQuery, query);
+  }
+  async getAllItemsPost(
+    collectionName: string,
+    reqQuery: SearchPaginate | any = null,
+    query: Query[] | [] = [],
+  ) {
+    return this.callApi(getAllItemsPost, collectionName, reqQuery, query);
   }
   async createItem(collectionName: string, body: any) {
     return this.callApi(createItem, collectionName, body);
@@ -259,13 +267,13 @@ export class DrapcodeApis {
   async countItemByValue(
     collectionName: string,
     fieldName: string,
-    fieldValue: any
+    fieldValue: any,
   ) {
     return this.callApi(
       countItemByValue,
       collectionName,
       fieldName,
-      fieldValue
+      fieldValue,
     );
   }
   async saveCSVData(collectionName: string, items: any[]) {
@@ -280,7 +288,7 @@ export class DrapcodeApis {
   async updateItemWithUuid(
     collectionName: string,
     itemUuid: string,
-    body: any
+    body: any,
   ) {
     return this.callApi(updateItemWithUuid, collectionName, itemUuid, body);
   }
